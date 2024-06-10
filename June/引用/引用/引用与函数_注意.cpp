@@ -51,16 +51,16 @@ int& test_1() {
 }
 //函数可以作为 左值 
 //当函数返回一个引用的时候 ，此时的函数可以作为左值
-int main() {
-	
-	int& res = test();
-	cout << res << endl;
-	cout << res << endl;
-	int& ref = test_1();
-	cout << ref << endl;
-	test_1() = 1000;
-	cout << ref << endl;
-
-	system("pause");
-	return 0;
-}
+//int main() {
+//	
+//	int& res = test();
+//	cout << res << endl;
+//	cout << res << endl;
+//	int& ref = test_1();
+//	cout << ref << endl;
+//	test_1() = 1000;
+//	cout << ref << endl;
+//
+//	system("pause");
+//	return 0;
+//}
