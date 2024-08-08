@@ -7,7 +7,7 @@ public:
 	//ÊôĞÔ
 	string _name;
 	int _Id;
-
+public:
 	//ĞĞÎª
 	void Set_Name(string name) {
 		_name = name;
@@ -20,13 +20,13 @@ public:
 	}
 };
 
-int main() {
-	
-
-	Student s1;
-	s1.Set_Id(123);
-	s1.Set_Name("wang_tao");
-	s1.Show_Stu();
-	system("pause");
-	return 0;
-}
+//int main() {
+//	
+//
+//	Student s1;
+//	s1.Set_Id(123);
+//	s1.Set_Name("wang_tao");
+//	s1.Show_Stu();
+//	system("pause");
+//	return 0;
+//}
