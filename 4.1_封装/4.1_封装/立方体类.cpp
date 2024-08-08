@@ -45,20 +45,20 @@ bool _same(Cube &c1, Cube &c2) {
 	else
 		return false;
 }
-int main() {
-	Cube c1;
-	Cube c2;
-	c1.set_height(10);
-	c1.set_length(10);
-	c1.set_width(10);
-
-	c2.set_height(10);
-	c2.set_length(10);
-	c2.set_width(10);
-	// 实例化的类有各自的属性，成员函数法判断  是把传入的类的属性与自身的属性进行比较
-	cout << _same(c1, c2) << endl;
-	cout << c1.is_same(c2) << endl;
-	
-
-	return 0;
-}
+//int main() {
+//	Cube c1;
+//	Cube c2;
+//	c1.set_height(10);
+//	c1.set_length(10);
+//	c1.set_width(10); 
+//
+//	c2.set_height(10);
+//	c2.set_length(10);
+//	c2.set_width(10);
+//	// 实例化的类有各自的属性，成员函数法判断  是把传入的类的属性与自身的属性进行比较
+//	cout << _same(c1, c2) << endl;
+//	cout << c1.is_same(c2) << endl;
+//	
+//
+//	return 0;
+//}
