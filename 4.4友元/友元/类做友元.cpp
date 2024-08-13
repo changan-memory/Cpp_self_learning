@@ -1,7 +1,7 @@
 
 #include "类做友元.h"
 
- Building::Building() {
+ Building::Building() {	//构造函数
 	 this->liv_room = "客厅";
 	 this->_bed_room = "卧室";
 }

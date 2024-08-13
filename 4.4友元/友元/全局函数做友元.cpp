@@ -8,7 +8,7 @@ class Building {
 	//全局函数  做 类的 友元
 	//该行代码的意思是  声明一个全局函数为 该类的友元 
 	// 类的友元  可以访问 类的私有属性
-	friend void Good_Gay(Building& B);
+	friend void Good_Gay(Building& B);	//全局函数做友元  成员函数做友元需要加上成员函数的作用域
 public:
 	Building() {
 		this->_bedroom = "卧室";
