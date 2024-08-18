@@ -106,15 +106,8 @@ void test1() {
 	delete computer3;
 }
 
-
-
-
-
-
-
 int main() {
 
 	test1();
-
 	return 0;
 }
