@@ -1,4 +1,4 @@
-#include <fstream>
+#include <fstream>		//文件流  是一个类
 #include <iostream>
 using namespace std;
 
