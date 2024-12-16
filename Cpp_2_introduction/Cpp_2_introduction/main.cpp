@@ -41,20 +41,8 @@ void Test3() {
 
 
 //半缺省的应用
-struct Stack {
-	int* base;
-	int top;
-	int capacity;
-};
-void StackInit(struct Stack* pst, int defaultCapacity = 4) {
-	pst->base = (int*)malloc(sizeof(int) * defaultCapacity);
-	if (pst->capacity == NULL) {
-		perror("malloc failed");
-		return;
-	}
-	pst->top = 0;
-	pst->capacity = defaultCapacity;
-}
+#include "Stack.h"
+
 void Test4() {
 	struct Stack st1;
 	struct Stack st2;
