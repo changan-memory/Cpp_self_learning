@@ -38,9 +38,36 @@ void Test3() {
 //2. 缺省参数不能在函数声明和定义中同时出现
 //3. 缺省值必须是常量或者全局变量
 //4. C语言不支持（编译器不支持）
+
+
+//半缺省的应用
+struct Stack {
+	int* base;
+	int top;
+	int capacity;
+};
+void StackInit(struct Stack* pst, int defaultCapacity = 4) {
+	pst->base = (int*)malloc(sizeof(int) * defaultCapacity);
+	if (pst->capacity == NULL) {
+		perror("malloc failed");
+		return;
+	}
+	pst->top = 0;
+	pst->capacity = defaultCapacity;
+}
+void Test4() {
+	struct Stack st1;
+	struct Stack st2;
+	//场景1  初始化两个栈， 如果已知需要插入10000个元素， 可以给缺省参数传参， 直接开辟10000个空间
+	//避免扩容的损耗
+	StackInit(&st1, 100000);
+	//场景2 我不知道一共要插入多少个数据， 那就根据缺省值来初始化  随着数据量的增多来扩容
+	StackInit(&st2);
+}
 int main() {
 	//Test1();
 	//Test2();
-	Test3();
+	//Test3();
+	Test4();
 	return 0;
 }
