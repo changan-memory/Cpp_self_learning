@@ -2,6 +2,7 @@
 using std::cout;
 using std::endl;
 
+// 一、
 //缺省参数  基本使用
 void Func(int a = 10) {
 	cout << a << endl;
@@ -52,10 +53,74 @@ void Test4() {
 	//场景2 我不知道一共要插入多少个数据， 那就根据缺省值来初始化  随着数据量的增多来扩容
 	StackInit(&st2);
 }
+//二、
+//函数重载
+//函数重载：是函数的一种特殊情况，C++允许在同一作用域中声明几个功能类似的同名函数，这
+//些同名函数的形参列表( 参数个数 或 类型 或 类型顺序)不同，常用来处理实现功能类似数据类型不同的问题。
+
+// 重载对函数的返回值没有要求
+
+//1 参数类型不同
+int Add(int x, int y) {
+	cout << "int x, int y" << endl;
+	return x + y;
+}
+double Add(double x, int y) {
+	cout << "double x, int y" << endl;
+	return x + y;
+}
+// 2 参数个数不同
+void f() {
+	cout << "无参" << endl;
+}
+void f(int x) {
+	cout << "一个参数" << endl;
+}
+
+//3 类型的顺序不同
+void f1(int a, double b) {
+	cout << "int , double" << endl;
+}
+void f1(double a, int b) {
+	cout << "double, int" << endl;
+
+}
+//4. 函数重载与函数的缺省值
+//属于函数重载
+//可以编译通过，但实际调用时， 会报错， 因为当参数为空时， 不知道调用哪个函数
+void f2() {
+	cout << "无缺省值"<<endl;
+}
+void f2(int a = 10) {
+	cout << "有缺省值" << endl;
+}
+void Test5() {
+	//类型不同
+	Add(1, 2);
+	Add(1.11, 2);
+	//参数个数不同
+	f();
+	f(1);
+	//参数 的类型的顺序不同
+	f1(1, 2.2);
+	f1(2.2, 1);
+	//函数重载与缺省值碰撞
+	//有默认参数时， 不传参数时， 有二义性， 因此报错
+	f2(1);//输出有缺省值
+}
+
+void Test6() {
+	struct Stack s;
+	StackInit(&s);
+	StackPush(&s, 1);
+	StackPush(&s, 1.1);
+}
 int main() {
 	//Test1();
 	//Test2();
 	//Test3();
-	Test4();
+	//Test4();
+	//Test5();
+	Test6();
 	return 0;
 }
