@@ -16,5 +16,4 @@ void StackPush(struct Stack* pst, int x) {
 }
 void StackPush(struct Stack* pst, double y) {
 	printf("void StackPush(struct Stack* pst, double y)\n");
-
 }
