@@ -187,7 +187,52 @@ void TestRef() {
 	//++z;//会报错
 
 	const int& m = 10;	//常量引用   给常量取别名
-	//int& n = 10;	//这样子不行
+	//int& n = 10;	//这样子不行, 是因为10是常量
+
+	double dd = 11;
+	int ii = dd;	//会发生隐式类型转换 类型转换会产生临时变量，临时变脸具有常性，只能做右值
+
+	//类型转换会产生临时变量，临时变脸具有常性  
+	//int& rii = dd;	//dd 到 int, 发生了类型转换， 本质上， rii是 常临时变量 的引用  这样的写法扩大了权限
+	const int& rii = dd;	//加了const后， 权限相同， 因此编译通过
+}
+//例子
+int func1() {	//返回x的拷贝，会产生临时变量
+	static int x = 10;
+	return x;
+}
+int& func2() {	//返回x的别名， 不会产生临时变量
+	static int x = 10;
+	return x;
+}
+void func3() {
+	//int& x = func1();	//权限放大， 不可以进行
+	int x1 = func1();	// 仅拷贝
+	const int& y = func1();	//权限平移， 可以进行
+
+	int& ret2 = func2();	//可以，权限的平移   
+	const int& ret2_ = func2();		//可以，权限的缩小
+	//总结，func返回的是一个变量的别名， 
+}
+
+//测试类型转换时会产生临时变量
+void TestTypeChange() {
+	int i = 10;
+	double j = 10.11;
+	//一般是小的往大的进行类型提升， 提升的时候不能改变原变量，因此只能产生原变量的副本，即临时变量
+	if (j > i)	
+		cout << "xxxxxxxxxxxxx" << endl;
+}
+void TestPointerANDRef(){
+	int a = 10;
+	//在语法层面，引用不开辟空间， 是一片空间的别名
+	int& ra = a;
+	ra = 1000;
+	//语法层面，指针开辟空间， 存放a的地址
+	int* p = &a;
+	*p = 100;
+
+	//从底层汇编实现的角度看，引用使用类似指针的方式实现的
 }
 int main() {
 	//Test1();
@@ -197,6 +242,8 @@ int main() {
 	//Count();
 	//TestRetRefVal();
 	//TestSeqList_CppVersion();
-	TestRef();
+	//TestRef();
+	//TestTypeChange();	//测试类型转换时会产生临时变量
+	TestPointerANDRef();
 	return 0;
 }
