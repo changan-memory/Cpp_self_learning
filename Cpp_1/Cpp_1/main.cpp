@@ -26,8 +26,8 @@ using namespace bit;
 void Test1() {
 	int a = 100;
 	printf("%d\n", a);
-	printf("%d\n", ::a);
-	printf("%d\n", bit::a);
+	printf("%d\n", ::a);	//用:: 来访问全局作用域下的同名变量
+	printf("%d\n", bit::a);	//用  namespace:: 来访问特定命名空间下的变量
 }
 //2.所有文件中，相同名字的命名空间会被合并
 void Test2() {
@@ -69,6 +69,7 @@ void Test3() {
 	//第三种解决方案  把常用的从命名空间中展开
 	using std::cout;
 	using std::endl;
+	using std::cin;
 	cout << "hello world" << endl;
 }
 //4. C++的输入和输出
@@ -88,10 +89,10 @@ void Test4() {
 	//在某些对性能有要求的地方， printf/scanf 比 cout/cin 性能要好一丢丢(C语言输入输出要更快一点点)
 }
 int main() {
-	//Test1();
-	Test2();
-	Test3();
-	Test4();
+	Test1();
+	//Test2();
+	//Test3();
+	//Test4();
 	return 0;
 }
 
