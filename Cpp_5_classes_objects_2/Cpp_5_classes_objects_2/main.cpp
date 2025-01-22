@@ -118,7 +118,7 @@ int main() {
 	//TestClassSize();
 	//TestEmptyClass();
 	//Test_this();
-	//Test_This_1();
-	Test_This_2();
+	Test_This_1();
+	//Test_This_2();
 	return 0;
 }
