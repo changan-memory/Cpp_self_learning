@@ -4,6 +4,7 @@ using std::endl;
 
 // 一、
 //缺省参数  基本使用
+void Func(int a);
 void Func(int a = 10) {
 	cout << a << endl;
 }
@@ -83,7 +84,6 @@ void f1(int a, double b) {
 }
 void f1(double a, int b) {
 	cout << "double, int" << endl;
-
 }
 //4. 函数重载与函数的缺省值
 //属于函数重载
@@ -95,17 +95,17 @@ void f2(int a = 10) {
 	cout << "有缺省值" << endl;
 }
 void Test5() {
-	//类型不同
+	//1. 类型不同
 	Add(1, 2);
 	Add(1.11, 2);
-	//参数个数不同
+	//2. 参数个数不同
 	f();
 	f(1);
-	//参数 的类型的顺序不同
+	//3. 参数 的类型的顺序不同
 	f1(1, 2.2);
 	f1(2.2, 1);
 	//函数重载与缺省值碰撞
-	//有默认参数时， 不传参数时， 有二义性， 因此报错
+	// 有默认参数 并且 不传参数时， 有二义性， 因此报错
 	f2(1);//输出有缺省值
 }
 
@@ -131,7 +131,7 @@ int main() {
 	//Test2();
 	//Test3();
 	//Test4();
-	//Test5();
-	Test6();
+	Test5();
+	//Test6();
 	return 0;
 }

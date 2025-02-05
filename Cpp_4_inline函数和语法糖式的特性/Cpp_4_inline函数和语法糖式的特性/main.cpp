@@ -57,7 +57,7 @@ void TestFor(){
 }
 
 
-//加入有个函数，要在循环内执行10000次， 那么每次调用函数都会建立栈帧，有建立栈帧的开销
+//假如有个函数，要在循环内执行10000次， 那么每次调用函数都会建立栈帧，有建立栈帧的开销
 // C语言中通过宏函数，将函数体展开来解决这样的问题
 //#define TESTADD(x, y) (10*(x+y))	//宏执行的是文本替换， 不能加分号， 不能加return  不用加形参类型
 #define ADD(x, y) (10*((x)+(y)))  //每个变量都可能是表达式，因此，需要加多重括号
@@ -112,7 +112,7 @@ int main() {
 
 	//Test_NewFunction();
 	//TestFor();
-	//Test_Inline();
-	Test_nullptr();
+	Test_Inline();
+	//Test_nullptr();
 	return 0;
 }
