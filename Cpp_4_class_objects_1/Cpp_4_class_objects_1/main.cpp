@@ -3,7 +3,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 //类的引入
-//C++兼容C语言，同时C++中struct升级成了 类(真真正正的类)
+//C++兼容C语言，同时C++中struct升级成了 类(具有类的所有特性)
 struct _Stack {
 	//成员方法
 	void Init(int defaultCapacity = 4) {
@@ -39,25 +39,29 @@ void TestStruct() {
 	cout << "size: " << st2.size << " capacity: " << st2.capacity << endl;
 }
 
-////类的定义
-//class Stack {
-//public:
-//	void Init(int defaultCapacity = 4) {
-//		base = (int*)malloc(sizeof(int) * defaultCapacity);
-//		capacity = defaultCapacity;
-//		top = 0;
-//	}
-//	void Push() {
-//		//.......
-//	}
-//	void Pop() {
-//		//.......
-//	}
-//private:
-//	int* base;
-//	int top;
-//	int capacity;
-//};
+
+//类的定义
+class Stack {
+public:
+	void Init(int defaultCapacity = 4) {
+		base = (int*)malloc(sizeof(int) * defaultCapacity);
+		capacity = defaultCapacity;
+		top = 0;
+	}
+	void Push() {
+		//.......
+	}
+	void Pop() {
+		//.......
+	}
+private:
+	int* base;
+	int top;
+	int capacity;
+};
+//class和struct都可以定义类，struct是为了兼容C语言的写法，C++中定义类可以用struct,但C++更喜欢用class
+//class中成员函数和变量默认是私有的，strutc中默认是公开的
+
 
 //类的声明和定义分离
 // 头文件中写类的定义包括， 成员的权限限定 成员函数的声明   以及成员变量的声明
@@ -68,7 +72,7 @@ void TestStruct() {
 
 class Date {
 public:
-	//根据局部优先的原则，是函数的形参赋值给类内的成员
+	//根据局部优先的原则，是 函数的形参   赋值给  函数的形参,不会对成员year产生影响
 	//但这样写，不易区分
 	void setDate(int year, int month, int day) {
 		/*year = year;
@@ -81,35 +85,40 @@ public:
 	void getDate() {
 		cout << _day << endl;
 	}
-private:
+//private:
 	//int year;
 	//int month;
 	//int day;
 
 	//通常在类的成员变量加上_来区分
-	int _year;	//声明，变量声明和定义的区别是，是否开辟空间
+	int _year;	//类似的写法都是声明，变量声明和定义的区别是，是否开辟空间
 	int _month;
 	int _day;
 };
 
 //面向对象三大特性：封装、继承、多态
 // 先学习封装
-// C语言，数据和方法是分离的
-// 局部域， 全局域，类域，命名空间域 
+// C语言，数据和方法是分离的，封装就是把数据和方法写在一起，是为了更好的管理，可以杜绝一些不文明的代码操作
+// 局部域， 全局域，命名空间域(需要指定)，类域
 // 局部域和全局域会影响生命周期， 类域和命名空间域不会影响生命周期
 
 //对象的大小只计算成员变量，不计算成员函数
+//不同对象，调用成员函数，调用的是同一个函数，这些函数的指针存在一个公共区域
 
 //也就是说，对象中只存储了成员变量，没有存储函数指针
 //函数存储在一个公共的区域
 void TestClass() {
-	// 类实例化对象
+
+	// 类实例化对象，整体定义了类内的数据
+	// 类就像图纸，实例化出的对象就像是房子
+	
 	Date d1;
-	cout << sizeof(d1) << endl;		//大小为 12
+	//Date::_year = 1;	//不能这样写，图纸不能住人。类内没有开辟空空间，不能存放数据。
+	d1._day = 2;	//应该这样访问
+	cout << sizeof(d1) << endl;		//大小为 12，对象的大小只计算成员变量，不计算成员函数
 }
 int main() {
-	
-	TestClass();
 	TestStruct();
+	TestClass();
 	return 0;
 }
