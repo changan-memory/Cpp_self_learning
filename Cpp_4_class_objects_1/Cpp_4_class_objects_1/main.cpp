@@ -3,15 +3,41 @@ using std::cout;
 using std::cin;
 using std::endl;
 //类的引入
-//C++中struct升级成了类
+//C++兼容C语言，同时C++中struct升级成了 类(真真正正的类)
 struct _Stack {
+	//成员方法
 	void Init(int defaultCapacity = 4) {
 		base = (int*)malloc(sizeof(int) * defaultCapacity);
+		if (base == nullptr) {
+			perror("malloc failed\n");
+			return;
+		}
+		this->size = 0;
+		this->capacity = defaultCapacity;
 	}
+	void Push() {
+
+	}
+	void Destroy() {
+		free(this->base);
+		this->base = nullptr;
+		this->top = this->capacity;
+	}
+	//成员变量
 	int* base;
 	int top;
 	int capacity;
+	int size;
 };
+void TestStruct() {
+	struct _Stack st1;	//C语言的写法
+	st1.Init();
+	_Stack st2;		//C++的写法
+	st2.Init();
+
+	cout << "size: " << st1.size << " capacity: " << st1.capacity << endl;
+	cout << "size: " << st2.size << " capacity: " << st2.capacity << endl;
+}
 
 ////类的定义
 //class Stack {
@@ -84,6 +110,6 @@ void TestClass() {
 int main() {
 	
 	TestClass();
-
+	TestStruct();
 	return 0;
 }

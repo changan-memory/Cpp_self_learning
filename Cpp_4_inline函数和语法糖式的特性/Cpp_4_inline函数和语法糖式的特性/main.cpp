@@ -95,6 +95,28 @@ void Test_Inline() {
 	//此处调用时，只有声明，因此编译器就要去找函数的定义，但内联函数的定义被展开了，找不到
 }
 
+////C++中的空指针
+//void f(int) {
+//	cout << "f(int)" << endl;
+//}
+//void f(int*) {
+//	cout << "f(int*)" << endl;
+//}
+//void Test_nullptr() {
+//	f(0);
+//	f(NULL);
+//	f(nullptr);	//空指针关键字
+//	cout << sizeof(nullptr) << endl; //8字节
+//}
+//int main() {
+//
+//	//Test_NewFunction();
+//	//TestFor();
+//	//Test_Inline();
+//	Test_nullptr();
+//	return 0;
+//}
+
 //C++中的空指针
 void f(int) {
 	cout << "f(int)" << endl;
@@ -102,17 +124,10 @@ void f(int) {
 void f(int*) {
 	cout << "f(int*)" << endl;
 }
-void Test_nullptr() {
+int main() {
 	f(0);
 	f(NULL);
 	f(nullptr);	//空指针关键字
 	cout << sizeof(nullptr) << endl; //8字节
-}
-int main() {
-
-	//Test_NewFunction();
-	//TestFor();
-	Test_Inline();
-	//Test_nullptr();
 	return 0;
 }
