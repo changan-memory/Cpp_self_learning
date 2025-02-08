@@ -145,13 +145,28 @@ void Test_This_2() {
 }
 //调用两个函数的结果分别是什么  1.编译时报错   2. 运行时崩溃   3. 正常运行
 int main() {
-	//TestClassSize();
-	//TestEmptyClass();
-	//Test_this();
-	Test_This_1();
-	//Test_This_2();
+	//Test_This_1();
+	Test_This_2();
 	return 0;
 }
+//class Calculator {
+//	int result;
+//public:
+//	Calculator& add(int n) {
+//		result += n;
+//		return *this;
+//	}
+//	// 其他方法...
+//};
+//
+//Calculator calc;
+//calc.add(5).add(3).add(2);  // 连续调用
 
-
-//底层上，C和C++是没有区别的
+//int main() {
+//	//TestClassSize();
+//	//TestEmptyClass();
+//	//Test_this();
+//	//Test_This_1();
+//	//Test_This_2();
+//	return 0;
+//}

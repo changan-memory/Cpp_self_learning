@@ -68,7 +68,7 @@ private:
 // 对应的.cpp文件中，写成员函数的实现， 只不过需要在函数名前加上对应类的 作用域限定
 //类的声明和定义分离，需要在函数名前面，加上类的作用域限定
 //注意： 1. 在类内进行实现的函数，会被建议成为内联函数，具体是否称为取决于编译器
-//		 2. 类中，声明和定义分离的函数，不会是内联函数(内联函数生命和定义不能分离，否则会链接不上)
+//		 2. 类中，声明和定义分离的函数，不会是内联函数(内联函数声明和定义不能分离，否则会链接不上)
 
 class Date {
 public:
@@ -117,8 +117,20 @@ void TestClass() {
 	d1._day = 2;	//应该这样访问
 	cout << sizeof(d1) << endl;		//大小为 12，对象的大小只计算成员变量，不计算成员函数
 }
+//int main() {
+//	TestStruct();
+//	TestClass();
+//	return 0;
+//}
+
+class Empty {};
+class Data {
+	int num;        // 4字节
+	double value;   // 8字节
+	char tag;       // 1字节
+};// 8 + 8 + 1 = 17 → vs下实际输出24（内存对齐）
+
 int main() {
-	TestStruct();
-	TestClass();
-	return 0;
+	cout << sizeof(Empty) << endl;;  // 输出1
+	cout << sizeof(Data) << endl;;  // 输出24
 }
