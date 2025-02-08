@@ -2,11 +2,13 @@
 using std::cout;
 using std::cin;
 using std::endl;
+
+
 class Stack {
 private:
-	int* _base;
-	int _top;
-	int _capacity;
+	int* _base = nullptr;	//C++11支持的成员变量缺省值
+	int _top = 0;
+	int _capacity = 0;
 public:
 	Stack(int defaultCapacity = 4) {
 		this->_base = (int*)malloc(sizeof(int) * defaultCapacity);
@@ -17,10 +19,20 @@ public:
 		this->_capacity = defaultCapacity;
 		this->_top = 0;
 	}
-	//实现一个深拷贝
-	/*Stack(const Stack& stack) {
-		
-	}*/
+	//注意：类中如果没有涉及资源申请时，拷贝构造函数是否写都可以；
+	// 一旦涉及到资源申请时，则拷贝构造函数是一定要写的，否则就是浅拷贝。
+
+	//简单实现一个深拷贝  st2(st1)
+	Stack(const Stack& stack) {
+		this->_base = (int*)malloc(sizeof(int) * stack._capacity);
+		if (this->_base == nullptr) {
+			perror("malloc failed\n");
+			return;
+		}
+		memcpy(this->_base, stack._base, sizeof(int) * stack._top);
+		this->_top = stack._top;
+		this->_capacity = stack._capacity;
+	}
 	~Stack() {
 		cout << " ~Stack" << endl;
 		free(this->_base);
@@ -93,10 +105,12 @@ int main() {
 	Date d2(d1);
 
 	Func(d1);
-	Func(10);
+	Func(10);	//形参的拷贝，
 	
-	//值拷贝，有问题
+	//值拷贝(浅拷贝)，有问题，两个指针存下了同一块空间的地址，析构时会对一块空间析构两次
+	// st1.push , 对 d1 对象的操作，也会影响 d2 对象
+	//会引发错误。  类似于  栈这样的对象，必须自己实现深拷贝
 	Stack st1;
-	Stack st2(st1);
+	Stack st2(st1);		//可以认为深拷贝 是为了  有资源的对象 的拷贝而设计的
 	return 0;
 }

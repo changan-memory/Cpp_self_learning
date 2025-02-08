@@ -214,4 +214,29 @@ int main() {
 	//TestNULLparameter();
 	//TestCallConstruct();
 	return 0;
-}
+ 
+
+
+//#include <iostream>
+//using namespace std;
+//
+//class Date {
+//public:
+//	/*Date(int year = 2, int month = 2, int day = 2) {
+//		this->_year = year;
+//		this->_month = month;
+//		this->_day = day;
+//	}*/
+//	void Print() {
+//		cout << this->_year << "--" << this->_month << "--" << this->_day << endl;
+//	}
+//private:
+//	int _year = 2025;	
+//	int _month = 1;
+//	int _day = 1;
+//};
+//int main() {
+//	Date d1;
+//	d1.Print();
+//	return 0;
+//}
