@@ -3,14 +3,14 @@ using std::cout;
 using std::cin;
 using std::endl;
 #include <assert.h>
-//C语言 初始化和销毁经常忘记写
-//C语言 这些操作写起来很繁琐
-//类和对象
-//类的六个默认成员函数 初始化 清理 拷贝 赋值(前四个) 很重要
-
-//这些函数是特殊的成员函数
-
-
+////C语言 初始化和销毁经常忘记写
+////C语言 这些操作写起来很繁琐
+////类和对象
+////类的六个默认成员函数 初始化 清理 拷贝 赋值(前四个) 很重要
+//
+////这些函数是特殊的成员函数
+//
+//
 class Stack {
 	typedef int StackDataType;		//括号匹配需要把 int 换成char
 private:
@@ -125,6 +125,7 @@ void TestStackClass() {
 }
 
 
+
 //自动生成的构造函数
 class Date {
 public:
@@ -214,29 +215,8 @@ int main() {
 	//TestNULLparameter();
 	//TestCallConstruct();
 	return 0;
- 
+}
 
 
-//#include <iostream>
-//using namespace std;
-//
-//class Date {
-//public:
-//	/*Date(int year = 2, int month = 2, int day = 2) {
-//		this->_year = year;
-//		this->_month = month;
-//		this->_day = day;
-//	}*/
-//	void Print() {
-//		cout << this->_year << "--" << this->_month << "--" << this->_day << endl;
-//	}
-//private:
-//	int _year = 2025;	
-//	int _month = 1;
-//	int _day = 1;
-//};
-//int main() {
-//	Date d1;
-//	d1.Print();
-//	return 0;
-//}
+
+
