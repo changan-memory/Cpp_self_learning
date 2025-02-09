@@ -48,7 +48,7 @@ private:
 	int _month;
 	int _day;
 public:
-	Date(int year = 2023, int month = 10, int day = 28) {
+	Date(int year = 2024, int month = 10, int day = 28) {
 		this->_year = year;
 		this->_month = month;
 		this->_day = day;
@@ -59,23 +59,12 @@ public:
 	// 可以用指针 解决以上问题，因为所有类型的指针都是内置类型，  但是引用更香
 	//调用一个函数，要先传参，而自定义类型的传参  必须  调用拷贝构造函数
 
-	Date(const Date& date) {	//建议加上 const
-		//const 是为了防止别人写错，防止别人写成以下代码
-		//date._year = _year;		//不仔细看真看不出来，赔了夫人又折兵，会出现随机值
-		//date._month = _month;
-		//date._day = _day;
-
+	Date(const Date& date) {	
 		this->_year = date._year;
 		this->_month = date._month;
 		this->_day = date._day;
 	}
 };
-void Func(int i) {
-	return;
-}
-void Func(Date d) {
-	return;
-}
 //默认拷贝构造函数
 class Date_1 {
 private:
@@ -99,6 +88,12 @@ public:
 		this->_day = date._day;
 	}*/
 };
+void Func(int i) {
+	return;
+}
+void Func(Date d) {
+	return;
+}
 int main() {
 	//日期类可以不写拷贝构造，默认生成的就可以
 	Date d1(2025, 2, 8);
@@ -115,3 +110,8 @@ int main() {
 	return 0;
 }
 
+//建议加上 const
+		//const 是为了防止别人写错，防止别人写成以下代码
+		//date._year = _year;		//不仔细看真看不出来，赔了夫人又折兵，会出现随机值
+		//date._month = _month;
+		//date._day = _day;
