@@ -184,7 +184,7 @@ void TestRef() {
 	int& y = x;		//权限平移
 	const int& z = x;	//权限缩小  权限缩小后,这个变量只是,用 z 这个别名时，不能修改，用别名x依然可以修改
 	x++;
-	//++z;//会报错
+	//++z; //会报错
 
 	const int& m = 10;	//常量引用   给常量取别名
 	//int& n = 10;	//这样子不行, 是因为10是常量
@@ -243,7 +243,7 @@ int main() {
 	//TestRetRefVal();
 	//TestSeqList_CppVersion();
 	//TestRef();
-	//TestTypeChange();	//测试类型转换时会产生临时变量
-	TestPointerANDRef();
+	TestTypeChange();	//测试类型转换时会产生临时变量
+	//TestPointerANDRef();
 	return 0;
 }
