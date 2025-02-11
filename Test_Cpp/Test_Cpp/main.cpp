@@ -1,3 +1,5 @@
+#include <iostream>
+using namespace std;
 //#include <iostream>
 //#include <assert.h>
 //
@@ -114,8 +116,7 @@
 //
 
 //引用
-#include <iostream>
-using namespace std;
+
 // 1.
 //int main() {
 //    int a = 10;
@@ -171,10 +172,52 @@ using namespace std;
 //	return 0;
 //}
 
+
+//struct A {
+//	long a1;	//4
+//	short a2;	//2
+//	int a3;		//4
+//	int* a4;	//8
+//};
+//int main() {
+//	int i = 10;
+//	double j = 10.11;
+//	if (j > i)
+//		cout << "xxxxxxxxxxxxx" << endl;
+//	cout << sizeof(A) << endl;
+//	return 0;
+//}
+
+//拷贝构造函数
+class Date {
+public:
+	Date(int year = 2025, int month = 2, int day = 1) {
+		cout << "Date(int year = 2025, int month = 2, int day = 22)" << endl;
+		_year = year;
+		_month = month;
+		_day = day;
+	}
+	Date(const Date& d) {
+		cout << "Date(const Date& d)" << endl;
+		_year = d._year;
+		_month = d._month;
+		_day = d._day;
+	}
+	~Date() {
+		cout << "~Date()" << endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+};
+
+Date Test(Date d) {
+	Date temp(d);
+	return temp;
+}
 int main() {
-	int i = 10;
-	double j = 10.11;
-	if (j > i)
-		cout << "xxxxxxxxxxxxx" << endl;
+	Date d1(2025, 2, 11);
+	Test(d1);
 	return 0;
 }
