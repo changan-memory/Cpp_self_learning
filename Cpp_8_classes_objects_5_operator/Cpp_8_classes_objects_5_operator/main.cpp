@@ -91,8 +91,24 @@ namespace TestSpace_operator {
 	}
 }
 
+void TestDate() {
+	Date d1(2024, 3, 6);
+	Date d2(2025, 3, 6);
+	d2 += 100;
+	d2.Print();
+	d2 = d1 + 10000;
+	d1.Print();
+	d2.Print();
 
+	/*Date d3(2025, 2, 12);
+	Date d4 = d3 - 100;
+	d3.Print();
+	d4.Print();
+	d3 -= 100;
+	d4.Print();*/
+}
 int main() {
-	TestSpace_operator:: Test_operator();
+	//TestSpace_operator:: Test_operator();
+	TestDate();
 	return 0;
 }

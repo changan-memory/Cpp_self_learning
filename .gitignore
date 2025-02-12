@@ -23,6 +23,7 @@ bin-release/
 *.db
 *.ipch
 Debug/
+Release/
 .vs
 
 # Project files, i.e.`.project`, `.actionScriptProperties` and `.flexProperties`
