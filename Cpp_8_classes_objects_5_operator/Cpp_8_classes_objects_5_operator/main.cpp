@@ -80,14 +80,13 @@ namespace TestSpace_operator {
 
 		Date d5(2025, 6, 6);
 		d5 = d1;
+		
+		//区分拷贝构造和赋值运算符重载
 		//用一个已经存在的对象初始化另一个对象  -----  调用拷贝构造函数
-		Date d6 = d5;
+		Date d6 = d5;	//等价于 Date d6(d5);
 
 		//已经存在的两个对象之间复制拷贝  -----  赋值运算符重载函数
 		d1 = d6;
-
-		
-
 	}
 }
 
@@ -107,8 +106,18 @@ void TestDate() {
 	d3 -= 100;
 	d4.Print();*/
 }
+void TestDate2() {
+	Date d1(2025, 2, 12);
+	// 都要++，前置++返回++后的对象， 后置++返回++前的对象
+	++d1;	//d1.operator();
+	d1.Print();
+	d1++;	//d1.operator(0);
+	d1.Print();
+
+}
 int main() {
-	//TestSpace_operator:: Test_operator();
-	TestDate();
+
+	//TestDate();
+	TestDate2();
 	return 0;
 }
