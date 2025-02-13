@@ -40,6 +40,9 @@ bool Date::operator!=(const Date& d) {
 
 //这样写 是+= 会修改当前对象
 Date& Date::operator+=(const int day) {
+	if (day < 0) {
+		return *this -= -day;
+	}
 	this->_day += day;	//修改了当前对象，所以实现的是+=
 	while(this->_day > GetMonthDay(_year, _month)) {
 		_day -= GetMonthDay(_year, _month);
@@ -89,19 +92,60 @@ Date Date::operator++(int) {
 }
 
 Date& Date::operator-=(const int day) {
+	if (day < 0) {	//考虑输入为负数的情况， - 复用了 -= ，因此只需要改-=
+		return *this += -day;
+	}
 	this->_day -= day;
 	while (_day <= 0) {
-		_day += GetMonthDay(_year, _month-1);
-		_month--;
+		--_month;	//--之后，可能-完之后变成0
 		while (_month <= 0) {
 			_year--;
 			_month = 12;
 		}
+		//借完位才可以加天数
+		_day += GetMonthDay(_year, _month);
 	}
 	return *this;
 }
 
 Date Date::operator-(const int day) {
-	Date temp = *this;
-	return (temp -= day);
+	Date temp = *this;	//此处是 拷贝构造
+	temp -= day;
+	return temp;
 }
+
+//前置--
+Date& Date::operator--() {
+	*this -= 1;
+	return *this;
+}
+//因此自定义类型，应该多用前置++ --,效率更高
+Date Date::operator--(int) {	//占位参数，构成参数
+	Date temp(*this);
+	*this -= 1;
+	return temp;
+}
+// d1 - d2
+int Date::operator-(const Date& d) {
+	//默认this比d大，默认算出的值是正的
+	Date max = *this;
+	Date min = d;
+	int flag = 1;
+	if (*this < d) {
+		max = d;
+		min = *this;
+		flag = -1;
+	}
+
+	int days = 0;
+	while (min < max) {
+		min++;
+		days++;
+	}
+	return days * flag;
+}
+
+void Date::operator<<(std::ostream& out) {
+
+}
+

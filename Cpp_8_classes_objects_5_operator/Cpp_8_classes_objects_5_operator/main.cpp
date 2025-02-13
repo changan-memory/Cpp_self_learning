@@ -12,7 +12,7 @@ namespace TestSpace_operator {
 		void Print() {
 			cout << this->_day << "--" << this->_month << "--" << this->_day << endl;
 		}
-
+		//内置类型，转换成
 		//操作符是几个操作数，operator函数就有几个参数(应该包括上隐含的this指针参数)
 		//也可以全局重载，但在类内重载更方便，可以直接访问私有成员
 		bool operator<(const Date& d) {	//自定义类型，最好传引用，类内不能修改，加上const
@@ -115,9 +115,53 @@ void TestDate2() {
 	d1.Print();
 
 }
+void TestDate3() {
+	Date d1(2025, 2, 13);
+	d1 -= 50;
+	d1.Print();
+
+	Date d2(2025, 2, 13);
+	d2 += -10000;
+	d2.Print();
+}
+void TestDate4() {
+	Date d1(2025, 2, 13);
+	Date ret1 = d1--;
+	ret1.Print();
+	d1.Print();
+
+	Date d2(2024, 2, 13);
+	Date ret2 = --d2;
+	ret2.Print();
+	d2.Print();
+}
+void TestDate5() {
+	Date d1(2025, 2, 13);
+	Date d2(1949, 10, 1);
+	cout << d1 - d2 << endl;
+	cout << d2 - d1 << endl;
+}
+void TestDate6() {
+	Date d1(2025, 2, 13);
+	Date d2(1949, 10, 1);
+	//流插入运算符 <<  ,操作数是两个对象， cout 是ostream的一个类对象
+	//流插入不能写成成员函数？
+	cout << d1 << endl;
+}
 int main() {
 
 	//TestDate();
-	TestDate2();
+	//TestDate2();
+	//TestDate3();
+	//TestDate4();
+	TestDate5();
+
+
+	/*int i = 1, j = 11;
+	Date d1(2025, 2, 13);
+	Date d2(2024, 2, 13);
+
+	bool ret1 = d1 < d2;
+	bool ret2 = i < j;*/
 	return 0;
 }

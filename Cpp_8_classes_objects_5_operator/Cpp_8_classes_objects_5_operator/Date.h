@@ -38,14 +38,18 @@ public:
 	// d1 + 100
 	Date operator+(const int day);
 	Date& operator+=(const int day);	//有返回值，是为了满足+=的连续赋值
-	Date& operator++();
-	Date operator++(int);	//
+	Date& operator++();		//前置++	编译器规则，前置++重载时，直接重载
+	Date operator++(int);	//后置++	后置++重载时，要加一个参数用于占位
 
 
-
-	Date operator-(const int day);
 	Date& operator-=(const int day);
+	Date operator-(const int day);
+	Date& operator--();
+	Date operator--(int);
 
+	int operator-(const Date& d);	//实现两个日期的相减
+
+	void operator<<(std::ostream& out);
 private:
 	int _year;
 	int _month;
