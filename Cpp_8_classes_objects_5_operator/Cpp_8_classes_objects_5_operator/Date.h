@@ -3,12 +3,13 @@
 
 #include <assert.h>
 #include <iostream>
+using namespace std;
 
 #endif
 
 
 
-using namespace std;
+
 
 //实现一个日期类，表示日期的话，全是内置类型成员
 // 拷贝构造不需要写，赋值重载不需要写，析构也不需要写
