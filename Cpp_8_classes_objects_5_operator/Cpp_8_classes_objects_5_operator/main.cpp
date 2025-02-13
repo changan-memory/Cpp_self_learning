@@ -5,6 +5,7 @@ namespace TestSpace_operator {
 	class Date {
 	public:
 		Date(int year = 2025, int month = 2, int day = 22) {
+			//检查数据的合理性
 			this->_year = year;
 			this->_month = month;
 			this->_day = day;
@@ -144,9 +145,20 @@ void TestDate5() {
 void TestDate6() {
 	Date d1(2025, 2, 13);
 	Date d2(1949, 10, 1);
+	Date d3(2020, 3, 3);
 	//流插入运算符 <<  ,操作数是两个对象， cout 是ostream的一个类对象
 	//流插入不能写成成员函数？
-	cout << d1 << endl;
+	//因为Date对象默认占用第一个参数，就是做了左操作数
+	//写出来就一定是下面这样子，不符合使用习惯
+	//d1 << cout;		// d1.operator<<(cout);  //第一个参数是左操作数，第二个参数是右操作数
+	//d1.operator<<(cout);
+	
+	cout << d1;
+	//从左往右执行，d2, d1, d1 依次流入cout，因此每次调用后都需要返回cout
+	cout << d3 << d2 << d1;		//解决连续cout的问题
+
+	//数据流入 d1 后，返回in对象，接着流入d2，流提取运算符，就是把终端的内容提取到内存中
+	cin >> d1 >> d2;
 }
 int main() {
 
@@ -154,7 +166,8 @@ int main() {
 	//TestDate2();
 	//TestDate3();
 	//TestDate4();
-	TestDate5();
+	//TestDate5();
+	TestDate6();
 
 
 	/*int i = 1, j = 11;

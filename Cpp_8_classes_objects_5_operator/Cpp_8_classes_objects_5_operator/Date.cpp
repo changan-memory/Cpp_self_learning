@@ -1,10 +1,5 @@
 #include "Date.h"
 
-Date::Date(int year, int month, int day) {
-	_year = year;
-	_month = month;
-	_day = day;
-}
 
 bool Date::operator<(const Date& d) {
 	if (this->_year < d._year)
@@ -145,7 +140,32 @@ int Date::operator-(const Date& d) {
 	return days * flag;
 }
 
-void Date::operator<<(std::ostream& out) {
+//void Date::operator<<(std::ostream& out) {	//第一个参数是 this ，第二个参数是引用
+//	//引用传值，out是cout的别名
+//	out << this->_year << "年" << _month << "月" << _day << "日" << endl;
+//}
 
+//重载成全局函数，没办法访问私有成员变量，C++中会用友元来解决
+//void operator<<(const ostream& out, const Date& d)	//流插入就是往cout里插入数据，如果加了const，还怎么插入
+ostream& operator<<(std::ostream& out, const Date& d) {
+	out << d._year << "年" << d._month << "月" << d._day << "日" << endl;
+	return out;
+}
+
+//流提取 cin 不能加const, 因为提取后会，内部会更改状态值
+istream& operator>>(std::istream& in, Date& d) {
+	int year = 0, month = 0, day = 0;
+	in >> year >> month >> day;
+	//检查输入数据的合法性
+	if (month > 0 && month < 13 && day > 0 && day < d.GetMonthDay(year, month)) {
+		d._year = year;
+		d._month = month;
+		d._day = day;
+	}
+	else {
+		cout << "非法日期" << endl;
+		assert(false);
+	}
+	return in;
 }
 

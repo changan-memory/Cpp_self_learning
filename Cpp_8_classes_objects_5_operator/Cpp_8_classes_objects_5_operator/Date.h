@@ -1,14 +1,35 @@
-#pragma once
+#ifndef __DATE_H
+#define __DATE_H
+
+#include <assert.h>
 #include <iostream>
-using std::endl;
-using std::cin;
-using std::cout;
+
+#endif
+
+
+
+using namespace std;
 
 //实现一个日期类，表示日期的话，全是内置类型成员
 // 拷贝构造不需要写，赋值重载不需要写，析构也不需要写
 class Date {
+	//友元函数声明   可以使类外的函数  不受访问权限的控制
+	friend ostream& operator<<(std::ostream& out, const Date& d);
+	friend istream& operator>>(std::istream& in, Date& d);
+
 public:
-	Date(int year = 2025, int month = 2, int day = 11);
+	Date(int year = 2025, int month = 2, int day = 11) {
+		//要从构造处和输入处检查非法日期
+		if (month > 0 && month < 13 && day > 0 && day < GetMonthDay(year, month)) {
+			_year = year;
+			_month = month;
+			_day = day;
+		}
+		else {
+			cout<<"非法日期"<<endl;
+			assert(false);
+		}
+	}
 	void Print() { 
 		cout << _year << "--" << _month << "--" << _day << endl;
 	}
@@ -49,7 +70,12 @@ public:
 
 	int operator-(const Date& d);	//实现两个日期的相减
 
-	void operator<<(std::ostream& out);
+	//流插入不能写成成员函数？
+	//因为Date对象默认占用第一个参数，就是做了左操作数
+	//写出来就一定是下面这样子，不符合使用习惯
+	// d1 << cout;		// d1.operator<<(cout);  //第一个参数是左操作数，第二个参数是右操作数
+	// cout << d1;	要让cout成为第一个参数，把<<重载成全局的
+	//void operator<<(std::ostream& out);
 private:
 	int _year;
 	int _month;
