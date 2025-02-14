@@ -31,11 +31,12 @@ public:
 			assert(false);
 		}
 	}
-	void Print() { 
+	void Print() const { 
 		cout << _year << "--" << _month << "--" << _day << endl;
 	}
 	//获取某年中某个月的天数
-	int GetMonthDay(int year, int month) {
+	//加不加const都可，最优的办法是写成 static 成员函数
+	int GetMonthDay(int year, int month) const {
 		//局部静态
 		static int daysArray[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		//每次调用函数都需要在栈区创建数组，干脆将他变成静态数组
@@ -50,26 +51,25 @@ public:
 		//内置类型没必要用引用返回，引用的底层也需要开指针，差距不大
 	}
 
-	bool operator<(const Date& d);
-	bool operator==(const Date& d);
-	bool operator>(const Date& d);
-	bool operator>=(const Date& d);
-	bool operator<=(const Date& d);
-	bool operator!=(const Date& d);
+	bool operator<(const Date& d) const ;
+	bool operator==(const Date& d) const ;
+	bool operator>(const Date& d) const ;
+	bool operator>=(const Date& d) const ;
+	bool operator<=(const Date& d) const ;
+	bool operator!=(const Date& d) const;
 
 	// d1 + 100
-	Date operator+(const int day);
+	Date operator+(const int day) const ;	//加不会改变对象本身
 	Date& operator+=(const int day);	//有返回值，是为了满足+=的连续赋值
 	Date& operator++();		//前置++	编译器规则，前置++重载时，直接重载
 	Date operator++(int);	//后置++	后置++重载时，要加一个参数用于占位
 
-
+	Date operator-(const int day) const;
 	Date& operator-=(const int day);
-	Date operator-(const int day);
 	Date& operator--();
 	Date operator--(int);
 
-	int operator-(const Date& d);	//实现两个日期的相减
+	int operator-(const Date& d) const;	//实现两个日期的相减
 
 	//流插入不能写成成员函数？
 	//因为Date对象默认占用第一个参数，就是做了左操作数

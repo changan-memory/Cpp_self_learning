@@ -1,7 +1,7 @@
 #include "Date.h"
 
 
-bool Date::operator<(const Date& d) {
+bool Date::operator<(const Date& d) const {
 	if (this->_year < d._year)
 		return true;
 	else if (this->_year == d._year && this->_month < d._month)
@@ -12,24 +12,24 @@ bool Date::operator<(const Date& d) {
 		return false;
 }
 
-bool Date::operator==(const Date& d) {
+bool Date::operator==(const Date& d) const {
 	return this->_year == d._year 
 		&& this->_month == d._month 
 		&& this->_day == d._day;
 }
 //利用逻辑关系复用
-bool Date::operator<=(const Date& d) {
+bool Date::operator<=(const Date& d) const {
 	return *this < d || *this == d;
 }
 
-bool Date::operator>(const Date& d) {
+bool Date::operator>(const Date& d) const {
 	return !(*this <= d);
 }
 
-bool Date::operator>=(const Date& d) {
+bool Date::operator>=(const Date& d) const {
 	return !(*this < d);
 }
-bool Date::operator!=(const Date& d) {
+bool Date::operator!=(const Date& d) const {
 	return !(*this == d);
 }
 
@@ -53,7 +53,7 @@ Date& Date::operator+=(const int day) {
 	return *this;*/
 }
 //先实现+=,之后+再复用+=更好   比+中复用+=更好
-Date Date::operator+(const int day) {
+Date Date::operator+(const int day) const {
 	//拷贝构造一个
 	Date temp(*this);	//Date temp = *this;	//两种写法本质上是一样的
 	temp += day;
@@ -103,7 +103,7 @@ Date& Date::operator-=(const int day) {
 	return *this;
 }
 
-Date Date::operator-(const int day) {
+Date Date::operator-(const int day) const {
 	Date temp = *this;	//此处是 拷贝构造
 	temp -= day;
 	return temp;
@@ -121,7 +121,7 @@ Date Date::operator--(int) {	//占位参数，构成参数
 	return temp;
 }
 // d1 - d2
-int Date::operator-(const Date& d) {
+int Date::operator-(const Date& d) const {
 	//默认this比d大，默认算出的值是正的
 	Date max = *this;
 	Date min = d;

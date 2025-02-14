@@ -160,6 +160,40 @@ void TestDate6() {
 	//数据流入 d1 后，返回in对象，接着流入d2，流提取运算符，就是把终端的内容提取到内存中
 	cin >> d1 >> d2;
 }
+
+void Test_const() {
+	//问题的根源是形参this和实参的权限不匹配
+	Date d1(2025, 2, 14);
+	d1.Print();	//转换 -> d1.Print(&d1); 
+
+	const Date d2(2024, 2, 14);	//d2的类型是const Date，它的地址是const Date* 类型的
+	d2.Print();	//转换 -> d2.Print(&d2);
+
+	//实际上 Print() 为  Print(Date* this)， 隐含的this指针类型是 Date*，也就是指向非const Date对象的指针
+	//d1   Date* this = &d1;
+	//d2   Date* this = &d2;	// d2的地址是const Date* 类型的，因此不匹配
+	//如何解决?   
+	//将 Date* this 变成 const Date* this
+	//const Date* this = &d1;
+	//const Date* this = &d2;
+
+	//const Date* this = &d1, 加上const后会影响d1原来的可修改性吗
+
+	//这里的 const 修饰的是指针指向的内容，即 this 指针所指向的 Date 对象是 const 的，
+	//意味着你   不能通过 this 指针来修改 d1 对象的内容
+	//加上后， 无法通过 this 指针来修改 d1 的数据成员，但这不会影响 d1 本身。
+	//你仍然可以通过其他非 const 指针或者引用来修改 d1，只要 d1 不是本身是 const 对象。
+
+	//const 修饰 this 后， 普通对象可以传(权限缩小)，const对象也可以传(权限平移)
+	//只要成员函数内部不修改成员变量，都应该加const
+	//这样const对象和普通对象都可以调用
+
+	//const Date* this = &d1; 只会限制通过 this 指针修改 d1 的内容，不会影响 d1 自身的可修改性。
+
+	//结论：
+	// 不能所有的成员函数都加const ,要修改成员变量的函数不能加
+	// 只要成员函数内部不修改成员变量，都应该加const, 这样const对象和普通对象都可以调用
+}
 int main() {
 
 	//TestDate();
@@ -167,7 +201,7 @@ int main() {
 	//TestDate3();
 	//TestDate4();
 	//TestDate5();
-	TestDate6();
+	//TestDate6();
 
 
 	/*int i = 1, j = 11;

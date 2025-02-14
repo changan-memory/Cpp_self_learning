@@ -67,41 +67,75 @@
 #include <iostream>
 using namespace std;
 
-class Stack {
-	typedef int DataType;
+//class Stack {
+//	typedef int DataType;
+//public:
+//	Stack(size_t capacity = 10) {
+//		_array = (DataType*)malloc(capacity * sizeof(DataType));
+//		if (nullptr == _array) {
+//			perror("malloc申请空间失败");
+//			return;
+//		}
+//		_size = 0;
+//		_capacity = capacity;
+//	}
+//	void Push(const DataType& data) {
+//		// CheckCapacity();
+//		_array[_size] = data;
+//		_size++;
+//	}
+//	~Stack() {
+//		if (_array) {
+//			free(_array);
+//			_array = nullptr;
+//			_capacity = 0;
+//			_size = 0;
+//		}
+//	}
+//private:
+//	DataType* _array;
+//	size_t _size;
+//	size_t _capacity;
+//};
+//int main() {
+//	Stack s1;
+//	s1.Push(1);
+//	s1.Push(2);
+//	Stack s2;
+//	s2 = s1;
+//	return 0;
+//}
+
+class Date {
 public:
-	Stack(size_t capacity = 10) {
-		_array = (DataType*)malloc(capacity * sizeof(DataType));
-		if (nullptr == _array) {
-			perror("malloc申请空间失败");
-			return;
-		}
-		_size = 0;
-		_capacity = capacity;
+	Date(int year = 2025, int month = 2, int day = 22){
+		this->_year = year;
+		this->_month = month;
+		this->_day = day;
 	}
-	void Push(const DataType& data) {
-		// CheckCapacity();
-		_array[_size] = data;
-		_size++;
-	}
-	~Stack() {
-		if (_array) {
-			free(_array);
-			_array = nullptr;
-			_capacity = 0;
-			_size = 0;
+	Date& operator=(const Date& d) {
+		if (this != &d) {
+			this->_year = d._year;
+			this->_month = d._month;
+			this->_day = d._day;
 		}
+		return *this;
+	}
+	Date(const Date& d) {
+		cout << "Date(const Date& d) " << endl;
+		_year = d._year;
+		_month = d._month;
+		_day = d._day;
 	}
 private:
-	DataType* _array;
-	size_t _size;
-	size_t _capacity;
+	int _year;
+	int _month;
+	int _day;
 };
 int main() {
-	Stack s1;
-	s1.Push(1);
-	s1.Push(2);
-	Stack s2;
-	s2 = s1;
-	return 0;
+	Date d1(2025, 2, 12);
+	Date d2(2024, 3, 13);
+	//思考会分别调用什么函数
+	Date d3 = d1;	//拷贝构造  还是  赋值运算符重载 ?
+	d2 = d1;		//拷贝构造  还是  赋值运算符重载 ?
 }
