@@ -31,7 +31,7 @@ public:
 			assert(false);
 		}
 	}
-	void Print() const { 
+	void Print(){ 
 		cout << _year << "--" << _month << "--" << _day << endl;
 	}
 	//获取某年中某个月的天数
