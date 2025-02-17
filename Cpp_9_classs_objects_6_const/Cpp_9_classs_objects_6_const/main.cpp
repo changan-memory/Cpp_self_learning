@@ -18,9 +18,9 @@ public:
 		return this;
 	}
 private:
-	int _year = 1;
-	int _month = 1;
-	int _day = 1;
+	int _year = 2025;
+	int _month = 2;
+	int _day = 17;
 };
 int main() {
 	Date d1;
@@ -29,3 +29,17 @@ int main() {
 	cout << &d2 << endl;
 	return 0;
 }
+
+//class Date {
+//private:
+//	int _year = 2025;
+//	int _month = 2;
+//	int _day = 17;
+//};
+//int main() {
+//	Date d1;
+//	const Date d2;	//const类型对象声明时必须初始化，因为只有这一次的初始化机会
+//	cout << &d1 << endl;
+//	cout << &d2 << endl;
+//	return 0;
+//}
