@@ -1,30 +1,35 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-void Test_new(){
-	//C
-	int* p1 = (int*)malloc(sizeof(int));
-	free(p1);
-	//Cpp
-	int* p2 = new int;
-	delete p2;
-
-	//开 10个int的 数组
-	//C
-	int* p3 = (int*)malloc(sizeof(int) * 10);
-	//Cpp	申请存放10个int的一块空间
-	int* p4 = new int[10];	//数组不能初始化
-	delete[] p4;
-	//申请一个 int ,初始化为 10
-	int* p5 = new int(10);
-	delete p5;
-	// new 数组时初始化
-	int* p6 = new int[10] {1, 2, 3};
-	delete[] p6;
-}
-
+class A {
+public:
+	A(int a = 0)
+		: _a(a)
+	{
+		cout << "A():" << this << endl;
+	}
+	~A(){
+		cout << "~A():" << this << endl;
+	}
+private:
+	int _a;
+};
+//申请的都是虚拟内存
 int main() {
-	
-	Test_new();
+	// new/delete 和 malloc/free最大区别是 new/delete对于【自定义类型】除了开空间还会调用构造函数和析构函数
+	// 一定要 new/delete  malloc/free 匹配使用
+	A* p1 = (A*)malloc(sizeof(A));
+	A* p2 = new A(1);
+
+	free(p1);
+	delete p2;
+	cout << endl;
+	A* p5 = (A*)malloc(sizeof(A) * 3);
+	//调用了构造函数的，用传入的参数初始化
+	//没有初始化的，调用默认构造函数
+	A* p6 = new A[4]{A(1), A(2), A(3)};	//利用匿名对象进行初始化
+
+	free(p5);
+	delete[] p6;
 	return 0;
 }
