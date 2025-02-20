@@ -1,14 +1,6 @@
-#ifndef __DATE_H
-#define __DATE_H
-
 #include <assert.h>
 #include <iostream>
 using namespace std;
-
-#endif
-
-
-
 
 
 //实现一个日期类，表示日期的话，全是内置类型成员
@@ -31,14 +23,19 @@ public:
 			assert(false);
 		}
 	}
-	void Print(){ 
+	void Print() const { 
 		cout << _year << "--" << _month << "--" << _day << endl;
 	}
 	//获取某年中某个月的天数
 	//加不加const都可，最优的办法是写成 static 成员函数
 	int GetMonthDay(int year, int month) const {
 		//局部静态
-		static int daysArray[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		//关键字修饰：
+
+		//const：数组内容不可修改。
+		//static：若在函数内定义，表示数组仅初始化一次，且生命周期持续到程序结束；
+		// 若在类中定义，表示所有实例共享此数组。
+		const static int daysArray[13] = { 0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		//每次调用函数都需要在栈区创建数组，干脆将他变成静态数组
 		//四年一润，百年不润，四百年一润
 		if (month == 2 && ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0))) {
