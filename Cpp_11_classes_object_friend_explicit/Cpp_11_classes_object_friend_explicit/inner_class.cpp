@@ -8,7 +8,7 @@ public:
 	//类型受到访问限定符的限制
 	class B {	// B天生就是A的友元  内部类是外部类的友元
 	public:
-		void foo(const A& a){
+		void print(const A& a){
 			cout << k << endl; 
 			cout << a.h << endl;//OK
 		}

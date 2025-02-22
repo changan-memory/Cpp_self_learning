@@ -57,9 +57,9 @@ void Test2() {
 	//A& ref_a = Func5();	//返回的是临时变量，临时变量具有常性，需要用常引用
 	const A& ref_a = Func5();
 }
-int main() {
-	//TestFunc();
-	Test2();
-
-	return 0;
-}
+//int main() {
+//	//TestFunc();
+//	Test2();
+//
+//	return 0;
+//}
