@@ -13,6 +13,7 @@ class Date {
 public:
 	Date(int year = 2025, int month = 2, int day = 11) {
 		//要从构造处和输入处检查非法日期
+		//由于要检查非法日期，因此不便使用初始化列表初始化
 		if (month > 0 && month < 13 && day > 0 && day < GetMonthDay(year, month)) {
 			_year = year;
 			_month = month;

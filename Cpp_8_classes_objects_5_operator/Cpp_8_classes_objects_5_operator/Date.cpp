@@ -39,7 +39,7 @@ Date& Date::operator+=(const int day) {
 		return *this -= -day;
 	}
 	this->_day += day;	//修改了当前对象，所以实现的是+=
-	while(this->_day > GetMonthDay(_year, _month)) {
+	while (this->_day > GetMonthDay(_year, _month)) {
 		_day -= GetMonthDay(_year, _month);
 		++_month;
 		if (_month == 13) {
@@ -168,4 +168,3 @@ istream& operator>>(std::istream& in, Date& d) {
 	}
 	return in;
 }
-
