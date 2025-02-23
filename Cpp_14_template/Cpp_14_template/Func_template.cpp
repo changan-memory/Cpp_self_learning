@@ -64,25 +64,25 @@ T* Alloc(int n) {
 	return new T[n];
 }
 
-//int main() {
-//	//函数模板的实例化
-//	int a1 = 10, a2 = 20;
-//	double d1 = 10.1, d2 = 20.1;
-//	//编译器自动推导 进行函数模板的实例化
-//	//通过实参传递的类型，推演T的类型
-//	cout << Add(a1, a2) << endl;
-//	cout << Add(d1, d2) << endl;
-//	cout << Add(a1, (int)d1) << endl;	//通过强制类型转换，确保推导的结果一致
-//	cout << Add((double)a1, d1) << endl;
-//
-//	//函数模板的 显式实例化，用指定类型实例化，会发生隐式类型转换
-//	cout << Add<int>(a1, d1) << endl;
-//	cout << Add<double>(a1, d1) << endl;
-//
-//	//显式实例化的应用场景
-//	//有些函数不能自动类型推导，需要显式指定
-//	int* p_int = Alloc<int>(10);
-//	double* p_double = Alloc<double>(20);
-//
-//	return 0;
-//}
+int main() {
+	//函数模板的实例化
+	int a1 = 10, a2 = 20;
+	double d1 = 10.1, d2 = 20.1;
+	//编译器自动推导 进行函数模板的实例化
+	//通过实参传递的类型，推演T的类型
+	cout << Add(a1, a2) << endl;
+	cout << Add(d1, d2) << endl;
+	cout << Add(a1, (int)d1) << endl;	//通过强制类型转换，确保推导的结果一致
+	cout << Add((double)a1, d1) << endl;
+
+	//函数模板的 显式实例化，用指定类型实例化，会发生隐式类型转换
+	cout << Add<int>(a1, d1) << endl;
+	cout << Add<double>(a1, d1) << endl;
+
+	//显式实例化的应用场景
+	//有些函数不能自动类型推导，需要显式指定
+	int* p_int = Alloc<int>(10);
+	double* p_double = Alloc<double>(20);
+
+	return 0;
+}

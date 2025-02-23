@@ -30,9 +30,9 @@ public:
 // Stack<double> st2; // double
 // 类模板和函数模板的声明和定义分离：第12集的55分钟 ----- 1小时5分钟
 
-int main() {
-	Stack<int> s1;	// int类型的栈
-	Stack<double> s2;	// double类型的栈
-	Stack<char> s3;	// char类型的栈
-	return 0;
-}
+//int main() {
+//	Stack<int> s1;	// int类型的栈
+//	Stack<double> s2;	// double类型的栈
+//	Stack<char> s3;	// char类型的栈
+//	return 0;
+//}
