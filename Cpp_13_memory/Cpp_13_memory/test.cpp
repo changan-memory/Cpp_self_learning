@@ -55,11 +55,11 @@ void TestList() {
 	struct ListNode* nn3 = new ListNode(3);
 	return;
 }
-int main() {
-	//Test_new();
-	TestList();
-	return 0;
-}
+//int main() {
+//	//Test_new();
+//	TestList();
+//	return 0;
+//}
 
 
 
