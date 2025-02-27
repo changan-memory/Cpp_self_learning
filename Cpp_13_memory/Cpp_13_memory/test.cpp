@@ -55,9 +55,29 @@ void TestList() {
 	struct ListNode* nn3 = new ListNode(3);
 	return;
 }
+void Test_new_1() {
+	//开一个int
+	int* p1 = (int*)malloc(sizeof(int));
+	int* p2 = new int;
+
+	//申请存放10个int的一块空间
+	int* p3 = (int*)malloc(sizeof(int) * 10);
+	int* p4 = new int[10];	//int* p4 = new int[10](0);		//数组不能用()来初始化
+	//申请一个 int ,初始化为 10
+	int* p5 = new int(10);	//圆括号 
+
+	// new 数组时初始化
+	int* p6 = new int[10] {1, 2, 3};
+
+	free(p1);
+	delete p2;
+	free(p3);
+	delete[] p4;
+	delete p5;
+	delete[] p6;
+}
 //int main() {
-//	//Test_new();
-//	TestList();
+//	Test_new_1();
 //	return 0;
 //}
 

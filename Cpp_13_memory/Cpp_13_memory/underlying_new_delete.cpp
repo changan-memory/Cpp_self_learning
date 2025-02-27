@@ -44,7 +44,7 @@ void TestNew_1() {
 	int* p2 = new int(1);
 	delete p2;
 
-	A* p3 = (A*)operator new(sizeof(A));
+	A* p3 = (A*)operator new(sizeof(A) * 10);
 	operator delete(p3);
 
 	A* p4 = new A();
@@ -53,7 +53,7 @@ void TestNew_1() {
 
 //int main() {
 //	//operator new/delete
-//	//operator new/delete  的用法和malloc/free 的用法相同
+//	//operator new/delete  的用法和 malloc/free 的用法相同
 //	
 //	A* p3 = (A*)operator new(sizeof(A));
 //	operator delete(p3);
