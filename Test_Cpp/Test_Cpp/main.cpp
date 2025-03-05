@@ -141,25 +141,53 @@ using namespace std;
 //}
 
 //const
-class Date {
-public:
-	Date(int year = 2025, int month = 2, int day = 22) {
-		this->_year = year;
-		this->_month = month;
-		this->_day = day;
-	}
-	void Print() {
-		cout << this->_day << "--" << this->_month << "--" << this->_day << endl;
-	}
-private:
-	int _year;
-	int _month;
-	int _day;
-};
-int main() {
-	Date d1(2025, 2, 14);
-	d1.Print();
+//class Date {
+//public:
+//	Date(int year = 2025, int month = 2, int day = 22) {
+//		this->_year = year;
+//		this->_month = month;
+//		this->_day = day;
+//	}
+//	void Print() {
+//		cout << this->_day << "--" << this->_month << "--" << this->_day << endl;
+//	}
+//private:
+//	int _year;
+//	int _month;
+//	int _day;
+//};
+//int main() {
+//	Date d1(2025, 2, 14);
+//	d1.Print();
+//
+//	const Date d2(2024, 2, 14);
+//	d2.Print();
+//}
 
-	const Date d2(2024, 2, 14);
-	d2.Print();
+//typedef char* pstring;
+//int main() {
+//	//const pstring p1; //const char* p1;
+//	const pstring* p1; //const char** p1;
+//
+//
+//	return 0;
+//}
+
+void TestFor_1() {
+	int array[] = { 1, 2, 3, 4, 5 };
+	for (int i = 0; i < sizeof(array) / sizeof(array[0]); ++i)
+		array[i] *= 2;
+	for (int* p = array; p < array + sizeof(array) / sizeof(array[0]); ++p)
+		cout << *p << endl;
+}
+void TestFor_2() {
+	int array[] = { 1, 2, 3, 4, 5 };
+	for (auto& e : array)
+		e *= 2;
+	for (auto& e : array)
+		cout << e << endl;
+}
+int main() {
+	TestFor_2();
+	return 0;
 }
