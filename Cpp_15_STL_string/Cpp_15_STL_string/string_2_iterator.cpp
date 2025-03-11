@@ -92,8 +92,31 @@ void Test_2() {
 
 }
 
-int main() {
-	//Test_1();
-	Test_2();
-	return 0;
+// 反向迭代器
+void Test_3() {
+	string s1("hello world");
+	//string::reverse_iterator rit = s1.rbegin();
+	auto rit = s1.rbegin();
+	//范围for不能倒着遍历容器
+	while (rit != s1.rend()) {
+		cout << (*rit) << " ";
+		++rit;
+	}
+	cout << endl;
 }
+// const对象需要用const迭代器
+void Test_4(const string& str) {
+	//string::reverse_iterator rit = str.rbegin();
+	string::const_reverse_iterator rit = str.rbegin();
+	while (rit != str.rend()) {
+		cout << (*rit) << " ";
+		++rit;
+	}
+	cout << endl;
+}
+//int main() {
+//	//Test_1();
+//	//Test_2();
+//	Test_3();
+//	return 0;
+//}
