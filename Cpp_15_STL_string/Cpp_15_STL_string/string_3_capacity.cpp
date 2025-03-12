@@ -11,10 +11,13 @@ using std::list;
 using namespace std;
 
 //capacity相关接口
-int main() {
+void Test_3_1() {
 	string s1("hello world");
 	cout << s1.size() << endl;
 	cout << s1.length() << endl;
 	cout << s1.capacity() << endl;
+}
+int main() {
+	Test_3_1();
 	return 0;
 }
