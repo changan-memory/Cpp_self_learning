@@ -130,11 +130,87 @@ void Test_v4() {
 	}
 	cout << endl;
 }
+
+void Test_v5() {
+	//用C语言风格的数组进行初始化
+	int arr[] = { 66, 77, 12, 3, 3, 3, 3, 39, 6, 2 };
+	//容器的迭代器的end指向的是最后一个元素的下一个位置
+	vector<int> v1(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	for (auto& e : v1) {
+		cout << e << " ";
+	}
+	cout << endl;
+
+	//尾插和尾删
+	v1.push_back(12);
+	for (auto& e : v1) {
+		cout << e << " ";
+	}
+	cout << endl;
+	v1.pop_back();
+	for (auto& e : v1) {
+		cout << e << " ";
+	}
+	cout << endl;
+
+	//利用 insert 和 erase 实现头插和头删  insert  在传入的位置之前插入
+	v1.insert(v1.begin()+1, 100);	//可以配合加减来实现任意位置的插入
+	for (auto& e : v1) {
+		cout << e << " ";
+	}
+	cout << endl;
+	//删除第一个元素
+	v1.erase(v1.begin());
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
+}
+void Test_v7() {
+	//用C语言风格的数组进行初始化
+	int arr[] = { 66, 77, 12, 3, 39, 6, 3, 2, 3, 3};
+	//容器的迭代器的end指向的是最后一个元素的下一个位置
+	vector<int> v1(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	vector<int> v2(arr, arr + sizeof(arr) / sizeof(arr[0]));
+	for (auto& e : v1) {
+		cout << e << " ";
+	}
+	cout << endl;
+
+	//配合算法库中的find来删除数组中的指定元素 
+	// find 返回对应下标的迭代器，如果找不到，返回 容器的end
+	//这样写删除的是 数组中的 第一个匹配的元素
+	vector<int> ::iterator pos = find(v1.begin(), v1.end(), 3);
+	if (pos != v1.end()) {
+		v1.erase(pos);
+	}
+	for (auto& e : v1) {
+		cout << e << " ";
+	}
+	cout << endl;
+
+	//删除数组中所有的 3 ？？
+	//这里会涉及迭代器失效的问题  --  底层实现时要解决
+	vector<int> ::iterator pos_1 = std::find(v2.begin(), v2.end(), 3);
+	while (pos_1 != v2.end()) {
+		vector<int>::iterator pos_tmp;
+		v1.erase(pos_1);
+		//pos_1 = std::find(pos_1+1, v2.end(), 3);  //这样写涉及迭代器失效
+		pos_tmp = std::find(v2.begin(), v2.end(), 3);	//可以再从头开始找，但效率比较低
+	}
+	for (auto& e : v2) {
+		cout << e << " ";
+	}
+	cout << endl;
+
+}
+
 int main() {
 	//Test_v1();
 	//Test_v2();
 	//Test_v3();
-	Test_v4();
+	//Test_v4();
+	//Test_v5();
+	Test_v7();
 	return 0;
 }
 
