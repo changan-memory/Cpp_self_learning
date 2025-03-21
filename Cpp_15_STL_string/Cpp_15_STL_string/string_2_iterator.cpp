@@ -3,19 +3,24 @@
 #include <vector>
 #include <list>
 #include <algorithm>
-using std::cout;
-using std::endl;
-using std::string;
-using std::vector;
-using std::list;
+//using std::cout;
+//using std::endl;
+//using std::string;
+//using std::vector;
+//using std::list;
 using namespace std;
+
+
 //test operator[]
 void Test_1() {
 	string s0;
 	string s1("hello world");	//底层是一个字符数组，结尾有一个\0
 	cout << s1 << endl;
-	cout << s1.size() << endl;	// \0不算大小，size是 11,\0是一个标识字符串结束的特殊字符，不算有效字符
 
+	//遍历string,使用[]
+	//[] 有普通对象重载版本  和  const对象  重载版本
+	cout << s1.size() << endl;	// \0不算大小，size是 11,\0是一个标识字符串结束的特殊字符，不算有效字符
+	//size计算出的大小为 11,不包括 '\0',因此不会访问到'\0'
 	for (size_t i = 0; i < s1.size(); ++i) {
 		cout << s1[i] << " ";
 	}
@@ -26,9 +31,11 @@ void Test_1() {
 	}
 
 	char s3[] = "hello world";
+	//本质区别
 	s3[0]++;	//底层: *(s3+0)
 	s1[0]++;	//底层: s1.operator[](&s1, 0)
 }
+
 //迭代器，暂且理解成像指针一样的东西
 void Test_2() {
 	string s1("hello world");	//底层是一个字符数组，结尾有一个\0
@@ -95,28 +102,43 @@ void Test_2() {
 // 反向迭代器
 void Test_3() {
 	string s1("hello world");
+
+	//对于类的迭代器类型，auto更加智能
 	//string::reverse_iterator rit = s1.rbegin();
 	auto rit = s1.rbegin();
-	//范围for不能倒着遍历容器
+	//范围for不能倒着遍历容器，范围for只能使用正向迭代器
 	while (rit != s1.rend()) {
 		cout << (*rit) << " ";
 		++rit;
 	}
 	cout << endl;
 }
+
 // const对象需要用const迭代器
 void Test_4(const string& str) {
 	//string::reverse_iterator rit = str.rbegin();
-	string::const_reverse_iterator rit = str.rbegin();
-	while (rit != str.rend()) {
-		cout << (*rit) << " ";
-		++rit;
+	//string::const_reverse_iterator rit = str.rbegin();		//反向迭代器
+	// it不是常量，(*it)才是常量
+	auto it = str.cbegin();		//const 对象迭代器
+	while (it != str.cend()) {
+		cout << (*it) << "";
+		++it;
 	}
 	cout << endl;
+
+	//四种迭代器
+	// iterator		普通迭代器
+	// const_iterator	const对象 迭代器
+	// 
+	// reverse_itreator		反向迭代器
+	// const_reverse_itreator		const对象 反向迭代器
 }
+
 //int main() {
 //	//Test_1();
 //	//Test_2();
-//	Test_3();
+//	//Test_3();
+//	const string cstring("hello Linux");
+//	Test_4(cstring);
 //	return 0;
 //}
