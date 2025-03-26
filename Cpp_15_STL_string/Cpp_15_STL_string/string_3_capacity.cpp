@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include <iostream>
 #include <string>
 #include <vector>
@@ -90,15 +91,94 @@ void Test_replace() {
 	cout << s1 << endl;
 
 	s1.replace(6, 23, "yyyy");
-	cout << s1 << endl;
-}
-int main() {
-	//Test_3_1();
-	//Test_3_2();
-	//Test_resize();
-	//Test_access();
-	//Test_insert_erase();
-	Test_replace();
+	cout << s1 << endl;		//底层非常耗时
 
-	return 0;
+	string s2("hello world hello Linux");	//把所有的空格替换成%
+	//可以用replace，但以下为最舒服的方法
+	string s3;
+	for (auto& ch : s2) {
+		if (ch != ' ')
+			s3 += ch;
+		else
+			s3 += '%';
+	}
+	s2 = s3;
+	cout << s2 << endl;		//调用s2对象的<<重载
+	cout << s2.c_str() << endl;		//返回const char*
+	// c_str 是为了更好的与C语言的接口配合
+	string filename = "test.cpp";
+	filename += ".zip";
+	FILE* fout = fopen(filename.c_str(), "r");
 }
+void Test_find() {
+	string url = "https://cplusplus.com/reference/string/string/";
+	//分离 协议 域名  资源名
+	string protocol;
+	size_t pos1 = url.find("://");
+	if (pos1 != string::npos) {
+		protocol += url.substr(0, pos1);	//从下标0开始，查找指定长度的字符串
+	}
+	string domain;
+	string uri;
+	size_t pos2 = url.find("/", pos1 + 3);
+	if (pos2 != string::npos) {
+		domain += url.substr(pos1 + 3, pos2 - (pos1 + 3));
+		uri = url.substr(pos2+1);
+	}
+	cout << url << endl;
+	cout << protocol << endl << domain << endl << uri << endl;
+
+}
+void Test_rfind() {
+	//查找文件的后缀时，可用rfind   从后往前找
+}
+//字符串转换和编码
+void Test_convert() {
+	/*string str1 = to_string(1234);
+	string str2 = to_string(12.34);
+	string str3 = to_string(1234);*/
+
+	//计算机中，字符存储的是ascii码
+	char str1[] = "abcd";
+	char str2[2];
+	str2[0] = 98;
+	cout << str2[0] << endl;
+
+	char str3[] = "你好";
+	cout << sizeof(str3) << endl;
+	cout << str3 << endl;
+
+	str3[1]--;
+	cout << sizeof(str3) << endl;
+	cout << str3 << endl;
+}
+
+//int main() {
+//	//Test_3_1();
+//	//Test_3_2();
+//	//Test_resize();
+//	//Test_access();
+//	//Test_insert_erase();
+//	//Test_replace();
+//	//Test_find();
+//	Test_convert();
+//	return 0;
+//}
+
+////#include <cstddef>
+//#include <iostream>
+//using namespace std;
+//
+//int main() {
+//	string str;
+//	//cin >> str;	//cin和scanf读取数据时，遇到空格或者换行，都会结束，天生读不到字符串中的空格
+//	getline(cin, str);	//默认遇到换行符结束，也可以自己控制
+//	size_t pos = str.rfind(' ');
+//	if (pos != string::npos) {
+//		cout << str.size() - (pos + 1) << endl;
+//	}
+//	else {
+//		cout << str.size() << endl;
+//	}
+//	return 0;
+//}
