@@ -74,18 +74,17 @@ void TestFind() {
 	size_t pos1 = url.find("://");
 	if (pos1 != m_string::string::npos) {
 		m_string::string protocol = url.substr(0, pos1);	//从下标0开始，查找指定长度的字符串
-		cout << protocol.substr(0, pos1).c_str() << endl;
+		cout << protocol.c_str() << endl;
 	}
-	m_string::string domain;
-	m_string::string uri;
 
 	size_t pos2 = url.find("/", pos1 + 3);
 	if (pos2 != string::npos) {
-		domain = url.substr(pos1 + 3, pos2 - (pos1 + 3));
-		uri = url.substr(pos2 + 1);
+		m_string::string domain = url.substr(pos1 + 3, pos2 - (pos1 + 3));
+		cout << domain.c_str() << endl;
+		m_string::string uri = url.substr(pos2 + 1);
+		cout << uri.c_str() << endl;
 	}
 	cout << url.c_str() << endl;
-	cout  << endl << domain.c_str() << endl << uri.c_str() << endl;
 }
 int main() {
 
