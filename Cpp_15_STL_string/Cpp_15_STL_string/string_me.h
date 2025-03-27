@@ -76,19 +76,20 @@ namespace m_string {
 		}
 		//返回c_str			const 修饰this指针指向的对象，可以让普通对象和const对象都可以调
 		//函数内不修改对象，建议加上const
-		const char* c_str() const {
-			return _str;
+		const char* c_str() const { 
+			return _str; 
 		}
+
 		//返回_size
 		size_t size() const {
 			return _size;
 		}
 
+		//[]重载		//const对象调const版本[]    普通对象调普通版本[]
 		char& operator[](size_t pos) {	//返回引用，读写版本
 			assert(pos < _size);
 			return _str[pos];
-		}	//const对象调const版本[]    普通对象调普通版本[]
-
+		}
 		const char& operator[](size_t pos) const {	//只读版本
 			assert(pos < _size);
 			return _str[pos];
