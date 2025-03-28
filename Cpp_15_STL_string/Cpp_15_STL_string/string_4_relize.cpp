@@ -86,12 +86,65 @@ void TestFind() {
 	}
 	cout << url.c_str() << endl;
 }
+void TestResize() {
+	//std::string s("hello world");
+	m_string::string s("hello world");
+	s.resize(8,'x');
+	cout << s.c_str() << endl;
+	cout << s << endl;
+	s.resize(13, 'y');
+	cout << s.c_str() << endl;
+	cout << s << endl;
+	s.resize(20, 'z');
+	cout << s.c_str() << endl;
+	cout << s << endl;
+
+	// c的字符数组，以\0为终止算长度
+	// string不看\0, 以size为终止算长度
+
+	m_string::string s2("hello world");
+	s2 += '\0';
+	s2 += "!!!!!!!!!";
+	//该场景下 cout<<s2 和 cout<<s2.c_str 会有区别
+	cout << s2 << endl;		//输出全部内容
+	cout << s2.c_str() << endl;		//遇到\0就停止了  cstring系列的库函数
+	cout << endl;
+
+	//s2中间有\0
+	m_string::string copy(s2);	//拷贝构造内使用strcpy,遇到\0终止
+	cout << s2 << endl;
+	cout << copy << endl;
+
+	s2 += "xxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+	cout << s2 << endl;
+
+}
+
+void Test_cin() {
+	//char buff[128];
+	//for (size_t i = 0; i < 5; ++i) {
+	//	cin >> buff[i];		
+	//	//cin读取数据时，以空格和换行进行分割多个值，因此默认读取不到空格和换行
+	//}
+	m_string::string s;
+	/*for (int i = 0; i < 3; ++i) {
+		cin >> s;
+		cout << s << endl;
+	}*/
+	cin >> s;
+	cout << s << endl;
+}
+void TestCompare() {
+
+}
 int main() {
 
 	//Test1();
 	//TestString_2();
 	//TestInsert();
 	//TestErase();
-	TestFind();
+	//TestFind();
+	//TestResize();
+	Test_cin();
 	return 0;
 }

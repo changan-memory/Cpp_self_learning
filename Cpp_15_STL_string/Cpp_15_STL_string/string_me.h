@@ -50,7 +50,9 @@ namespace m_string {
 			_size = strlen(str);
 			_capacity = _size;	//capacity表示可以存放的下的字符个数
 			_str = new char[_capacity + 1];		//开空间+1  要存放'\0'
-			strcpy(_str, str);	//拷贝数据
+			//strcpy(_str, str);	//拷贝数据,遇到中间含有\0的字符串会有Bug
+			//strcpy默认会 拷贝\0， 因此使用memcpy，需要将拷贝的字节数+1，是\0的位置
+			memcpy(_str, str, _size + 1);	
 		}
 		//将无参构造通过缺省参数合并
 		//string() {	//三种默认构造  无参的 全缺省的  我们不写编译器自己生成的
@@ -63,7 +65,8 @@ namespace m_string {
 		//拷贝构造  简单实现深拷贝
 		string(const string& str) {
 			_str = new char[str._capacity + 1];
-			strcpy(_str, str._str);
+			//strcpy(_str, str._str);
+			memcpy(_str, str._str, str._size + 1);
 			_size = str._size;
 			_capacity = str._capacity;
 		}
@@ -100,7 +103,8 @@ namespace m_string {
 		void reserve(size_t request_size) {	//request_size指的是要存放的字符的个数
 			if (request_size > _capacity) {	//请求的空间大于_capacity时，才扩容
 				char* newSpace = new char[request_size + 1];	//多开一个空间存放\0
-				strcpy(newSpace, _str);		//new是异地扩容
+				//strcpy(newSpace, _str);		//new是异地扩容
+				memcpy(newSpace, _str, _size + 1);
 				delete[] _str;
 				_str = newSpace;
 				_capacity = request_size;
@@ -122,7 +126,8 @@ namespace m_string {
 				//至少扩容到_size + len
 				reserve(_size + len);
 			}
-			strcpy(_str + _size, str);
+			//strcpy(_str + _size, str);
+			memcpy(_str + _size, str, len + 1);
 			_size += len;	//插入后_size要改变
 		}
 		string& operator+=(char ch) {
@@ -226,6 +231,42 @@ namespace m_string {
 			}
 			return tmp;	//出了作用域，对象销毁，要用值传递
 		}
+
+		void resize(size_t newSize, char ch = '\0') {
+			if (newSize < _size) {
+				_size = newSize;
+				_str[_size] = '\0';
+			}
+			else {
+				//reserve会判断newSize和_capacity的大小，超过扩容，小于不做处理
+				reserve(newSize);
+				//扩容后进行初始化
+				for (size_t i = _size; i < newSize; ++i)
+					_str[i] = ch;
+				_size = newSize;
+				_str[_size] = '\0';
+			}
+		}
+		//清空数据
+		void clear() {
+			_str[0] = '\0';
+			_size = 0;
+		}
+
+		bool operator<(const string& str) {
+			//return strcmp(_str, str.c_str());	//strcmp遇到\0终止，可能会对特定的字符串有意外
+			/*if (_size == str._size)
+				return memcmp(_str, str.c_str(), _size) < 0;
+			const string* pstr_low = this;
+			const string* pstr_high = &str;
+			if (_size > str._size) {
+				std::swap(pstr_low, pstr_high);
+			}
+			
+			bool res1 = memcmp(pstr_low->c_str(), pstr_high->c_str(), pstr_low->_size);
+			bool res2 = memcmp(pstr_low->c_str(), pstr_high->c_str(), pstr_low->_size);*/
+				
+		}
 	private:
 		size_t _size;
 		size_t _capacity;	//_capacity一般不包含\0
@@ -236,4 +277,47 @@ namespace m_string {
 		const static size_t npos;	//建议静态成员变量，声明和定义分离
 	};
 	const size_t string::npos = -1;
+}
+
+// 成员函数的第一个参数是this
+// 我们希望第一个参数是流对象，因此要重载成全局的
+ostream& operator<<(ostream& out, const m_string:: string& s) {
+	//ostream做了一件事，做了防拷贝，因此ostream做参数或返回值时要用引用
+	for (int i = 0; i < s.size(); ++i)
+		out << s[i];
+	/*for (auto& e : s)
+		out << e;*/
+	return out;
+}
+
+//流提取不能加 const
+istream& operator>>(istream& in, m_string::string& s) {
+	/*char ch;
+	in >> ch;*/
+	//s.clear();	//每次读取要先清空,防止 多次输入数据时，数据重叠
+	char ch = in.get();
+	char buff[128];
+
+	//清空 第一个有效数据来临前的空格和换行
+	while (ch == ' ' || ch == '\n') {
+		ch = in.get();
+	}
+	int i = 0;
+	while (ch != ' ' && ch != '\n'){	//这种写法读不到字符串中的空格或换行,认为
+										//可以选择 使用 \n 还是 ' '作为字符串的分隔符
+		//s += ch;		//+=，当输入的字符串非常大时，会不断扩容,利用buff减少扩容的次数
+		buff[i++] = ch;
+		if (i == 127) {
+			buff[i] = '\0';
+			s += buff;
+			i = 0;
+		}
+		//in >> ch;
+		ch = in.get();
+	}
+	if (i != 0) {
+		buff[i] = '\0';
+		s += buff;
+	}
+	return in;
 }
