@@ -63,7 +63,7 @@ namespace m_string {
 		//	_str[0] = '\0';
 		//}
 
-		//拷贝构造  简单实现深拷贝
+		//拷贝构造  要实现深拷贝，开一块新的空间，拷贝数据，并初始化
 		string(const string& str) {
 			_str = new char[str._capacity + 1];
 			//strcpy(_str, str._str);
@@ -71,6 +71,16 @@ namespace m_string {
 			_size = str._size;
 			_capacity = str._capacity;
 		}
+
+		//以下是string的构造函数的现代写法，这种写法在遇到中间含有\0字符串会有问题
+		/*string(const string& s) 
+			:_str(nullptr)
+			,_size(0)
+			,_capacity(0)
+		{
+			string tmp(s.c_str());
+			swap(tmp);
+		}*/
 		
 		// 传统写法
 		//	s1 = s3

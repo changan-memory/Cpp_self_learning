@@ -81,8 +81,8 @@ void Test_use_2() {
 	cout << xstr << endl;
 
 }
-//int main() {
-//	//Test_use_construct();
-//	Test_use_2();
-//	return 0;
-//}
+int main() {
+	Test_use_construct();
+	//Test_use_2();
+	return 0;
+}

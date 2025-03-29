@@ -170,16 +170,28 @@ void Test_CopyConstruct() {
 	s1 = s3;		//赋值  已经存在的两个对象 之间进行赋值， 默认的赋值是浅拷贝
 	cout << s1 << endl << s3 << endl;
 }
-int main() {
 
-	//Test1();
-	//TestString_2();
-	//TestInsert();
-	//TestErase();
-	//TestFind();
-	//TestResize();
-	//Test_cin();
-	//TestCompare();
-	Test_CopyConstruct();
-	return 0;
+void Test_String() {
+	std::string s1("hello world");
+	std::string s2(s1);
+
+	std::string s3("hello worldxxxxxxxxxxxxxxxxxxxxxxxx");
+
+	printf("%p\n", s1.c_str());		//vs下的写法  总是深拷贝
+	printf("%p\n", s2.c_str());
 }
+//int main() {
+//
+//	//Test1();
+//	//TestString_2();
+//	//TestInsert();
+//	//TestErase();
+//	//TestFind();
+//	//TestResize();
+//	//Test_cin();
+//	//TestCompare();
+//	//Test_CopyConstruct();
+//	Test_String();
+//	
+//	return 0;
+//}
