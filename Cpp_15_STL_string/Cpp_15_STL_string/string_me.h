@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 
 #include <iostream>
+#include <algorithm>
 #include <assert.h>
 #include <cstring>
 using namespace std;
@@ -46,7 +47,7 @@ namespace m_string {
 		//string(const char* str = nullptr)
 		//string(const char* str = "\0")	//这个写法会让结尾有两个"\0"
 		//字符串的结束位置必须有\0
-		string(const char* str = "") {
+		string(const char* str = "") {	//用c风格的字符串进行构造，默认以\0为结束符
 			_size = strlen(str);
 			_capacity = _size;	//capacity表示可以存放的下的字符个数
 			_str = new char[_capacity + 1];		//开空间+1  要存放'\0'
@@ -71,6 +72,47 @@ namespace m_string {
 			_capacity = str._capacity;
 		}
 		
+		// 传统写法
+		//	s1 = s3
+		//string& operator=(const string& str) {
+		//	if (this != &str) {
+		//		char* newSpace = new char[str._capacity + 1];	//开空间
+		//		memcpy(newSpace, str._str, str._size + 1);		//拷数据
+		//		delete[] _str;			//释放原空间
+		//		_str = newSpace;
+
+		//		_size = str._size;
+		//		_capacity = str._capacity;
+		//	}
+		//	return *this;
+		//}
+
+		//赋值的现代写法
+		//string& operator=(const string& str) {
+		//	if (this != &str) {
+		//		string tmp(str);		//反正tmp出了作用域也要销毁，不如让他销毁时，顺便把
+		//		// s1 想要tmp的空间
+		//		std::swap(_str, tmp._str);		//不能直接交换两个对象，否则会引发无穷赋值
+		//		std::swap(_size, tmp._size);
+		//		std::swap(_capacity, tmp._capacity);
+
+		//		//可以直接
+		//		//swap(tmp);
+		//	}
+		//	return *this;
+		//}
+
+		// 交换两个string对象的内容
+		void swap(string& str) {		
+			std::swap(_str, str._str);		//不能直接交换两个对象
+			std::swap(_size, str._size);
+			std::swap(_capacity, str._capacity);
+		}
+		// s1 = s3
+		string& operator=(string tmp) {		//直接利用函数参数，深拷贝s3，函数结束后,形参自动析构
+			this->swap(tmp);			// 将s3的拷贝和s1 也就是 *this 交换
+			return *this;		// 返回*this, 也就是 s1
+		}
 		//析构函数
 		~string() {
 			delete[] _str;
@@ -224,6 +266,7 @@ namespace m_string {
 			size_t n = len;
 			if (len == npos || (pos + len) > _size)
 				n = _size - pos;
+
 			string tmp;
 			tmp.reserve(n);
 			for (size_t i = pos; i < pos + n; ++i) {
@@ -253,19 +296,47 @@ namespace m_string {
 			_size = 0;
 		}
 
-		bool operator<(const string& str) {
-			//return strcmp(_str, str.c_str());	//strcmp遇到\0终止，可能会对特定的字符串有意外
-			/*if (_size == str._size)
-				return memcmp(_str, str.c_str(), _size) < 0;
-			const string* pstr_low = this;
-			const string* pstr_high = &str;
-			if (_size > str._size) {
-				std::swap(pstr_low, pstr_high);
+		// hello hello false
+		// helloxxx hello false
+		// hello helloxxx true
+		bool operator<(const string& str) const {
+			size_t i1 = 0, i2 = 0;
+			//先比较同样的长度
+			while (i1 < _size && i2 < str._size) {
+				if (_str[i1] < str._str[i2])
+					return true;
+				else if (_str[i1] > str._str[i2])
+					return false;
+				else {
+					++i1;
+					++i2;
+				}
 			}
-			
-			bool res1 = memcmp(pstr_low->c_str(), pstr_high->c_str(), pstr_low->_size);
-			bool res2 = memcmp(pstr_low->c_str(), pstr_high->c_str(), pstr_low->_size);*/
-				
+			//到这里 i1 == _size 且 i2 == str._size
+			// i1 == _size && i2 != str_size时，代表str后面还有字符串，说明后面的更大
+			return i1 == _size && i2 != str._size;
+		}
+		//复用库的方式
+		//bool operator<(const string& str) const {
+		//	int ret = memcmp(_str, str._str, _size < str._size ? _size : str._size);
+		//	return ret == 0 ? _size < str._size : ret < 0;
+		//	//return ret < 0 ? true : false;   错误方式
+		//}
+		bool operator==(const string& str) const {
+			return _size == str._size			//两个字符串相等，其长度一定相等
+				&& memcmp(_str, str._str, _size) == 0;		//再比较其内容是否相等
+		}
+		bool operator<=(const string& str) const {
+			return *this < str || *this == str;
+		}
+		bool operator>(const string& str) const {
+			return !(*this <= str);
+		}
+		bool operator>=(const string& str) const {
+			return (*this < str);
+		}
+		bool operator!=(const string& str) const {
+			return !(*this == str);
 		}
 	private:
 		size_t _size;

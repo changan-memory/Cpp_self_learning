@@ -135,7 +135,40 @@ void Test_cin() {
 	cout << s << endl;
 }
 void TestCompare() {
+	std::string s1("hello world");
+	std::string s2("hello world\0xxxxxxx");	
+	//构造函数使用strlen计算_size会有bug   但此处是用c风格的字符串来构造，默认以\0为字符串结束符
+	cout << (s1 < s2) << endl;
+	cout << (s1 > s2) << endl;
+	cout << (s1 == s2) << endl << endl;
 
+	m_string::string s3("hello");
+	m_string::string s4("hello");
+	cout << (s3 < s4) << endl;
+	cout << (s3 > s4) << endl;
+	cout << (s3 == s4) << endl << endl;
+
+	m_string::string s5("helloxxxxx");
+	m_string::string s6("hello");
+	cout << (s5 < s6) << endl;
+	cout << (s5 > s6) << endl;
+	cout << (s5 == s6) << endl << endl;
+
+	m_string::string s7("hello");
+	m_string::string s8("helloxxxxxxxx");
+	cout << (s7 < s8) << endl;
+	cout << (s7 > s8) << endl;
+	cout << (s7 == s8) << endl << endl;
+}
+//拷贝构造，深浅拷贝
+void Test_CopyConstruct() {
+	m_string::string s1("hello world");
+	m_string::string s2(s1);
+	cout << s1 << " " << s2 << endl;
+
+	m_string::string s3("xxxxxxxxxx");
+	s1 = s3;		//赋值  已经存在的两个对象 之间进行赋值， 默认的赋值是浅拷贝
+	cout << s1 << endl << s3 << endl;
 }
 int main() {
 
@@ -145,6 +178,8 @@ int main() {
 	//TestErase();
 	//TestFind();
 	//TestResize();
-	Test_cin();
+	//Test_cin();
+	//TestCompare();
+	Test_CopyConstruct();
 	return 0;
 }
