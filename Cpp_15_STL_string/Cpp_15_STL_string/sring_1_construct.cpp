@@ -18,16 +18,15 @@ void Test_use_construct() {
 	string s3("hello world");
 	string s4(10, 'p');		// string (const char* s, size_t n)
 	string s5(s2);	//string (const string& str);	//拷贝构造
-
-	cout << s1 << endl;
-	cout << s2 << endl;
-	cout << s3 << endl;
-	cout << s4 << endl;
-	cout << s5 << endl;
-
 	string s6(s3, 6, 5);	// string (const string& str, size_t pos, size_t len = npos)
 	string s7(s3, 6);	//缺省参数值是 -1 size_t = -1 ,是整形的最大值，会拷贝后面所有的字符串
+
+	cout << s1 << endl << s2 << endl;
+	cout << s3 << endl << s4 << endl;
+	cout << s5 << endl;
 	cout << s6 << " --- " << s7 << endl;
+	
+
 
 	string url("https://cplusplus.com/reference/string/string/string/");
 	string sub1(url, 0, 5);		//用该构造函数切分网站
@@ -81,8 +80,26 @@ void Test_use_2() {
 	cout << xstr << endl;
 
 }
-int main() {
-	Test_use_construct();
-	//Test_use_2();
-	return 0;
+void capacityDemo() {
+	string str = "Hello";
+	cout << str.size() << endl;     // 5
+	cout << str.capacity() << endl; // 15（VS2022实测值）
+
+	str.reserve(50);
+	cout << str.capacity() << endl; // 63
+
+	str.resize(3);
+	cout << str << endl;            // "Hel"
+
+	str.resize(10, 'x');
+	cout << str << endl;            // "Helxxxxxxx"
+	str.clear();
+	cout << "clear后的size为: " << str.size() << endl;
+	cout << str << endl;            // "Helxxxxxxx"
 }
+//int main() {
+//	capacityDemo();
+//	//Test_use_construct();
+//	//Test_use_2();
+//	return 0;
+//}

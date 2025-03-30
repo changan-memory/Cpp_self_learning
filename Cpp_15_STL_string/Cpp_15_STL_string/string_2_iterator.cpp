@@ -128,17 +128,34 @@ void Test_4(const string& str) {
 
 	//四种迭代器
 	// iterator		普通迭代器
-	// const_iterator	const对象 迭代器
-	// 
 	// reverse_itreator		反向迭代器
+
+	// const_iterator	const对象 迭代器
 	// const_reverse_itreator		const对象 反向迭代器
+}
+void test() {
+	//Test_1();
+	//Test_2();
+	//Test_3();
+	const string cstring("hello Linux");
+	Test_4(cstring);
 }
 
 //int main() {
-//	//Test_1();
-//	//Test_2();
-//	//Test_3();
-//	const string cstring("hello Linux");
-//	Test_4(cstring);
+//	//各种迭代器的使用
+//	std::string s1("hello Linux");
+//	const std::string s2("hello world");
+//
+//	string::iterator it1 = s1.begin();	//普通对象迭代器
+//	string::iterator it2 = s1.end();	//普通对象迭代器
+//
+//	string::reverse_iterator rit1 = s1.rbegin(); //普通对象反向迭代器
+//	string::reverse_iterator rit2 = s1.rbegin(); //普通对象反向迭代器
+//
+//	string::const_iterator cit1 = s2.begin();	//const对象迭代器
+//	string::const_iterator cit2 = s2.end(); 	//const对象迭代器
+//
+//	string::const_reverse_iterator crit1 = s2.crbegin();	//const对象反向迭代器
+//	string::const_reverse_iterator crit2 = s2.crend();	//const对象反向迭代器
 //	return 0;
 //}
