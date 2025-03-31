@@ -14,7 +14,8 @@ namespace m_string {
 		typedef char* iterator;
 		typedef const char* const_iterator;
 		
-		//普通对象的迭代器
+		//普通对象的迭代器  
+		// 如果加了const会导致，非const对象只能返回const_iterator，失去修改元素的能力（违反直觉）。
 		iterator begin() {		
 			//return &_str[0];
 			return _str;	//数组名是第一个元素的地址
@@ -42,7 +43,7 @@ namespace m_string {
 		
 		//用c_str构造
 		//尽可能使用初始化列表初始化，但有些功能初始化列表完成不了。
-		// 内置类型在 初始化列表/函数体内 初始化无所谓，自定义类型尽量在初始化列表
+		// 内置类型在 初始化列表/函数体内 初始化无所谓，自定义类型尽量在初始化列表初始化
 		//string(const char* str = '\0')
 		//string(const char* str = nullptr)
 		//string(const char* str = "\0")	//这个写法会让结尾有两个"\0"
