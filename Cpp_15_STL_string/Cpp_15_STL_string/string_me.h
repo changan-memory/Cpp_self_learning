@@ -357,6 +357,7 @@ namespace m_string {
 	public:
 		const static size_t npos;	//建议静态成员变量，声明和定义分离
 	};
+	//类内声明、类外初始化
 	const size_t string::npos = -1;
 }
 
