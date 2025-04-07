@@ -41,8 +41,9 @@ namespace m_vector {
 		void push_back(const T& obj) {
 			//检查容量并扩容
 			if (_finish == _end_of_storage) {
-				size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);	//初始化新空间
-				reserve(newCapacity);											//扩容
+				//计算新空间需要的大小  二倍扩容逻辑
+				size_t newSpace = (capacity() == 0 ? 4 : capacity() * 2);	
+				reserve(newSpace);											//分配空间的大小
 			}
 			*_finish = obj;
 			++_finish;
