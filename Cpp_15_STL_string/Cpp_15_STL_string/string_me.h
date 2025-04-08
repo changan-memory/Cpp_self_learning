@@ -22,15 +22,11 @@ namespace m_string {
 		}
 		iterator end() {
 			//return &_str[_size];
-			return _str+_size;
+			return _str+_size; 
 		}
 		//const对象迭代器
-		const_iterator begin() const {
-			return _str;	
-		}
-		const_iterator end() const {
-			return _str + _size;
-		}
+		const_iterator begin() const { return _str; }
+		const_iterator end() const { return _str + _size; }
 
 		//构造函数
 		//string(const char* str)	//初始化列表是按照成员变量在类中声明的次序进行初始化的
@@ -153,14 +149,14 @@ namespace m_string {
 
 		//可以用reserve来实现扩容
 		//考虑特殊情况的话，memcpy会更好
-		void reserve(size_t request_size) {	//request_size指的是要存放的字符的个数
-			if (request_size > _capacity) {	//请求的空间大于_capacity时，才扩容
-				char* newSpace = new char[request_size + 1];	//多开一个空间存放\0
+		void reserve(size_t request_capacity) {	//request_size指的是要存放的字符的个数
+			if (request_capacity > _capacity) {	//请求的空间大于_capacity时，才扩容
+				char* newSpace = new char[request_capacity + 1];	//多开一个空间存放\0
 				//strcpy(newSpace, _str);		//new是异地扩容
 				memcpy(newSpace, _str, _size + 1);
 				delete[] _str;
 				_str = newSpace;
-				_capacity = request_size;
+				_capacity = request_capacity;
 			}
 		}
 		//+=的本质是push_back因此先实现push_back
@@ -292,7 +288,7 @@ namespace m_string {
 				_str[_size] = '\0';
 			}
 			else {
-				//reserve会判断newSize和_capacity的大小，超过扩容，小于不做处理
+				//reserve会判断newSize和_capacity的大小，超过扩容，小于 等于时不做处理
 				reserve(newSize);
 				//扩容后进行初始化
 				for (size_t i = _size; i < newSize; ++i)
