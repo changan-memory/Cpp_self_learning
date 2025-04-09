@@ -50,12 +50,34 @@ void testVector2() {
 	//insert之后，迭代器可能会失效(扩容时迭代器失效)
 	//以后insert尽量不使用形参迭代器，因为insert后，迭代器可能失效
 	//正确的做法是，使用insert返回的结果当来获取pos的值
+	//这样的接口是不安全的，
 	cout << *pres << endl;
+	print(v1);
+}
+//测试删除，头删没问题
+void testVector3() {
+	m_vector::vector<int> v1;
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	v1.push_back(5);
+	v1.push_back(6);
+	v1.push_back(7);
+	v1.push_back(8);	//已有8个元素，再插入时会触发扩容逻辑
+	v1.erase(v1.begin());
+	v1.erase(v1.begin());
+	v1.erase(v1.begin());
+
+	auto it = v1.begin();
+	v1.erase(it);	
+	cout << *it << endl;
 	print(v1);
 }
 int main() {
 	//testVector1();
-	testVector2();
+	//testVector2();
+	testVector3();
 
 	return 0;
 }

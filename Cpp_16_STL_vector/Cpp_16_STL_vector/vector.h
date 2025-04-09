@@ -98,8 +98,18 @@ namespace m_vector {
 		}
 
 		void erase(iterator pos) {
-			assert(pos >= _start && pos <= _finish);
-
+			//检查越界
+			assert(pos >= _start && pos < _finish);
+			//删除逻辑,有数据才能删
+			if (_start) {
+				iterator begin = pos + 1;
+				while (begin != _finish) {
+					*(begin - 1) = *begin;
+					++begin;
+				}
+				//更新状态
+				--_finish;
+			}
 		}
 		// 指针 - 指针，返回的是两个指针中间的元素个数
 		size_t capacity() const { return _end_of_storage - _start; }
