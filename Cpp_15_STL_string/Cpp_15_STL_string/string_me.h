@@ -128,13 +128,15 @@ namespace m_string {
 		}
 		//返回c_str			const 修饰this指针指向的对象，可以让普通对象和const对象都可以调
 		//函数内不修改对象，建议加上const
-		const char* c_str() const { 
-			return _str; 
-		}
+		const char* c_str() const { return _str; }
 
-		//返回_size
-		size_t size() const {
-			return _size;
+		size_t size() const { return _size; }
+		size_t capacity() const { return _capacity; }
+
+		//清空数据
+		void clear() {
+			_str[0] = '\0';
+			_size = 0;
 		}
 
 		//[]重载		//const对象调const版本[]    普通对象调普通版本[]
@@ -296,11 +298,6 @@ namespace m_string {
 				_size = newSize;
 				_str[_size] = '\0';
 			}
-		}
-		//清空数据
-		void clear() {
-			_str[0] = '\0';
-			_size = 0;
 		}
 
 		// hello hello false
