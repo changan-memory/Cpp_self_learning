@@ -242,41 +242,41 @@ namespace m_string {
 		}
 		//从pos位置开始删，删除len个字符，不传参默认删完
 		void erase(size_t pos, size_t len = npos) {
-			assert(pos);
+			assert(pos <= _size);
+			if (len == 0)
+				return;
+			// pos + len == _size时，pos + len位置放的是\0,大于时才全部删完
 			if (len == npos || pos + len > _size) {		//这两种都是删完的情况
 				_str[pos] = '\0';
 				_size = pos;
-				_str[_size] = '\0';
 			}
 			else {
 				size_t end = pos + len;
 				while (end < _size) {	//end = '\0'时，可以把'\0'也挪过来
 					_str[pos++] = _str[end++];
-					//++end;
 				}
 				_size -= len;
-				_str[_size] = '\0';
 			}
+			_str[_size] = '\0';	//统一设置结尾符
 		}
 		//查找字符
 		size_t find(char ch, size_t pos = 0) const {
 			assert(pos < _size);
 			for (size_t i = pos; i < _size; ++i) {
-				if (_str[i] == ch) {
+				if (_str[i] == ch) 
 					return i;
-				}
 			}
 			return npos;
 		}
 		size_t find(const char* str, size_t pos = 0) const {
-			assert(pos < _size);
+			assert(pos <= _size);	//允许查找空串，查找空串返回npos
 			const char* ptr = strstr(_str + pos, str);	//可以从不同的位置开始查找
 			if (ptr)
 				return ptr - _str;
 			else
 				return npos;
 		}
-
+		//substr到底找的是什么？？？
 		string substr(size_t pos = 0, size_t len = npos) const {
 			assert(pos < _size);
 			size_t n = len;
