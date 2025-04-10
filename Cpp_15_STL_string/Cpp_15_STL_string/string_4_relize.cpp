@@ -180,18 +180,18 @@ void Test_String() {
 	printf("%p\n", s1.c_str());		//vs下的写法  总是深拷贝
 	printf("%p\n", s2.c_str());
 }
-//int main() {
-//
-//	//Test1();
-//	//TestString_2();
-//	//TestInsert();
-//	//TestErase();
-//	//TestFind();
-//	//TestResize();
-//	//Test_cin();
-//	//TestCompare();
-//	//Test_CopyConstruct();
-//	Test_String();
-//	
-//	return 0;
-//}
+int main() {
+
+	//Test1();
+	//TestString_2();
+	//TestInsert();
+	//TestErase();
+	//TestFind();
+	//TestResize();
+	//Test_cin();
+	//TestCompare();
+	Test_CopyConstruct();
+	//Test_String();
+	
+	return 0;
+}

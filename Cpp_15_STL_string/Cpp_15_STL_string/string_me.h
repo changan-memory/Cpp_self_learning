@@ -70,56 +70,63 @@ namespace m_string {
 		}
 
 		//以下是string的构造函数的现代写法，这种写法在遇到中间含有\0字符串会有问题
-		/*string(const string& s) 
-			:_str(nullptr)
-			,_size(0)
-			,_capacity(0)
-		{
-			string tmp(s.c_str());
-			swap(tmp);
-		}*/
+		//s2(s1)
+		//string(const string& s) 
+		//	:_str(nullptr)
+		//	,_size(0)
+		//	,_capacity(0)
+		//{
+		//	string tmp(s.c_str());	//tmp内存放有s1的_str空间地址，_size和_capacity
+		//	this->swap(tmp);			//交换tmp和s2内的三个成员变量，
+		//						//交换后tmp内的_str为nullptr,局部对象出了函数作用域销毁后，析构tmp对象
+
+		//	//构造tmp时使用s.c_str()初始化，而c_str返回以\0结尾的C风格字符串
+		//	//若s._str中间含有\0，tmp的构造会截断数据，导致拷贝不完整
+		//}
 		
 		// 传统写法
 		//	s1 = s3
-		//string& operator=(const string& str) {
-		//	if (this != &str) {
-		//		char* newSpace = new char[str._capacity + 1];	//开空间
-		//		memcpy(newSpace, str._str, str._size + 1);		//拷数据
-		//		delete[] _str;			//释放原空间
-		//		_str = newSpace;
+		string& operator=(const string& str) {
+			if (this != &str) {
+				char* newSpace = new char[str._capacity + 1];	//开空间
+				memcpy(newSpace, str._str, str._size + 1);		//拷数据
+				delete[] _str;			//被赋值前可能为非空string，因此要释放原空间
+				_str = newSpace;
 
-		//		_size = str._size;
-		//		_capacity = str._capacity;
-		//	}
-		//	return *this;
-		//}
+				_size = str._size;
+				_capacity = str._capacity;
+			}
+			return *this;
+		}
 
 		//赋值的现代写法
 		//string& operator=(const string& str) {
 		//	if (this != &str) {
-		//		string tmp(str);		//反正tmp出了作用域也要销毁，不如让他销毁时，顺便把
+		//		string tmp(str);	//反正tmp出了作用域也要销毁，不如让他销毁时，顺便把s1的空间析构了
 		//		// s1 想要tmp的空间
 		//		std::swap(_str, tmp._str);		//不能直接交换两个对象，否则会引发无穷赋值
 		//		std::swap(_size, tmp._size);
 		//		std::swap(_capacity, tmp._capacity);
 
 		//		//可以直接
-		//		//swap(tmp);
+		//		//this->swap(tmp);
 		//	}
 		//	return *this;
 		//}
 
-		// 交换两个string对象的内容
+		// 交换两个string对象成员变量的内容
 		void swap(string& str) {		
 			std::swap(_str, str._str);		//不能直接交换两个对象
 			std::swap(_size, str._size);
 			std::swap(_capacity, str._capacity);
 		}
-		// s1 = s3
-		string& operator=(string tmp) {		//直接利用函数参数，深拷贝s3，函数结束后,形参自动析构
-			this->swap(tmp);			// 将s3的拷贝和s1 也就是 *this 交换
-			return *this;		// 返回*this, 也就是 s1
-		}
+		//// s1 = s3
+		//string& operator=(string tmp) {		//直接利用函数参数，深拷贝s3，函数结束后,形参自动析构
+		//	this->swap(tmp);			// 将s3的拷贝和s1 也就是 *this 交换
+		//	return *this;		// 返回*this, 也就是 s1
+		//}
+		
+
 		//析构函数
 		~string() {
 			delete[] _str;

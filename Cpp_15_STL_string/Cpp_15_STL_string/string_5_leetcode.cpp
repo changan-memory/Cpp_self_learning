@@ -31,13 +31,13 @@ void test3() {
 	str.erase(5, 4);      // "Hello World!!!"
 	cout << str.c_str() << endl;// "Hello World!!!"
 }
-int main() {
-	string str = "Hello World !!!";
-	string sub1 = str.substr(0);
-	string sub2 = str.substr(6);
-	string sub3 = str.substr(6, 5);
-	cout << sub1 << endl;
-	cout << sub2 << endl;
-	cout << sub3 << endl;
-	return 0;
-}
+//int main() {
+//	string str = "Hello World !!!";
+//	string sub1 = str.substr(0);
+//	string sub2 = str.substr(6);
+//	string sub3 = str.substr(6, 5);
+//	cout << sub1 << endl;
+//	cout << sub2 << endl;
+//	cout << sub3 << endl;
+//	return 0;
+//}
