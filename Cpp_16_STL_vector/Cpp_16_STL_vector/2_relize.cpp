@@ -43,7 +43,8 @@ void testVector2() {
 	
 	m_vector::vector<int>::iterator p = v1.begin() + 3;
 	m_vector::vector<int>::iterator pres = v1.insert(p, 200);
-	*p + 200;
+	
+	//*p + 200;
 	cout << *p << endl;
 	//p记录的是原空间地址，如果原空间发生了扩容，那么p就成了野指针,这里是野指针造成的迭代器失效
 	
