@@ -75,10 +75,10 @@ void testVector3() {
 	cout << *it << endl;
 	print(v1);
 }
-int main() {
-	//testVector1();
-	//testVector2();
-	testVector3();
-
-	return 0;
-}
+//int main() {
+//	//testVector1();
+//	//testVector2();
+//	testVector3();
+//
+//	return 0;
+//}
