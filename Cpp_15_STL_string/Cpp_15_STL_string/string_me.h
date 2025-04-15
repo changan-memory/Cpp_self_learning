@@ -404,3 +404,4 @@ istream& operator>>(istream& in, m_string::string& s) {
 	}
 	return in;
 }
+
