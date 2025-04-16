@@ -7,5 +7,7 @@ int main() {
 	cout << s1 << endl << endl;
 	cin >> s1;
 	cout << endl << s1 << endl;
+
+	cout << "test gitee demo" << endl;
 	return 0;
 }
