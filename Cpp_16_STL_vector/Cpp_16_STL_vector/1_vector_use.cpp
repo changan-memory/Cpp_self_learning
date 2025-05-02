@@ -216,22 +216,22 @@ void Test_v7() {
 //}
 
 // VS2022下vector的默认扩容机制
-int main(){
-	size_t sz;
-	vector<int> v;
-	sz = v.capacity();
-	cout << "making v grow:\n";
-	for (int i = 0; i < 100; ++i)
-	{
-		v.push_back(i);
-		if (sz != v.capacity())
-		{
-			sz = v.capacity();
-			cout << "capacity changed: " << sz << '\n';
-		}
-	}
-	return 0;
-}
+//int main(){
+//	size_t sz;
+//	vector<int> v;
+//	sz = v.capacity();
+//	cout << "making v grow:\n";
+//	for (int i = 0; i < 100; ++i)
+//	{
+//		v.push_back(i);
+//		if (sz != v.capacity())
+//		{
+//			sz = v.capacity();
+//			cout << "capacity changed: " << sz << '\n';
+//		}
+//	}
+//	return 0;
+//}
 
 
 namespace test {

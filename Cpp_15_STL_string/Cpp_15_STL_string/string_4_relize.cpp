@@ -184,13 +184,13 @@ int main() {
 
 	//Test1();
 	//TestString_2();
-	//TestInsert();
+	TestInsert();
 	//TestErase();
 	//TestFind();
 	//TestResize();
 	//Test_cin();
 	//TestCompare();
-	Test_CopyConstruct();
+	//Test_CopyConstruct();
 	//Test_String();
 	
 	return 0;
