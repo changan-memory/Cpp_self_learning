@@ -121,11 +121,34 @@ void testVector4() {
 		cout << e << " ";
 	cout << endl;
 }
+
+void testVector5() {
+	m_vector::vector<int> v;
+	v.push_back(1);
+	v.push_back(2);
+	v.push_back(3);
+	v.push_back(4);
+	v.push_back(5);
+	m_vector::vector<int> v1(v);	//浅拷贝，同一块空间析构两次
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
+
+	m_vector::vector<int> v2;
+	v2.resize(10, 3);
+	v1 = v2;
+	v2 = v2;
+	for (auto& e : v2)
+		cout << e << " ";
+	cout << endl;
+
+}
 int main() {
 	//testVector1();
 	//testVector2();
 	//testVector3();
-	testVector4();
+	//testVector4();
+	testVector5();
 
 	return 0;
 }

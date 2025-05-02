@@ -52,6 +52,36 @@ namespace m_vector {
 				_start = _finish = _end_of_storage = nullptr;
 			}
 		}
+
+		//深拷贝的拷贝构造
+		vector(const vector<T>& v)
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _end_of_storage(nullptr)
+		{
+			_start = new T[v.capacity()];
+			memcpy(_start, v._start, sizeof(T)*v.size());
+			_finish = _start + v.size();
+			_end_of_storage = _start + v.capacity();
+			
+			////现代写法
+			//reserve(v.capacity());
+			//for (auto& e : v)
+			//	push_back(e);
+		}
+
+		void swap(vector<T>& v) {
+			std::swap(_start, v._start);
+			std::swap(_finish, v._finish);
+			std::swap(_end_of_storage, v._end_of_storage);
+		}
+		//赋值重载  现代写法  值拷贝，利用形参 析构原对象
+		//可以自己给自己赋值
+		vector<T>& operator=(vector<T> v) {
+			swap(v);
+			return *this;
+		}
+
 		void reserve(size_t n) {
 			// reserve 不是只给push_back使用，因此也要检查传入数据的合法性
 			// 大于时 再扩容
