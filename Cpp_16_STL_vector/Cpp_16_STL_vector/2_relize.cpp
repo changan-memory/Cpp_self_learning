@@ -129,7 +129,7 @@ void testVector5() {
 	v.push_back(3);
 	v.push_back(4);
 	v.push_back(5);
-	m_vector::vector<int> v1(v);	//浅拷贝，同一块空间析构两次
+	m_vector::vector<int> v1(v);	//浅拷贝，同一块空间会析构两次，因此要实现深拷贝
 	for (auto& e : v1)
 		cout << e << " ";
 	cout << endl;
@@ -138,17 +138,46 @@ void testVector5() {
 	v2.resize(10, 3);
 	v1 = v2;
 	v2 = v2;
-	for (auto& e : v2)
+	for (auto& e : v1)
 		cout << e << " ";
 	cout << endl;
+}
 
+void testVector6() {
+	m_vector::vector<string> v;
+	//单参数的构造函数支持隐式类型转换
+	v.push_back("111111111111111111");		// const char* 可以隐式类型转换为string
+	v.push_back("222222222222222222");
+	v.push_back("333333333333333333");
+	v.push_back("444444444444444444");
+	v.push_back("555555555555555555");
+	for (auto& e : v)	//范围for的底层是取迭代器，*it 赋值给 e ,因此自定义类型最好要加引用
+		cout << e << " ";
+	cout << endl;
+	m_vector::vector<string> v1(v);		//如果拷贝构造用的也是memcpy，那么存string时也会出错
+	for (auto& e : v1)	
+		cout << e << " ";
+}
+
+void testVector7() {
+	m_vector::vector<int> v1(10, 1);	
+	m_vector::vector<int> v2(10, 1);
+	m_vector::vector<string> v3(10, "hello");
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
+	for (auto& e : v3)
+		cout << e << " ";
+	cout << endl;
 }
 int main() {
 	//testVector1();
 	//testVector2();
 	//testVector3();
 	//testVector4();
-	testVector5();
+	//testVector5();
+	//testVector6();
+	testVector7();
 
 	return 0;
 }

@@ -46,6 +46,42 @@ namespace m_vector {
 			, _end_of_storage(nullptr)
 		{ }
 
+		//m_vector::vector<int> v1(10, 1);	模板匹配时可以有多重选择
+		//m_vector::vector<int> v2(10u, 1);		//指定了unsigned int ,更匹配 size_t
+		//m_vector::vector<string> v3(10, "1111111");
+
+		// 用n个val来进行构造
+		vector(size_t n, const T& val = T()) 
+			:_start(nullptr)
+			,_finish(nullptr)
+			,_end_of_storage(nullptr)
+		{
+			resize(n, val);
+		}
+		//用一个 int 类型的构造来解决 使用 size_t n 时，会和迭代器模板冲突的问题
+		// 数字字面量默认被匹配成 int
+		vector(int n, const T& val = T())
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _end_of_storage(nullptr)
+		{
+			resize(n, val);
+		}
+
+		//用迭代器区间进行构造 [first, last)
+		//模板内可以有模板，可以用其他容器的迭代器进行初始化
+		template<class InputIterator>			//单类型的模板，两个类型必须一样
+		vector(InputIterator first, InputIterator last) 
+			:_start(nullptr)
+			,_finish(nullptr)
+			,_end_of_storage(nullptr)
+		{
+			while (first != last) {
+				push_back(*first);
+				++first;
+			}
+		}
+
 		~vector() {
 			if (_start) {
 				delete[] _start;
@@ -60,7 +96,10 @@ namespace m_vector {
 			, _end_of_storage(nullptr)
 		{
 			_start = new T[v.capacity()];
-			memcpy(_start, v._start, sizeof(T)*v.size());
+			//memcpy(_start, v._start, sizeof(T)*v.size());
+			for (int i = 0; i < v.size(); ++i)	//用深拷贝的赋值来解决问题
+				_start[i] = v._start[i];
+
 			_finish = _start + v.size();
 			_end_of_storage = _start + v.capacity();
 			
@@ -76,7 +115,7 @@ namespace m_vector {
 			std::swap(_end_of_storage, v._end_of_storage);
 		}
 		//赋值重载  现代写法  值拷贝，利用形参 析构原对象
-		//可以自己给自己赋值
+		//可以自己给自己赋值 
 		vector<T>& operator=(vector<T> v) {
 			swap(v);
 			return *this;
@@ -90,7 +129,11 @@ namespace m_vector {
 				T* tmp = new T[n];		//开空间, 异地扩容  会构造一个vector
 				// 原空间不为空时拷贝数据
 				if (_start) {
-					memcpy(tmp, _start, sizeof(T) * old_sz);
+					//memcpy(tmp, _start, sizeof(T) * old_sz);
+					//memcpy进行的是值拷贝，string内存有堆区空间的地址
+					// 值拷贝，会让两个vector记录同一块空间的地址，析构第一块空间后，第二快空间就报错了
+					for (int i = 0; i < old_sz; ++i)
+						tmp[i] = _start[i];
 					delete[] _start;
 				}
 				// start指向新空间，指针finish该为 start 加上 
@@ -200,6 +243,10 @@ namespace m_vector {
 		}
 
 	private:
+		/*iterator _start = nullptr;		//可以用C++11中的 成员变量缺省值 给初始化列表使用
+		iterator _finish = nullptr;			// 这样构造函数中，就不用写初始化列表了
+		iterator _end_of_storage = nullptr;*/
+
 		//与标准库STL中的命名风格保持一致
 		iterator _start;
 		iterator _finish;
