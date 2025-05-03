@@ -224,12 +224,13 @@ namespace m_string {
 		}
 		void insert(size_t pos, const char* str) {
 			assert(pos <= _size);	//_size位置是字符串的末尾，可以在字符串的末尾插入
+			assert(str != nullptr); // 确保str非空
 			size_t len = strlen(str);
 			//扩容
 			if (_size + len > _capacity)
 				reserve(_size + len);
 
-			size_t end = _size;
+			size_t end = _size;		//从末尾的 \0 开始挪动
 			while (end >= pos && end != npos) {
 				_str[end + len] = _str[end];
 				--end;

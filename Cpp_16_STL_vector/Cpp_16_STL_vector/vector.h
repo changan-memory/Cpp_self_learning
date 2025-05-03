@@ -41,9 +41,6 @@ namespace m_vector {
 		//默认构造函数
 		//我们写的逻辑是 构造时暂不开空间
 		vector()
-			:_start(nullptr)
-			, _finish(nullptr)
-			, _end_of_storage(nullptr)
 		{ }
 
 		//m_vector::vector<int> v1(10, 1);	模板匹配时可以有多重选择
@@ -52,18 +49,12 @@ namespace m_vector {
 
 		// 用n个val来进行构造
 		vector(size_t n, const T& val = T()) 
-			:_start(nullptr)
-			,_finish(nullptr)
-			,_end_of_storage(nullptr)
 		{
 			resize(n, val);
 		}
 		//用一个 int 类型的构造来解决 使用 size_t n 时，会和迭代器模板冲突的问题
 		// 数字字面量默认被匹配成 int
 		vector(int n, const T& val = T())
-			:_start(nullptr)
-			, _finish(nullptr)
-			, _end_of_storage(nullptr)
 		{
 			resize(n, val);
 		}
@@ -72,9 +63,6 @@ namespace m_vector {
 		//模板内可以有模板，可以用其他容器的迭代器进行初始化
 		template<class InputIterator>			//单类型的模板，两个类型必须一样
 		vector(InputIterator first, InputIterator last) 
-			:_start(nullptr)
-			,_finish(nullptr)
-			,_end_of_storage(nullptr)
 		{
 			while (first != last) {
 				push_back(*first);
@@ -91,9 +79,6 @@ namespace m_vector {
 
 		//深拷贝的拷贝构造
 		vector(const vector<T>& v)
-			:_start(nullptr)
-			, _finish(nullptr)
-			, _end_of_storage(nullptr)
 		{
 			_start = new T[v.capacity()];
 			//memcpy(_start, v._start, sizeof(T)*v.size());
@@ -243,13 +228,14 @@ namespace m_vector {
 		}
 
 	private:
-		/*iterator _start = nullptr;		//可以用C++11中的 成员变量缺省值 给初始化列表使用
-		iterator _finish = nullptr;			// 这样构造函数中，就不用写初始化列表了
-		iterator _end_of_storage = nullptr;*/
-
 		//与标准库STL中的命名风格保持一致
-		iterator _start;
+		//可以用C++11中的 成员变量缺省值 给初始化列表使用 这样在构造函数中，就不用写初始化列表了
+		iterator _start = nullptr;		
+		iterator _finish = nullptr;	
+		iterator _end_of_storage = nullptr;
+
+		/*iterator _start;
 		iterator _finish;
-		iterator _end_of_storage;
+		iterator _end_of_storage;*/
 	};
 }
