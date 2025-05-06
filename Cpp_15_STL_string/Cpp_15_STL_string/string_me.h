@@ -365,30 +365,61 @@ namespace m_string {
 
 // 成员函数的第一个参数是this
 // 我们希望第一个参数是流对象，因此要重载成全局的
+// c的字符数组，以\0为终止算长度
+// string不看\0，以size为终止算长度
 ostream& operator<<(ostream& out, const m_string:: string& s) {
-	//ostream做了一件事，做了防拷贝，因此ostream做参数或返回值时要用引用
-	for (int i = 0; i < s.size(); ++i)
-		out << s[i];
-	/*for (auto& e : s)
-		out << e;*/
+	//ostream这个类做了一件事，做了防拷贝，因此 ostream 类对象 做参数或返回值时要用引用
+
+	//实现方式 1
+	//out << s.c_str();		// 调用c_str() 可以直接打印
+	//out << s.c_str;			// 访问s._str 实现字符串打印
+	// 以上两种方式，打印 c_str 遇到 "hello world\0hello Linux" 中间含有\0的字符串时，是错误的
+	// 流插入的要求是，有多少内容，打印多少内容 因此不能遇到\0终止
+	
+
+	// 使用一个一个遍历字符的方式  实现打印
+	/*for (int i = 0; i < s.size(); ++i)
+		out << s[i];*/
+	for (auto& e : s)
+		out << e;
 	return out;
 }
 
-//流提取不能加 const
-istream& operator>>(istream& in, m_string::string& s) {
-	/*char ch;
-	in >> ch;*/
-	//s.clear();	//每次读取要先清空,防止 多次输入数据时，数据重叠
-	char ch = in.get();
-	char buff[128];
+// 流提取 的string形参不能加 const，引入数据要流入 m_string::string& s
+//istream& operator>>(istream& in, m_string::string& str) {
+//	//一个一个字符读
+//	/*char ch;
+//	in >> ch;*/
+//
+//	//用cin和scanf输入数据时，要以空格和换行进行分割多个值，注定cin和scanf默认读取不到空格和换行
+//	// 可用 istream 类对象的 get 方法来解决这个问题,get可以读入任意的字符
+//	//用in.get() 读
+//	char ch = in.get();
+//	str.clear();	// 对同一个string进行多次输入时，每次输入前要进行初始化。
+//	// 如果不初始化，会出现字符串堆叠
+//
+//	//以空格或换行分割字符串
+//	while (ch != ' ' && ch != '\n') {
+//		str += ch;
+//		//in >> ch;
+//		ch = in.get();
+//	}
+//	return in;
+//}
 
-	//清空 第一个有效数据来临前的空格和换行
-	while (ch == ' ' || ch == '\n') {
-		ch = in.get();
-	}
+// istream v2版本
+istream& operator>>(istream& in, m_string::string& s) {
+	s.clear();	//每次读取要先清空缓冲区,防止 多次输入数据时，数据重叠
+	char ch = in.get();
+	char buff[127] = { '\0' };
+
+	//清空 第一个有效数据 来临前的空格和换行
+	while (ch == ' ' || ch == '\n')
+		ch = in.get();		// 读了之后，直接去读下一个字符，就可以表示清除了
+
 	int i = 0;
-	while (ch != ' ' && ch != '\n'){	//这种写法读不到字符串中的空格或换行,认为
-										//可以选择 使用 \n 还是 ' '作为字符串的分隔符
+	while (ch != ' ' && ch != '\n') {	//这种写法读不到字符串中的空格或换行,认为
+		//可以选择 使用 \n 还是 ' '作为字符串的分隔符
 		//s += ch;		//+=，当输入的字符串非常大时，会不断扩容,利用buff减少扩容的次数
 		buff[i++] = ch;
 		if (i == 127) {
@@ -396,12 +427,13 @@ istream& operator>>(istream& in, m_string::string& s) {
 			s += buff;
 			i = 0;
 		}
-		//in >> ch;
 		ch = in.get();
 	}
+	// i != 0 说明里面还有数据
 	if (i != 0) {
 		buff[i] = '\0';
 		s += buff;
 	}
 	return in;
 }
+

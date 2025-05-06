@@ -121,18 +121,21 @@ void TestResize() {
 }
 
 void Test_cin() {
-	//char buff[128];
-	//for (size_t i = 0; i < 5; ++i) {
-	//	cin >> buff[i];		
-	//	//cin读取数据时，以空格和换行进行分割多个值，因此默认读取不到空格和换行
-	//}
-	m_string::string s;
-	/*for (int i = 0; i < 3; ++i) {
-		cin >> s;
-		cout << s << endl;
-	}*/
-	cin >> s;
-	cout << s << endl;
+	//用cin和scanf输入数据时，要以空格和换行进行分割多个值，注定cin和scanf默认读取不到空格和换行
+	// 可用 istream 类对象的 get 方法来解决这个问题,get可以读入任意的字符
+	char buff[11]{'0'};
+	for (size_t i = 0; i < 4; ++i) {
+		buff[i] = cin.get();
+	}
+	cout << buff << endl;
+
+	//m_string::string s;
+	///*for (int i = 0; i < 3; ++i) {
+	//	cin >> s;
+	//	cout << s << endl;
+	//}*/
+	//cin >> s;
+	//cout << s << endl;
 }
 void TestCompare() {
 	std::string s1("hello world");
@@ -180,15 +183,22 @@ void Test_String() {
 	printf("%p\n", s1.c_str());		//vs下的写法  总是深拷贝
 	printf("%p\n", s2.c_str());
 }
+void TestOut() {
+	m_string::string str1("hello world");
+	m_string::string str2("hello world\0hello Linux");
+	cout << str1 << endl;
+	cout << str2 << endl;
+}
 int main() {
 
 	//Test1();
 	//TestString_2();
-	TestInsert();
+	//TestInsert();
 	//TestErase();
 	//TestFind();
 	//TestResize();
-	//Test_cin();
+	Test_cin();
+	//TestOut();
 	//TestCompare();
 	//Test_CopyConstruct();
 	//Test_String();
