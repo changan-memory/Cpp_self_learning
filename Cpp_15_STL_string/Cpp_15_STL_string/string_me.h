@@ -162,7 +162,7 @@ namespace m_string {
 			if (request_capacity > _capacity) {	//请求的空间大于_capacity时，才扩容
 				char* newSpace = new char[request_capacity + 1];	//多开一个空间存放\0
 				//strcpy(newSpace, _str);		//new是异地扩容
-				memcpy(newSpace, _str, _size + 1);
+				memcpy(newSpace, _str, _size + 1);		//拷贝\0
 				delete[] _str;
 				_str = newSpace;
 				_capacity = request_capacity;
@@ -231,7 +231,10 @@ namespace m_string {
 				reserve(_size + len);
 
 			size_t end = _size;		//从末尾的 \0 开始挪动
-			while (end >= pos && end != npos) {
+			//跳出循环时，end 的值 为 pos - 1
+			//如果在 0 位置插入 end最后会变成 size_t -1 也就是npos 整形的最大值
+			while (end >= pos && end != npos) {	
+				
 				_str[end + len] = _str[end];
 				--end;
 			}
@@ -418,8 +421,9 @@ istream& operator>>(istream& in, m_string::string& s) {
 		ch = in.get();		// 读了之后，直接去读下一个字符，就可以表示清除了
 
 	int i = 0;
-	while (ch != ' ' && ch != '\n') {	//这种写法读不到字符串中的空格或换行,认为
-		//可以选择 使用 \n 还是 ' '作为字符串的分隔符
+	//while (ch != '\n') {				// 这种写法,类似于getline的实现，以换行符作为多个字符串的分隔
+	while (ch != ' ' && ch != '\n') {	//这种写法读不到字符串中的空格或换行
+										//可以选择 使用 \n 还是 ' '作为字符串的分隔符
 		//s += ch;		//+=，当输入的字符串非常大时，会不断扩容,利用buff减少扩容的次数
 		buff[i++] = ch;
 		if (i == 127) {

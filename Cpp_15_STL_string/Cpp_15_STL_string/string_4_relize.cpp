@@ -123,19 +123,17 @@ void TestResize() {
 void Test_cin() {
 	//用cin和scanf输入数据时，要以空格和换行进行分割多个值，注定cin和scanf默认读取不到空格和换行
 	// 可用 istream 类对象的 get 方法来解决这个问题,get可以读入任意的字符
-	char buff[11]{'0'};
+	/*char buff[11]{'0'};
 	for (size_t i = 0; i < 4; ++i) {
 		buff[i] = cin.get();
 	}
-	cout << buff << endl;
+	cout << buff << endl;*/
 
-	//m_string::string s;
-	///*for (int i = 0; i < 3; ++i) {
-	//	cin >> s;
-	//	cout << s << endl;
-	//}*/
-	//cin >> s;
-	//cout << s << endl;
+	m_string::string s;
+	for (int i = 0; i < 3; ++i) {
+		cin >> s;
+		cout << s << endl;
+	}
 }
 void TestCompare() {
 	std::string s1("hello world");
