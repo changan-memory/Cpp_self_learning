@@ -231,10 +231,8 @@ namespace m_string {
 				reserve(_size + len);
 
 			size_t end = _size;		//从末尾的 \0 开始挪动
-			//跳出循环时，end 的值 为 pos - 1
 			//如果在 0 位置插入 end最后会变成 size_t -1 也就是npos 整形的最大值
-			while (end >= pos && end != npos) {	
-				
+			while (end >= pos && end != npos) {
 				_str[end + len] = _str[end];
 				--end;
 			}
