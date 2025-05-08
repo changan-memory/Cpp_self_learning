@@ -28,6 +28,7 @@ namespace m_vector {
 		size_t capacity() const { return _end_of_storage - _start; }
 		size_t size() const { return _finish - _start; }
 
+		bool empty() const { return size() == 0; }
 		//[]重载
 		T& operator[](size_t pos) {
 			assert(pos < size());
@@ -37,6 +38,12 @@ namespace m_vector {
 			assert(pos < size());
 			return _start[pos];
 		}
+		//front 
+		T& front() { return _start[0]; }
+		const T& front() const { return _start[0]; }
+		// back
+		T& back() { return _start[size() - 1]; }
+		const T& back() const { return _start[size() - 1]; }
 
 		//默认构造函数
 		//我们写的逻辑是 构造时暂不开空间
@@ -217,8 +224,10 @@ namespace m_vector {
 			assert(pos >= _start && pos < _finish);		//检查越界,两重限制，保证了一定有数据
 			//删除逻辑,有数据才能删
 			iterator begin = pos + 1;
-			//while (begin != _finish) {
-			while (begin < _finish) {
+			//while (begin < _finish) {
+			// 这里使用 != 是因为，vector是连续空间的容器，但在非连续的容器例如 list 就不能用 < 了
+			// 为了STL的统一性，就用了 != 
+			while (begin != _finish) {
 				*(begin - 1) = *begin;
 				++begin;
 			}
