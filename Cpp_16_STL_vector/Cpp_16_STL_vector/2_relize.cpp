@@ -170,6 +170,7 @@ void testVector7() {
 		cout << e << " ";
 	cout << endl;
 }
+
 int main() {
 	//testVector1();
 	//testVector2();
@@ -177,7 +178,16 @@ int main() {
 	//testVector4();
 	//testVector5();
 	//testVector6();
-	testVector7();
+	//testVector7();
 
 	return 0;
 }
+
+//int main() {
+//
+//	int i = 0;
+//	int j = int();	// 内置 int 的默认构造是 0
+//	int k = int(20);	// 用 20 进行构造
+//	cout << i << " " << j << " " << k << endl;
+//	return 0;
+//}

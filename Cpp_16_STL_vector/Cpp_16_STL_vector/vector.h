@@ -55,22 +55,19 @@ namespace m_vector {
 		//m_vector::vector<string> v3(10, "1111111");
 
 		// 用n个val来进行构造
-		vector(size_t n, const T& val = T()) 
-		{
+		vector(size_t n, const T& val = T()) {
 			resize(n, val);
 		}
 		//用一个 int 类型的构造来解决 使用 size_t n 时，会和迭代器模板冲突的问题
 		// 数字字面量默认被匹配成 int
-		vector(int n, const T& val = T())
-		{
+		vector(int n, const T& val = T()) {
 			resize(n, val);
 		}
 
 		//用迭代器区间进行构造 [first, last)
 		//模板内可以有模板，可以用其他容器的迭代器进行初始化
 		template<class InputIterator>			//单类型的模板，两个类型必须一样
-		vector(InputIterator first, InputIterator last) 
-		{
+		vector(InputIterator first, InputIterator last) {
 			while (first != last) {
 				push_back(*first);
 				++first;
@@ -138,10 +135,10 @@ namespace m_vector {
 			}
 		}
 		
-		//resize 初始化，val可以有默认值(缺省参数)，但如何确定缺省参数的类型
-		// 此时 T() 本质是一个T类型的匿名对象 ，会调用T类型的默认构造，写一个类，一定要提供默认构造
-		// 如果是 int 等内置类型 resize怎么跑？   理论上不能跑
-		// 有了模板后，C++对内置类型进行了升级，也支持内置类型有默认构造函数
+		/*resize 初始化，val可以有默认值(缺省参数)，但如何确定缺省参数的类型
+		 此时 T() 本质是一个T类型的匿名对象 ，会调用T类型的默认构造，写一个类，一定要提供默认构造
+		 如果是 int 等内置类型 resize怎么跑？   理论上不能跑
+		 有了模板后，C++对内置类型进行了升级，也支持内置类型有默认构造函数*/
 		void resize(size_t n, const T& val = T()) {
 			//判断要求的情况
 			if (n < size())		//改变大小
