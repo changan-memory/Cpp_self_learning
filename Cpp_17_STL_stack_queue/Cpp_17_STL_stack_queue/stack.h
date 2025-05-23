@@ -1,16 +1,9 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <list>
-#include <stack>
-#include <queue>
-#include <deque>
 
-using namespace std;
 
 // ÊÊÅäÆ÷Ä£Ê½
 namespace m_stack {
-	template<class T, class Container = list<T>>
+	template<class T, class Container = list<T> >
 	class stack {
 	public:
 		stack(){}

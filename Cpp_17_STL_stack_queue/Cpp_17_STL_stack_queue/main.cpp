@@ -1,9 +1,14 @@
 #include <iostream>
+#include <vector>
+#include <list>
 #include <stack>
 #include <queue>
+#include <deque>
 
 using namespace std;
+
 #include "stack.h"
+#include "queue.h"
 
 // stack 和 queue 的使用
 void testUse_stack_queue() {
@@ -32,9 +37,9 @@ void testUse_stack_queue() {
 
 }
 
-int main() {
-
-	//testUse_stack_queue();
-	m_stack::testStack();
-	return 0;
-}
+//int main() {
+//
+//	//m_stack::testStack();
+//	m_queue::testQueue();
+//	return 0;
+//}
