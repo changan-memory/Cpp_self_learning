@@ -17,6 +17,9 @@ namespace m_vector {
 	public:
 		typedef T* iterator;
 		typedef const T* const_iterator;
+		class A {
+
+		};
 	public:
 		//µü´úÆ÷Óëconstµü´úÆ÷
 		iterator begin() { return _start; }
@@ -244,4 +247,6 @@ namespace m_vector {
 		iterator _finish;
 		iterator _end_of_storage;*/
 	};
+	vector<double>::A;
+	vector<int>::iterator;
 }
