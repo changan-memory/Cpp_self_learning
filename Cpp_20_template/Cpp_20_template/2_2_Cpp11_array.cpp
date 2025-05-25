@@ -7,8 +7,8 @@ using namespace std;
 
 void testArray() {
 	// C++11更新了一个array   支持模板的静态数组
-	int a[8];
-	//array<int, 10> a;
+	//int a[8];
+	array<int, 10> a;
 	a[0] = 0;
 	for (auto e : a)
 		cout << e << " ";
@@ -16,7 +16,7 @@ void testArray() {
 
 	// array对越界的检查十分严格，越界读写都能检查
 	// 普通数组，不能越界检查读，少部分越界写可以检查出来
-	//a[8];
+	//a[10];
 
 	vector<int> v(10, 0);
 	for (auto e : v)
