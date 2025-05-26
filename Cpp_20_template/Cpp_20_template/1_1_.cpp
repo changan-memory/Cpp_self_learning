@@ -123,9 +123,9 @@ void test2() {
 	st1.func();
 }
 
-int main() {
-
-	test1();
-	//test2();
-	return 0;
-}
+//int main() {
+//
+//	test1();
+//	//test2();
+//	return 0;
+//}

@@ -113,6 +113,9 @@ void test4() {
 	Data<char&, double&> d8;			// 特化 Data<T1&, T2&>
 	Data<char&, double*> d9;			// 特化 Data<T1&, T2*>
 }
+
+// 一般在开发中，特化都是 特化一些极小的类
+
 //int main() {
 //	
 //	//test3();
