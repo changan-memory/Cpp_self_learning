@@ -1,6 +1,3 @@
-// 1. 非类型模板参数
-
-
 #include <iostream>
 #include <vector>
 #include <list>
@@ -95,7 +92,7 @@ void test1() {
 //public:
 //	
 //private:
-//	T _bash[N];
+//	T _base[N];
 //	int _top;
 //};
 //void test2() {	
