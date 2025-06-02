@@ -102,7 +102,7 @@ private:
 // 可根据 特化出来的具体类型的需求 做具体安排
 void test4() {
 	// 偏特化  偏特化  部分  模板参数
-	cout << "偏特化  偏特化  部分  模板参数" << endl;
+	cout << "偏特化  偏特化部分模板参数" << endl;
 	Data<int, int> d1;   // 未特化 Data<T1, T2>
 	Data<int, double> d2;	// 特化 Data<int, double>
 	Data<Data<int, int>, double> d3;	// 特化一次 Data<T1, T2>  Data<T, double>
@@ -119,8 +119,18 @@ void test4() {
 // 一般在开发中，特化都是 特化一些极小的类
 
 //int main() {
+//	cout << "偏特化  偏特化部分模板参数" << endl;
+//
+//	Data<int, int> d1;   // 未特化 Data<T1, T2>
+//	Data<int, double> d2;	// 特化 Data<int, double>
+//	Data<Data<int, int>, double> d3;	// 特化一次 Data<T1, T2>  Data<T, double>
+//	Data<Data<vector<int>, int>, double> d4;	// 特化两次 Data<T1, T2>  Data<T, double>
 //	
-//	//test3();
-//	test4();
+//	cout << "偏特化  对类型进一步限制" << endl;
+//	Data<int*, double*> d5;			// 特化 Data<T1*, T2*>
+//	Data<void*, void*> d6;			// 特化 Data<T1*, T2*>
+//	Data<int*, double&> d7;			// 特化 Data<T1*, T2&>
+//	Data<char&, double&> d8;			// 特化 Data<T1&, T2&>
+//	Data<char&, double*> d9;			// 特化 Data<T1&, T2*>
 //	return 0;
 //}
