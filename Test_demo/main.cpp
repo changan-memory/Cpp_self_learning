@@ -21,13 +21,13 @@
 #include "stack.h"
 using namespace std;
 
-//int main() {
-//	m_stack::stack<int> st1;
-//	st1.push(1);
-//	st1.push(2);	//调用push，链接错误
-//	// 链接错误，在符号表中，找不到push函数的地址
-//	st1.top();		// top
-//	st1.size();		//调用size无链接错误
-//
-//	return 0;
-//}
+int main() {
+	m_stack::stack<int> st1;
+	st1.push(1);
+	st1.push(2);	//调用push，链接错误
+	// 链接错误，在符号表中，找不到push函数的地址
+	st1.top();		// top
+	st1.size();		//调用size无链接错误
+
+	return 0;
+}
