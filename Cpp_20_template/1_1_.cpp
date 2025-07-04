@@ -4,7 +4,7 @@
 using namespace std;
 // 模板 的两大 控制作用
 // 1. 控制容器中存放的数据的类型  实现容器中的类型的通配化
-// 2. 控制代码的逻辑: 适配器模式：传入不同的容器或迭代器类型，可以适配出不同的容器和迭代器
+// 2. 控制某种 代码设计的逻辑 : 适配器模式：传入不同的容器或迭代器类型，可以适配出不同的容器和迭代器
 // 只要是 传类型，就可以用模板，模板不仅仅是 类型参数化，还有更多的用法和功能，比如适配器
 // 或者通过传入不同的类型   实现不同的功能
 
@@ -12,7 +12,8 @@ using namespace std;
 // 模板中 typename 和 class 的区别
 // 场景1  遍历容器 假设有一个vector需要遍历
 void Print(const vector<int>& v) {
-	vector<int>::const_iterator it = v.begin();
+	//vector<int>::const_iterator it = v.begin();
+	typename vector<int>::const_iterator it = v.begin();
 	while (it != v.end()) {
 		cout << *it << " ";
 		++it;
@@ -36,7 +37,7 @@ void Print(const vector<int>& v) {
 // 作模板参数中，使用typename和class效果一样
 ////template<class Container>
 
-// 这里的 Container 不知到是什么，但是知道是一个容器
+// 这里的 Container 不知道是什么，但是知道是一个容器
 // 且可以支持所有的容器
 template<typename Container>			
 void Print(const Container& con) {
@@ -94,6 +95,15 @@ void test1() {
 	l1.push_back(7);
 	l1.push_back(8);
 	Print(l1);
+
+	vector<int> v5(3, 6);
+	v5.push_back(7);
+	v5.push_back(8);
+	v5.push_back(9);
+	v5.push_back(19);
+	for (auto& e : v5) {
+		cout << e << endl;
+	}
 }
 
 // 场景2 非类型模板参数
