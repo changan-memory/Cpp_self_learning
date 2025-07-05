@@ -18,7 +18,7 @@
 
 
 #include <iostream>
-#include "stack.h"
+#include "stack.hpp"
 using namespace std;
 
 int main() {
@@ -28,6 +28,6 @@ int main() {
 	// 链接错误，在符号表中，找不到push函数的地址
 	st1.top();		// top
 	st1.size();		//调用size无链接错误
-
+	cout << "stack.hpp" << endl;
 	return 0;
 }

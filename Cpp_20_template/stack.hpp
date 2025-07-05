@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <deque>
+
 // 适配器模式
 namespace m_stack {
 	template<class T, class Container = std::deque<T> >
@@ -60,6 +61,4 @@ namespace m_stack {
 	// 模板不支持直接的分离编译，有更好的解决方法
 	// STL中 是将 声明和定义分离开，但放在了同一个文件中
 	// 当前已经放在了同一个文件中
-
-
 }
