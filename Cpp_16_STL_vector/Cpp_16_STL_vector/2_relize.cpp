@@ -178,7 +178,7 @@ int main() {
 	//testVector4();
 	//testVector5();
 	//testVector6();
-	//testVector7();
+	testVector7();
 
 	return 0;
 }
