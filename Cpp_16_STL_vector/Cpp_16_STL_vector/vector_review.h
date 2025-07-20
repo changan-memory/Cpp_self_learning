@@ -47,6 +47,10 @@ namespace mm_vector {
 			,_finish(nullptr)
 			,_end_of_storage(nullptr)
 		{ }
+		// 用n个val构造
+		vector(size_t n, const T& val = T()){
+			resize(n, val);
+		}
 		~vector() {
 			if (_start) {
 				delete[] _start;
@@ -78,6 +82,26 @@ namespace mm_vector {
 				_end_of_storage = _start + newSize;
 			}
 		}
+		// 用resize初始化一个vector 
+		//resize 初始化，val可以有默认值(缺省参数)，但如何确定缺省参数的类型
+		// 此时 T() 本质是一个T类型的匿名对象 ，会调用T类型的默认构造，写一个类，一定要提供默认构造
+		// 如果是 int 等内置类型 resize怎么跑？   理论上不能跑
+		// 有了模板后，C++对内置类型进行了升级，也支持内置类型有默认构造函数
+		// 初始化 n 个数据
+		void resize(size_t n, const T& val = T()) {
+			// 要求size 变小时，直接 该 _finish
+			if (n < size())
+				_finish = _start + n;
+			// 要求size 变大时，多出来的空间用val初始化
+			else {
+				reserve(n);		// n 小于 capacity时，reserve什么都不做，大于时扩容
+				// 将多出来的空间用val填充
+				while(_finish != _start + n){
+					*_finish = val;
+					++_finish;
+				}
+			}
+		}
 		void push_back(const T& obj) {
 			// 判断是否需要扩容
 			if (_finish == _end_of_storage) {
@@ -88,6 +112,9 @@ namespace mm_vector {
 			*_finish = obj;
 			++_finish;
 			//insert(end(), obj);
+		}
+		void pop_back() {
+			erase(--end());
 		}
 
 		// 这里本质上解决的是内部的迭代器失效
@@ -140,7 +167,41 @@ namespace mm_vector {
 			++_finish;
 			return pos;
 		}
-		
+		// 为了解决迭代器失效问题，erase返回传入的pos的下一个位置
+		iterator erase(iterator pos) {
+			assert(pos >= _start && pos < _finish);
+			//删除
+			iterator begin = pos + 1;
+			//while (begin < end()) {
+			while (begin != _finish) {
+				*(begin - 1) = *begin;
+				++begin;
+			}
+			--_finish;
+			// 为了解决迭代器失效问题，erase返回传入的pos的下一个位置
+			// 挪动数据后，pos 就是被删除元素后面第一个元素的位置
+			return pos;	
+		}
 
+		//void insert(iterator pos, size_t n, const T& obj) {
+		//	// 保证插入位置正确
+		//	assert(pos >= _start && pos <= _finish);
+		//	// 扩容逻辑
+		//	if (_finish + n > _end_of_storage) {
+		//		size_t len = pos - _start;	// 记录 pos 相对于 _start 的位置
+		//		size_t newCapacity = (capacity() == 0 ? 4 : capacity() + n);
+		//		reserve(newCapacity);
+		//		// 扩容后更新pos的值，防止迭代器失效
+		//		pos = _start + len;
+		//	}
+		//	// 挪动数据
+		//	memcpy(pos + n, pos, sizeof(T) * n);
+		//	size_t len = 0;
+		//	while (len < n) {
+		//		_start[len] = obj;
+		//	}
+		//	_finish += n;
+		//	
+		//}
 	};
 }
