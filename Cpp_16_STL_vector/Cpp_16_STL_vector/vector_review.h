@@ -15,19 +15,10 @@ namespace mm_vector {
 	public:
 		typedef T* iterator;
 		typedef const T* const_iterator;
-		iterator begin() {
-			return _start;
-		}
-		// end是最后一个元素的下一个位置
-		iterator end() {
-			return _finish;
-		}
-		const_iterator begin() const {
-			return _start;
-		}
-		const_iterator end() const {
-			return _finish;
-		}
+		iterator begin() { return _start; }
+		iterator end() { return _finish; }	// end是最后一个元素的下一个位置
+		const_iterator begin() const { return _start; }
+		const_iterator end() const { return _finish; }
 		// 指针 - 指针 得到中间的元素个数
 		size_t capacity() const {
 			return _end_of_storage - _start;
@@ -51,6 +42,45 @@ namespace mm_vector {
 		vector(size_t n, const T& val = T()){
 			resize(n, val);
 		}
+		// 拷贝构造函数
+		vector(const vector<T>& v)
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _end_of_storage(nullptr)
+		{
+			/*T* newSpace = new T[v.capacity()];*/
+			_start = new T[v.capacity()];
+			// 凡是调用memcpy的地方，应该实现深拷贝类型的扩容
+			//memcpy(_start, v._start, sizeof(T) * v.size());
+			for (size_t i = 0; i < v.size(); ++i) {
+				_start[i] = v[i];
+			}
+			_finish = _start + v.size();
+			_end_of_storage = _start + v.capacity();
+		}
+		// 拷贝构造函数的第二种写法
+		/*vector(const vector<T>& v)
+			:_start(nullptr)
+			, _finish(nullptr)
+			, _end_of_storage(nullptr)
+		{
+			reserve(v.capacity());
+			for (auto& e : v)
+				push_back(e);
+		}*/
+		// = 重载 深拷贝
+		// v2 = v1
+		// 传参时，传值，会调用拷贝构造函数，我们已经实现了深拷贝  operator= 的深拷贝
+		vector<T>& operator=(vector<T> tmp) {
+			swap(tmp);
+			return *this;
+		}
+		// 两个vector交换
+		void swap(vector<T>& v) {
+			std::swap(v._start, _start);
+			std::swap(v._finish, _finish);
+			std::swap(v._end_of_storage, _end_of_storage);
+		}
 		~vector() {
 			if (_start) {
 				delete[] _start;
@@ -72,7 +102,12 @@ namespace mm_vector {
 				T* newSpace = new T[newSize];
 				size_t oldSize = size();
 				if (_start) {
-					memcpy(newSpace, _start, sizeof(T) * oldSize);
+					// 凡是调用memcpy的地方，应该实现深拷贝类型的扩容
+					//memcpy(newSpace, _start, sizeof(T) * oldSize);
+					for (size_t i = 0; i < oldSize; ++i) {
+						newSpace[i] = _start[i];	// 用自定义类中的 = 重载实现深拷贝类型的拷贝
+						// 该写法也可以满足内置类型的拷贝的需求，内置类型本身就可以用=赋值
+					}
 					delete[] _start;
 				}
 				_start = newSpace;
