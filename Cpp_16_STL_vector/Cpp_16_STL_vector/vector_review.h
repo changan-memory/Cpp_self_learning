@@ -13,8 +13,8 @@ namespace mm_vector {
 	template<typename T>
 	class vector {
 	public:
-		template<class T>
-		friend ostream& operator<<(ostream& out, const vector<T>& v);
+		template<class T1>
+		friend ostream& operator<<(ostream& out, const vector<T1>& v);
 
 		typedef T* iterator;
 		typedef const T* const_iterator;
@@ -270,8 +270,8 @@ namespace mm_vector {
 		//	
 		//}
 	};
-	template<class T>
-	ostream& operator<<(ostream& out, const vector<T>& v) {
+	template<class T1>
+	ostream& operator<<(ostream& out, const vector<T1>& v) {
 		for (auto& e : v) 
 			out << e << " ";
 		return out;
