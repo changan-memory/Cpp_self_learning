@@ -13,6 +13,9 @@ namespace mm_vector {
 	template<typename T>
 	class vector {
 	public:
+		template<class T>
+		friend ostream& operator<<(ostream& out, const vector<T>& v);
+
 		typedef T* iterator;
 		typedef const T* const_iterator;
 		iterator begin() { return _start; }
@@ -25,6 +28,9 @@ namespace mm_vector {
 		}
 		size_t size() const {
 			return _finish - _start;
+		}
+		bool empty() const {
+			return _start == _finish;
 		}
 
 	private:
@@ -120,15 +126,15 @@ namespace mm_vector {
 			return _start[pos];
 		}
 
-		void reserve(size_t newSize) {
+		void reserve(size_t newCapacity) {
 			// reserve 不只给push_back用，需要检查是否需要扩容
-			if (newSize > capacity()) {
-				T* newSpace = new T[newSize];
-				size_t oldSize = size();
+			if (newCapacity > capacity()) {
+				T* newSpace = new T[newCapacity];
+				size_t old_sz = size();
 				if (_start) {
 					// 凡是调用memcpy的地方，应该实现深拷贝类型的扩容
-					//memcpy(newSpace, _start, sizeof(T) * oldSize);
-					for (size_t i = 0; i < oldSize; ++i) {
+					//memcpy(newSpace, _start, sizeof(T) * old_sz);
+					for (size_t i = 0; i < old_sz; ++i) {
 						newSpace[i] = _start[i];	// 用自定义类中的 = 重载实现深拷贝类型的拷贝
 						// 该写法也可以满足内置类型的拷贝的需求，内置类型本身就可以用=赋值
 					}
@@ -137,8 +143,8 @@ namespace mm_vector {
 				_start = newSpace;
 				//_finish = _start + size();	// 该实现有问题，这样写_finish的值没变
 				// 里面的size()  _start 指向新空间了，但此时_finish仍然指向旧空间
-				_finish = _start + oldSize;
-				_end_of_storage = _start + newSize;
+				_finish = _start + old_sz;
+				_end_of_storage = _start + newCapacity;
 			}
 		}
 		// 用resize初始化一个vector 
@@ -242,6 +248,7 @@ namespace mm_vector {
 			return pos;	
 		}
 
+
 		//void insert(iterator pos, size_t n, const T& obj) {
 		//	// 保证插入位置正确
 		//	assert(pos >= _start && pos <= _finish);
@@ -263,4 +270,10 @@ namespace mm_vector {
 		//	
 		//}
 	};
+	template<class T>
+	ostream& operator<<(ostream& out, const vector<T>& v) {
+		for (auto& e : v) 
+			out << e << " ";
+		return out;
+	}
 }

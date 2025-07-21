@@ -183,8 +183,7 @@ void testVector6() {
 }
 
 void testVector7() {
-	mm_vector::vector<int> v(10, 1);
-	mm_vector::vector<int> v1(10u, 1);
+	mm_vector::vector<int> v1(10, 1);
 	mm_vector::vector<string> v2(10, "hello");
 	for (auto& e : v1)
 		cout << e << " ";
@@ -195,6 +194,10 @@ void testVector7() {
 		cout << e << " ";
 	cout << endl;
 }
+void testVector8() {
+	mm_vector::vector<int> v(10, 33);
+	cout << v;
+}
 
 int main() {
 	//testVector1();
@@ -203,7 +206,8 @@ int main() {
 	//testVector4();
 	//testVector5();
 	//testVector6();
-	testVector7();
+	//testVector7();
+	testVector8();
 
 	return 0;
 }
