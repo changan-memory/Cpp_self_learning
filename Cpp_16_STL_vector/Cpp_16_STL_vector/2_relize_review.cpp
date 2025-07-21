@@ -200,14 +200,14 @@ void testVector8() {
 }
 
 int main() {
-	//testVector1();
+	testVector1();
 	//testVector2();
 	//testVector3();
 	//testVector4();
 	//testVector5();
 	//testVector6();
 	//testVector7();
-	testVector8();
+	//testVector8();
 
 	return 0;
 }
