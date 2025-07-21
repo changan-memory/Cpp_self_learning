@@ -28,9 +28,14 @@ namespace mm_vector {
 		}
 
 	private:
-		iterator _start;
+		//与标准库STL中的命名风格保持一致
+		//可以用C++11中的 成员变量缺省值 给初始化列表使用 这样在构造函数中，就不用写初始化列表了
+		iterator _start = nullptr;		
+		iterator _finish = nullptr;	
+		iterator _end_of_storage = nullptr;
+		/*iterator _start;
 		iterator _finish;
-		iterator _end_of_storage;
+		iterator _end_of_storage;*/
 	
 	public:
 		vector()
@@ -38,10 +43,29 @@ namespace mm_vector {
 			,_finish(nullptr)
 			,_end_of_storage(nullptr)
 		{ }
-		// 用n个val构造
-		vector(size_t n, const T& val = T()){
+
+		// mm_vector::vector<int> v(10, 1);	int int 匹配 size_t int 还是 int int
+		// mm_vector::vector<int> v1(10u, 1); unsigned int int 匹配 size_t int 还是 int int
+		// mm_vector::vector<string> v2(10, "hello"); int char* 只能匹配 size_t char*
+		// 用n个val构造  复用resize 时，三个指针应该初始化
+		vector(size_t n, const T& val = T()) {	// 成员变量给了缺省值，可以不写初始化列表
 			resize(n, val);
 		}
+		vector(int n, const T& val = T()) {	//多提供一个 int int 类型的构造
+			resize(n, val);
+		}
+		// 用一个迭代器区间进行初始化
+		// 类模板内的成员函数，依然可以再是另一个模板函数
+		// [first, last]
+		template<typename InputIterator>
+		vector(InputIterator first, InputIterator last) {
+			while (first != last) {
+				push_back(*first);	// vector<int> v(10, 1);  构造时匹配错误，匹配成了迭代器区间初始化
+									// 然后 int 不能解引用，因此报错
+				++first;
+			}
+		}
+
 		// 拷贝构造函数
 		vector(const vector<T>& v)
 			:_start(nullptr)

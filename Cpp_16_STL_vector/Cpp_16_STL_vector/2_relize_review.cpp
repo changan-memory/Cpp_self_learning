@@ -124,7 +124,7 @@ void testVector3() {
 }
 
 void testVector4() {
-	mm_vector::vector<int> v(3, 6);
+	mm_vector::vector<int> v;
 	v.resize(10, 2);
 
 	//resize 初始化，val可以有默认值(缺省参数)，但如何确定缺省参数的类型
@@ -182,17 +182,19 @@ void testVector6() {
 		cout << e << " ";
 }
 
-//void testVector7() {
-//	m_vector::vector<int> v1(10, 1);
-//	m_vector::vector<int> v2(10, 1);
-//	m_vector::vector<string> v3(10, "hello");
-//	for (auto& e : v1)
-//		cout << e << " ";
-//	cout << endl;
-//	for (auto& e : v3)
-//		cout << e << " ";
-//	cout << endl;
-//}
+void testVector7() {
+	mm_vector::vector<int> v(10, 1);
+	mm_vector::vector<int> v1(10u, 1);
+	mm_vector::vector<string> v2(10, "hello");
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
+	
+	mm_vector::vector<int> v3(v1.begin(), v1.end());
+	for (auto& e : v2)
+		cout << e << " ";
+	cout << endl;
+}
 
 int main() {
 	//testVector1();
@@ -200,8 +202,8 @@ int main() {
 	//testVector3();
 	//testVector4();
 	//testVector5();
-	testVector6();
-	//testVector7();
+	//testVector6();
+	testVector7();
 
 	return 0;
 }
