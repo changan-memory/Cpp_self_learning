@@ -67,10 +67,10 @@ void testVector2() {
 	//p记录的是原空间地址，如果原空间发生了扩容，原空间的地址会发生改变
 	// 那么p就成了野指针, 这里是野指针造成的迭代器失效
 
-	////insert之后，迭代器 有可能会失效(主要会在发生 扩容时 迭代器失效)，但不同平台的扩容策略不同，难以避免
-	//// insert 之后就不要使用这个形参迭代器了，因为insert后，迭代器可能失效
-	////正确的做法是，使用insert返回的结果当来获取pos的值
-	////这样的接口是不安全的，因此  直接认为 insert后，迭代器失效了
+	/*insert之后，迭代器 有可能会失效(主要会在发生 扩容时 迭代器失效)，但不同平台的扩容策略不同，难以避免
+	 insert 之后就不要使用这个实参参迭代器了，因为insert后，迭代器可能失效
+	正确的做法是，使用insert返回的结果当来获取pos的值
+	这样的接口是不安全的，因此  直接认为 insert后，迭代器失效了*/
 	////cout << *pres << endl;
 	//print(v1);
 }
@@ -96,30 +96,30 @@ void testVector3() {
 	cout << endl;*/
 
 	// 修改后无问题
-	auto it = v1.begin();
-	while (it != v1.end()) {
-		if (*it % 2 == 0)
-			it = v1.erase(it);
-		//v1.erase(it);
-		else
-			++it;
-	}
-	for (auto& e : v1)
-		cout << e << " ";
-	cout << endl;
+	//auto it = v1.begin();
+	//while (it != v1.end()) {
+	//	if (*it % 2 == 0)
+	//		it = v1.erase(it);
+	//	//v1.erase(it);
+	//	else
+	//		++it;
+	//}
+	//for (auto& e : v1)
+	//	cout << e << " ";
+	//cout << endl;
 
 	// 也认为 erase 会迭代器失效, 不能访问
 	// vs下会进行强制检查，访问会报错
-	//auto it = v1.begin() + 3;
-	//v1.erase(it);
-	//cout << *it << endl;
-	//++it;
-	//cout << *it << endl;
-	//print(v1);
+	auto it = v1.begin() + 3;
+	v1.erase(it);
+	cout << *it << endl;
+	++it;
+	cout << *it << endl;
+	print(v1);
 	//// g++中实现的erase，删除时也是不抹除数据的
 	// 考虑到平台的可移植性，认为erase也会迭代器失效
 
-	// 还有一些平台，不断地删除数据，删到只剩原有数据的一般时，有的平台会进行缩容
+	// 还有一些平台，不断地删除数据，删到只剩原有数据的一半时，有的平台会进行缩容
 	// 缩容一般都是异地缩容，那么erase后也会出现迭代器失效
 }
 
@@ -200,9 +200,9 @@ void testVector8() {
 }
 
 int main() {
-	testVector1();
+	//testVector1();
 	//testVector2();
-	//testVector3();
+	testVector3();
 	//testVector4();
 	//testVector5();
 	//testVector6();

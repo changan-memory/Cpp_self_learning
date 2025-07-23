@@ -1,17 +1,50 @@
-#include <vector>
 #include <iostream>
+#include "m_vector.h"
 using namespace std;
+
+//int main() {
+//	mm_vector::vector<int> v1;
+//	v1.reserve(4);
+//	v1.push_back(1);
+//	v1.push_back(2);
+//	v1.push_back(3);
+//	v1.push_back(4);
+//	for (auto& e : v1)
+//		cout << e << " ";
+//	cout << endl;
+//	// 外部迭代器失效
+//	// 不能排除有人会这样子调用insert函数
+//	mm_vector::vector<int>::iterator p = v1.begin() + 3;
+//	v1.insert(p, 300);
+//	cout << "insert之后，*p之前 : ";
+//	for (auto& e : v1)
+//		cout << e << " ";
+//	cout << endl <<"*p之后:              ";
+//	*p += 100;
+//	for (auto& e : v1)
+//		cout << e << " ";
+//	cout << endl;
+//	return 0;
+//}
 
 int main() {
 
-	//resize 初始化，val可以有默认值(缺省参数)，但如何确定缺省参数的类型
-	// 此时 T() 本质是一个T类型的匿名对象 ，会调用T类型的默认构造，
-	// 一般而言，写一个类，一定要提供默认构造
-	// 如果是 int 等内置类型 resize怎么跑？   理论上不能跑
-	// 有了模板后，C++对内置类型进行了升级，也支持内置类型有默认构造函数
-	int i = 1;
-	int j = int();	//默认是 0  int 默认是0 double 默认是 0.0  指针默认是nullptr
-	int k = int(20);
-	cout << i << " " << j << " " << k << endl;
-	return 0;
+	mm_vector::vector<int> v1;
+	//std::vector<int> v1;
+	v1.push_back(1);
+	v1.push_back(2);
+	v1.push_back(2);
+	v1.push_back(3);
+	v1.push_back(4);
+	v1.push_back(5);
+	v1.push_back(6);
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
+	mm_vector::vector<int>::iterator it = v1.begin();
+	v1.erase(it);
+	cout << *it << endl;
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
 }

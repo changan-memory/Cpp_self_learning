@@ -36,19 +36,20 @@ namespace mm_vector {
 	private:
 		//与标准库STL中的命名风格保持一致
 		//可以用C++11中的 成员变量缺省值 给初始化列表使用 这样在构造函数中，就不用写初始化列表了
-		iterator _start = nullptr;		
-		iterator _finish = nullptr;	
+		iterator _start = nullptr;
+		iterator _finish = nullptr;
 		iterator _end_of_storage = nullptr;
 		/*iterator _start;
 		iterator _finish;
 		iterator _end_of_storage;*/
-	
+
 	public:
 		vector()
 			:_start(nullptr)
-			,_finish(nullptr)
-			,_end_of_storage(nullptr)
-		{ }
+			, _finish(nullptr)
+			, _end_of_storage(nullptr)
+		{
+		}
 
 		// mm_vector::vector<int> v(10, 1);	int int 匹配 size_t int 还是 int int
 		// mm_vector::vector<int> v1(10u, 1); unsigned int int 匹配 size_t int 还是 int int
@@ -67,7 +68,7 @@ namespace mm_vector {
 		vector(InputIterator first, InputIterator last) {
 			while (first != last) {
 				push_back(*first);	// vector<int> v(10, 1);  构造时匹配错误，匹配成了迭代器区间初始化
-									// 然后 int 不能解引用，因此报错
+				// 然后 int 不能解引用，因此报错
 				++first;
 			}
 		}
@@ -161,45 +162,68 @@ namespace mm_vector {
 			else {
 				reserve(n);		// n 小于 capacity时，reserve什么都不做，大于时扩容
 				// 将多出来的空间用val填充
-				while(_finish != _start + n){
+				while (_finish != _start + n) {
 					*_finish = val;
 					++_finish;
 				}
 			}
 		}
 		void push_back(const T& obj) {
-			// 判断是否需要扩容
-			if (_finish == _end_of_storage) {
-				size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
-				reserve(newCapacity);
-			}
-			// 插入逻辑
-			*_finish = obj;
-			++_finish;
-			//insert(end(), obj);
+			//// 判断是否需要扩容
+			//if (_finish == _end_of_storage) {
+			//	size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
+			//	reserve(newCapacity);
+			//}
+			//// 插入逻辑
+			//*_finish = obj;
+			//++_finish;
+			insert(end(), obj);
 		}
 		void pop_back() {
 			erase(--end());
 		}
 		// 会导致迭代器失效的insert函数
-		void insert(iterator pos, const T& obj) {
-			// 保证插入位置正确
-			assert(pos >= _start && pos <= _finish);
-			// 扩容逻辑
-			if (_finish == _end_of_storage) {
-				size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
-				reserve(newCapacity);
-			}
-			// 挪动元素
-			iterator end = _finish - 1;
-			while (end >= pos) {
-				*(end + 1) = *end;
-				--end;
-			}
-			// 插入数据
-			*pos = obj;
-			++_finish;
-		}
+		//void insert(iterator pos, const T& obj) {
+		//	// 保证插入位置正确
+		//	assert(pos >= _start && pos <= _finish);
+		//	// 扩容逻辑
+		//	if (_finish == _end_of_storage) {
+		//		size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
+		//		reserve(newCapacity);
+		//	}
+		//	// 挪动元素
+		//	iterator end = _finish - 1;
+		//	while (end >= pos) {
+		//		*(end + 1) = *end;
+		//		--end;
+		//	}
+		//	// 插入数据
+		//	*pos = obj;
+		//	++_finish;
+		//}
+
+		// 仅更新了 pos 值的insert函数
+		//void insert(iterator pos, const T& obj) {
+		//	// 保证插入位置正确
+		//	assert(pos >= _start && pos <= _finish);
+		//	// 扩容逻辑
+		//	if (_finish == _end_of_storage) {
+		//		size_t len = pos - _start;	// 记录 pos 相对于 _start 的位置
+		//		size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
+		//		reserve(newCapacity);
+		//		// 扩容后更新pos的值，防止迭代器失效
+		//		pos = _start + len;
+		//	}
+		//	// 挪动元素
+		//	iterator end = _finish - 1;
+		//	while (end >= pos) {
+		//		*(end + 1) = *end;
+		//		--end;
+		//	}
+		//	// 插入数据
+		//	*pos = obj;
+		//	++_finish;
+		//}
 
 		// 这里本质上解决的是内部的迭代器失效
 		// 迭代器失效问题：pos记录的是地址。
@@ -227,31 +251,29 @@ namespace mm_vector {
 		//	++_finish;
 		//}
 
-		
-
 		// 解决内部和外部迭代器的最终insert实现方案
-		//iterator insert(iterator pos, const T& obj) {
-		//	// 保证插入位置正确
-		//	assert(pos >= _start && pos <= _finish);
-		//	// 扩容逻辑
-		//	if (_finish == _end_of_storage) {
-		//		size_t len = pos - _start;	// 记录 pos 相对于 _start 的位置
-		//		size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
-		//		reserve(newCapacity);
-		//		// 扩容后更新pos的值，防止迭代器失效
-		//		pos = _start + len;
-		//	}
-		//	// 挪动元素
-		//	iterator end = _finish - 1;
-		//	while (end >= pos) {
-		//		*(end + 1) = *end;
-		//		--end;
-		//	}
-		//	// 插入数据
-		//	*pos = obj;
-		//	++_finish;
-		//	return pos;
-		//}
+		iterator insert(iterator pos, const T& obj) {
+			// 保证插入位置正确
+			assert(pos >= _start && pos <= _finish);
+			// 扩容逻辑
+			if (_finish == _end_of_storage) {
+				size_t len = pos - _start;	// 记录 pos 相对于 _start 的位置
+				size_t newCapacity = (capacity() == 0 ? 4 : capacity() * 2);
+				reserve(newCapacity);
+				// 扩容后更新pos的值，防止迭代器失效
+				pos = _start + len;
+			}
+			// 挪动元素
+			iterator end = _finish - 1;
+			while (end >= pos) {
+				*(end + 1) = *end;
+				--end;
+			}
+			// 插入数据
+			*pos = obj;
+			++_finish;
+			return pos;
+		}
 
 		// 为了解决迭代器失效问题，erase返回传入的pos的下一个位置
 		iterator erase(iterator pos) {
@@ -266,7 +288,7 @@ namespace mm_vector {
 			--_finish;
 			// 为了解决迭代器失效问题，erase返回传入的pos的下一个位置
 			// 挪动数据后，pos 就是被删除元素后面第一个元素的位置
-			return pos;	
+			return pos;
 		}
 
 
@@ -293,7 +315,7 @@ namespace mm_vector {
 	};
 	template<class T1>
 	ostream& operator<<(ostream& out, const vector<T1>& v) {
-		for (auto& e : v) 
+		for (auto& e : v)
 			out << e << " ";
 		return out;
 	}
