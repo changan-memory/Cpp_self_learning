@@ -52,7 +52,7 @@ namespace mm_vector {
 
 		// mm_vector::vector<int> v(10, 1);	int int 匹配 size_t int 还是 int int
 		// mm_vector::vector<int> v1(10u, 1); unsigned int int 匹配 size_t int 还是 int int
-		// mm_vector::vector<string> v2(10, "hello"); int char* 只能匹配 size_t char*
+		// mm_vector::vector<string> v2(10, "hello"); int char* 只能匹配 size_t T
 		// 用n个val构造  复用resize 时，三个指针应该初始化
 		vector(size_t n, const T& val = T()) {	// 成员变量给了缺省值，可以不写初始化列表
 			resize(n, val);

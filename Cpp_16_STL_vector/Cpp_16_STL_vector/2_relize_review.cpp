@@ -88,8 +88,7 @@ void testVector3() {
 	v1.push_back(5);
 	v1.push_back(6);
 	for (auto& e : v1)
-		cout << e << " ";
-	cout << endl;
+		cout << e << " "; cout << endl;
 	/*v1.erase(v1.begin());
 	for (auto& e : v1)
 		cout << e << " ";
@@ -108,19 +107,42 @@ void testVector3() {
 	//	cout << e << " ";
 	//cout << endl;
 
+	// 1 2 2 3 4 5 6 删除其中所有的偶数
+	auto it = v1.begin();
+	while (it != v1.end()) {
+		if (*it % 2 == 0)
+			v1.erase(it);
+		else
+			++it;
+	}
+	for (auto& e : v1)
+		cout << e << " ";
+	cout << endl;
+
 	// 也认为 erase 会迭代器失效, 不能访问
-	// vs下会进行强制检查，访问会报错
-	auto it = v1.begin() + 3;
+	// vs2019下会进行强制检查，访问会报错
+	/*auto it = v1.begin() + 3;
 	v1.erase(it);
+	for (auto& e : v1)
+		cout << e << " "; cout << endl;
+	*it = 100;
 	cout << *it << endl;
 	++it;
 	cout << *it << endl;
-	print(v1);
+	print(v1);*/
 	//// g++中实现的erase，删除时也是不抹除数据的
 	// 考虑到平台的可移植性，认为erase也会迭代器失效
 
 	// 还有一些平台，不断地删除数据，删到只剩原有数据的一半时，有的平台会进行缩容
 	// 缩容一般都是异地缩容，那么erase后也会出现迭代器失效
+
+	//auto it = v1.begin() + 3;
+	////it = v1.erase(it);
+	//v1.erase(it);
+	//for (auto& e : v1)
+	//	cout << e << " "; cout << endl;
+	//cout<<*it << endl;
+	
 }
 
 void testVector4() {

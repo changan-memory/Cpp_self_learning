@@ -58,9 +58,10 @@ namespace mm_vector {
 		vector(size_t n, const T& val = T()) {	// 成员变量给了缺省值，可以不写初始化列表
 			resize(n, val);
 		}
-		vector(int n, const T& val = T()) {	//多提供一个 int int 类型的构造
-			resize(n, val);
-		}
+		//vector(int n, const T& val = T()) {	//多提供一个 int int 类型的构造
+		//	resize(n, val);
+		//}
+
 		// 用一个迭代器区间进行初始化
 		// 类模板内的成员函数，依然可以再是另一个模板函数
 		// [first, last]
