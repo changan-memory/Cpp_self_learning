@@ -127,8 +127,8 @@ void test_sort_vextor_list_1() {
     // vector 和 list分别插入 大量数据
     srand(time(0));
     //const int N = 100000;
-    //const int N = 1000000;
-    const int N = 5000000;
+    const int N = 1000000;
+    //const int N = 5000000;
     vector<int> v;
     v.reserve(N);
     list<int> lt1;
@@ -157,9 +157,10 @@ void test_sort_vextor_list_1() {
 void test_sort_vextor_list_2() {
     // vector 和 list分别插入 大量数据
     srand(time(0));
+    //const int N = 10000;
     //const int N = 100000;
-    const int N = 1000000;
-    //const int N = 10000000;
+    //const int N = 1000000;
+    const int N = 100000000;
     vector<int> v;
     v.reserve(N);
     list<int> lt1;
@@ -264,9 +265,9 @@ int main() {
     //test_reverse();
     //test_sort();
     //test_sort_vextor_list_1();
-    //test_sort_vextor_list_2();
+    test_sort_vextor_list_2();      // release版本下，测试的效果更明显
     //test_remove();
-    test_splice();
+    //test_splice();
 
     return 0;
 }
