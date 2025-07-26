@@ -259,15 +259,15 @@ void test_splice() {
     for (auto e : mylist1)
         cout << e << " "; cout << endl;
 }
-int main() {
-
-    //testAccess();
-    //test_reverse();
-    //test_sort();
-    //test_sort_vextor_list_1();
-    test_sort_vextor_list_2();      // release版本下，测试的效果更明显
-    //test_remove();
-    //test_splice();
-
-    return 0;
-}
+//int main() {
+//
+//    //testAccess();
+//    //test_reverse();
+//    //test_sort();
+//    //test_sort_vextor_list_1();
+//    test_sort_vextor_list_2();      // release版本下，测试的效果更明显
+//    //test_remove();
+//    //test_splice();
+//
+//    return 0;
+//}
