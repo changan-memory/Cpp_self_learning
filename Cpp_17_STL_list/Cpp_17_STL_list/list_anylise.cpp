@@ -1,9 +1,8 @@
+
 #pragma once
 #include <assert.h>
-#include <iostream>
 
-namespace m_list {
-	// 适配器模式 实现 vector 和 list 的反向迭代器
+namespace mm_list {
 
 	// 带头双向循环链表
 	template<typename T>
@@ -17,7 +16,8 @@ namespace m_list {
 			:_next(nullptr)
 			, _prev(nullptr)
 			, _val(val)
-		{ }
+		{
+		}
 	};
 	// 自定义一个迭代器, 完成迭代器++it取下一个位置或*it取数据的功能
 	// list 迭代器 本质是一个自定义类型，内嵌了node*
@@ -40,14 +40,15 @@ namespace m_list {
 		// 用一个结点的指针构造迭代器
 		__list_iterator(Node* node)		// 本来写了 const Node* node  但_node为非 const 因此错误
 			:_node(node)				// 这里实现浅拷贝没有问题，
-		{ }
+		{
+		}
 		//// 解引用, 节点中的数据
 		////const T& operator*() {  返回 const T& 时，调用*it 返回的是 常引用, 不能修改改对象
 		//T& operator*() {
 		//	// 出了作用域 结点还在，因此可以用引用返回
 		//	return _node->_val;
 		//}
-		
+
 		Ref operator*() {
 			// 出了作用域 结点还在，因此可以用引用返回
 			return _node->_val;
@@ -62,7 +63,7 @@ namespace m_list {
 		}
 		// 为了解决const迭代器的问题，operator->的返回值用了模板，同时兼顾了const和非const类型
 		// 迭代器++，返回迭代器		
-		self& operator++() {	
+		self& operator++() {
 			_node = _node->_next;
 			return *this;		// ++之后变成下一个位置的迭代器，因此要返回*this
 		}
@@ -144,7 +145,7 @@ namespace m_list {
 		//typedef const __list_iterator<T> const_iterator;	// 该写法导致 迭代器本身是const
 		// const __list_iterator<T> 表示迭代器本身	// 而不是表示迭代器指向的对象是const的
 		// const __list_iterator<T> 这种写法会导致 iterator 不能++
-		
+
 		/*const T* ptr1;		// const 迭代器模拟的是该种 const 指针
 		T* const ptr2;*/
 		// 如何设计 const 迭代器
@@ -170,29 +171,12 @@ namespace m_list {
 		}
 
 	public:
-		list() { empty_init(); }
-		// lt2(lt1)
-		list(const list<T>& lt) {
-			empty_init();
-			for (auto& e : lt)
-				push_back(e);	// 直接尾插，就不用拷贝了
-		}
-		void empty_init() {
+		list()
+			:_size(0)
+		{
 			_head = new Node;
 			_head->_next = _head;
 			_head->_prev = _head;
-			_size = 0;
-		}
-		//lt2 = lt1
-		//list& operator=(list tmp) {   // 在类内 使用模板类的时候，写类名和类型都可以
-		// 但是建议  统一使用类型  因为可读性更高，不容易出错
-		list<T>& operator=(list<T> tmp) {
-			swap(tmp);
-			return *this;
-		}
-		void swap(list<T>& lt) {
-			std::swap(_head, lt._head);
-			std::swap(_size, lt._size);
 		}
 		~list() {
 			// ... iterator 无需实现析构函数, iterator只是帮助我们访问数据

@@ -1,5 +1,4 @@
 #include "m_list.h"
-#include <iostream>
 
 void print(const m_list::list<int>& lt) {
 	m_list::list<int>::const_iterator it = lt.begin();	// 自定义迭代器类型 
@@ -103,13 +102,47 @@ void test_list3() {
 	lt.push_back(40);
 	print(lt);
 	std::cout << lt.size() << std::endl;
-
+}
+void test_list4() {
+	m_list::list<int> lt;
+	lt.push_back(1);
+	lt.push_back(2);
+	lt.push_back(3);
+	lt.push_back(4);
+	for (auto& e : lt)
+		std::cout << e << " "; std::cout << std::endl;
+	m_list::list<int> lt1(lt);
+	for (auto& e : lt)
+		std::cout << e << " "; std::cout << std::endl;
+}
+void test_list5() {
+	m_list::list<int> lt;
+	lt.push_back(1);
+	lt.push_back(2);
+	lt.push_back(3);
+	lt.push_back(4);
+	for (auto& e : lt)
+		std::cout << e << " "; std::cout << std::endl;
+	m_list::list<int> lt2;
+	lt2.push_back(3);
+	lt2.push_back(4);
+	lt2.push_back(5);
+	lt2.push_back(6);
+	for (auto& e : lt2)
+		std::cout << e << " "; std::cout << std::endl;
+	lt = lt2;
+	for (auto& e : lt)
+		std::cout << e << " "; std::cout << std::endl;
+	for (auto& e : lt2)
+		std::cout << e << " "; std::cout << std::endl;
 }
 int main() {
 	//test_list1();
 	//test_list2_insert_erase();
 	//test_operator();
-	test_list3();
+	//test_list3();
+	//test_list4();
+	test_list5();
 
 
 	return 0;

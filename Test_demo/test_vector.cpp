@@ -49,10 +49,10 @@ using namespace std;
 //	cout << endl;
 //}
 
-int main() {
-	mm_vector::vector<int> v1(10, 1);
-	for (auto& e : v1)
-		cout << e << " ";
-	cout << endl;
-	return 0;
-}
+//int main() {
+//	mm_vector::vector<int> v1(10, 1);
+//	for (auto& e : v1)
+//		cout << e << " ";
+//	cout << endl;
+//	return 0;
+//}

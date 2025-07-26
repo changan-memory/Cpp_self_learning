@@ -101,3 +101,30 @@
 ////	cout << endl;
 ////	return 0;
 ////}
+#include <iostream>
+using namespace std;
+class Date {
+public:
+	Date(int year = 2025, int month = 7, int day = 1)
+		:_year(year)
+		,_month(month)
+		,_day(day)
+	{ }
+	// 普通对象调用普通版本  const对象调用const版本
+	// 普通对象和const对象都能调用const版本
+	void showDate() const {
+		cout << _year << "年--" << _month << "月--" << _day <<"日"<< endl;
+	}
+private:
+	int _year;
+	int _month;
+	int _day;
+};
+
+int main() {
+	Date d1(6, 6, 6);
+	const Date d2(2025, 8, 31);
+	d1.showDate();
+	d2.showDate();
+	return 0;
+}
