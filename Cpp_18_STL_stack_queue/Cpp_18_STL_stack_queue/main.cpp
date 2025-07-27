@@ -38,9 +38,9 @@ void testUse_stack_queue() {
 
 }
 
-int main() {
-	testUse_stack_queue();
-	//m_stack::testStack();
-	//m_queue::testQueue();
-	return 0;
-}
+//int main() {
+//	//testUse_stack_queue();
+//	//m_stack::testStack();
+//	m_queue::testQueue();
+//	return 0;
+//}
