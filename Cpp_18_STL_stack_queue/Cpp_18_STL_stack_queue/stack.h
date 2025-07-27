@@ -2,6 +2,7 @@
 
 
 // 适配器模式
+// 没必要再从0实现一个栈， 数据的存储可以用其他容器实现。栈由其他容器适配出来
 namespace m_stack {
 	template<class T, class Container = list<T> >
 	class stack {

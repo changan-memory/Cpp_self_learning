@@ -11,6 +11,7 @@ using namespace std;
 #include "queue.h"
 
 // stack 和 queue 的使用
+// stack 和 queue 没有迭代器，因为这两个容器的特性  不支持随便遍历
 void testUse_stack_queue() {
 	stack<int> st;
 	st.push(1);
@@ -37,9 +38,9 @@ void testUse_stack_queue() {
 
 }
 
-//int main() {
-//
-//	//m_stack::testStack();
-//	m_queue::testQueue();
-//	return 0;
-//}
+int main() {
+	testUse_stack_queue();
+	//m_stack::testStack();
+	//m_queue::testQueue();
+	return 0;
+}

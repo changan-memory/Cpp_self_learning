@@ -61,7 +61,7 @@ public:
      * @return bool布尔型
      */
     bool IsPopOrder(vector<int>& pushV, vector<int>& popV) {
-        // write code here
+        // write code here   算法的模拟思想
         stack<int> st;
         int pushIndex = 0, outIndex = 0;
         while (!st.empty() && outIndex < popV.size()) {
