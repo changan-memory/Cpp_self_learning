@@ -16,6 +16,12 @@ void test_deque() {
 	for (auto& e : dq)
 		cout << e << " ";
 	cout << endl;
+	deque<int>::iterator it = dq.begin();
+	while (it != dq.end()) {
+		cout << *it << " ";
+		++it;
+	}
+	cout << endl;
 }
 
 int main() {
