@@ -40,7 +40,6 @@ namespace question4 {
 	class Person {
 	public:
 		Person() { ++_count; }
-	//protected:
 		string _name; // 姓名
 	public:
 		static int _count; // 统计人的个数。
@@ -71,13 +70,11 @@ namespace question4 {
 		// 只需要在基类的构造函数中  将count++
 		Person p1;
 		Person p2;
-		Person p3;
 		Student s1;
 		Student s2;
 		Graduate g1;
 		Graduate g2;
 		Graduate g3;
-		Graduate g4;
 		cout << Person::_count << endl;
 		cout << Student::_count << endl;
 		cout << Graduate::_count << endl;

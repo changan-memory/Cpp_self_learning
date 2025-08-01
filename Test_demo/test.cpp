@@ -130,11 +130,11 @@ private:
 //}
 
 // NB  main函数的第三个参数 可以获取环境变量
-int main(int argc, char* argv[], char* env[]) {
-	int i = 0;
-	for (; env[i]; ++i) {
-		// printf("argv[%d]->%s\n", i, env[i]);
-		printf("%s\n", env[i]);
-	}
-	return 0;
-}
+//int main(int argc, char* argv[], char* env[]) {
+//	int i = 0;
+//	for (; env[i]; ++i) {
+//		// printf("argv[%d]->%s\n", i, env[i]);
+//		printf("%s\n", env[i]);
+//	}
+//	return 0;
+//}

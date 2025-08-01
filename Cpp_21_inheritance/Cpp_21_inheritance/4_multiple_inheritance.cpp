@@ -81,9 +81,9 @@ void test_virtual() {
 	d._c = 4;
 	d._d = 5;
 }
-int main() {
-	//question5::test1();
-	// 虚继承是 如何解决 菱形继承的问题的
-	test_virtual();
-	return 0;
-}
+//int main() {
+//	//question5::test1();
+//	// 虚继承是 如何解决 菱形继承的问题的
+//	test_virtual();
+//	return 0;
+//}
