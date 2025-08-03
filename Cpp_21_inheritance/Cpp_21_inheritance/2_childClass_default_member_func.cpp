@@ -38,7 +38,7 @@ namespace question2 {
 		Student(const char* name = "张三", int id = 0)
 			: Person(name)	// 手动初始化父类那部分成员的语法，类似于构造一个匿名对象来初始化
 			, _id(id)		// 建议初始化列表的顺序和 声明的顺序(初始化的顺序)保持一致
-			//,_name(name)	// 不能显式 在初始化列表中 
+			//,_name(name)	// 不能显式 在初始化列表中 初始化父类或基类成员，在函数体内中可以
 		{
 			// 这里初始化列表中出现的顺序和初始化顺序无关
 			// 初始化列表中，是按照成员的声明顺序初始化的，继承的类，相当于先声明了基类，
@@ -95,7 +95,7 @@ namespace question2 {
 	}
 }
 
-//int main() {
-//	question2::test1();
-//	return 0;
-//}
+int main() {
+	question2::test1();
+	return 0;
+}

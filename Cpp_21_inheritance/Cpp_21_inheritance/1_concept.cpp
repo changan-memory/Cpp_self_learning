@@ -3,22 +3,22 @@
 using namespace std;
 
 
-// 1. 继承的基本写法 和 成员访问限定符和继承方式的组合 默认继承方式  用的最多的是 public 继承
-// 
-// 继承就是为了复用， 将已定义的属性，通过继承的方式，来实现代码复用
-// 以下 Person 是基类，也叫父类，继承形成的类 交 派生类，或者 子类
-class Person {
-public:
-	void Print() {
-		cout << "name:" << _name << endl;
-		cout << "age:" << _age << endl;
-	}
-//protected:
-public:
-//private:
-	string _name = "peter"; // 姓名
-	int _age = 18; // 年龄
-};
+//// 1. 继承的基本写法 和 成员访问限定符和继承方式的组合 默认继承方式  用的最多的是 public 继承
+//// 
+//// 继承就是为了复用， 将已定义的属性，通过继承的方式，来实现代码复用
+//// 以下 Person 是基类，也叫父类，继承形成的类 交 派生类，或者 子类
+//class Person {
+//public:
+//	void Print() {
+//		cout << "name:" << _name << endl;
+//		cout << "age:" << _age << endl;
+//	}
+////protected:
+//public:
+////private:
+//	string _name = "peter"; // 姓名
+//	int _age = 18; // 年龄
+//};
 
 // 三种访问限定符  public protected  private
 // 对应有三种继承方式  public protected private
@@ -26,50 +26,52 @@ public:
 // 如果子类是 class 继承时不写继承方式，默认是 private 继承
 // 如果子类是 struct 继承时不写继承方式，默认是 public 继承
 //class Student1 : public Person {
-struct Student1 : Person {
-
-public:
-	// 父类的私有成员，子类 所有继承方式 都无法访问
-	void func() {
-		cout << "name:" << _name << endl;
-		cout << "age:" << _age << endl;
-	}
-protected:
-	int _stuid = 0;
-};
-
-
-class Student : public Person {
-protected:
+////struct Student1 : Person {
+//
 //public:
-	int _stuid = 1;
-};
-class Teacher : public Person {
-protected:
-	int _jobid = 2;
-};
-// 一般都使用 public 继承
-
-int main() {
-	Student s;
-	Teacher t;
-	s.Print();
-	t.Print();
-	return 0;
-}
-
+//	// 父类的私有成员，子类 所有继承方式 都无法访问
+//	void func() {
+//		cout << "name:" << _name << endl;
+//		//cout << "age:" << _age << endl;
+//	}
+//protected:
+//	int _stuid = 0;
+//};
+//
+//
+//class Student : public Person {
+//protected:
+////public:
+//	int _stuid = 1;
+//};
+//class Teacher : public Person {
+//protected:
+//	int _jobid = 2;
+//};
+////// 一般都使用 public 继承
+////
+////int main() {
+////	Student s;
+////	Teacher t;
+////	s.Print();
+////	t.Print();
+////	return 0;
+////}
+//
 //// 2. 基类和 派生类 对象 赋值转换
 //void test1() {
+//	// 两个不同类型的对象 赋值，都是不允许的。如果允许，那就发生了类型转换
 //	Person p;
 //	Student s;
-//  int i = 0;
-//  double d = i;
+//	int i = 0;
+//    double d = i;
 //	// 不同类型之间的赋值，都会发生 用 临时变量转换 
 //	// 子类给父类 赋值，没有发生隐式类型转换
 //	// 这里会发生赋值兼容(也叫切割、切片)，这里 赋值的过程不产生临时对象
-//	// 切割 ，把子类中 父类 的那部分，拷贝给父类
+//	// 切割 ，赋值时 把子类中 父类 的那部分，拷贝给父类
 //	p = s;		// 子类 可以给父类赋值 但父类不能给子类赋值
-//	//s = p;
+//	//s = (Student) p;	// 强制类型转换 也是不允许的，因为子类中可能会有一些父类中没有的成员变量
+//	//s = p;			// 无法完成赋值
 //
 //	// 子类给父类赋值，被称为向上转换
 //}
@@ -102,11 +104,11 @@ protected:
 	int _num = 111;	//身份证号
 };
 
-// 隐藏/重定义 的概念: 当子类和父类有同名的成员时，子类的成员隐藏了父类的成员
-// 隐藏的成员 包括成员变量和成员函数
-// 实际中，不建议 子类和父类写同名的成员变量 和 成员函数
-// 子类和父类中的 同名函数也可以同时存在，不指明类域时，优先访问子类的成员函数
-// 查找的顺序  函数局部域 > 子类域 > 父类域 > 全局域
+ //隐藏/重定义 的概念: 当子类和父类有同名的成员时，子类的成员隐藏了父类的成员
+ //隐藏/重定义的成员 包括成员变量和成员函数
+ //实际中，不建议 子类和父类写同名的成员变量 和 成员函数
+ //子类和父类中的 同名函数也可以同时存在，不指明类域时，优先访问子类的成员函数
+ //查找的顺序  函数局部域 > 子类域 > 父类域 > 全局域
 // 不能说互相隐藏，只能是子类隐藏父类的，父类不能调用的子类的函数、不能访问子类的成员变量
 class Student : public Person {
 public:
@@ -162,6 +164,6 @@ namespace question {
 //	//test2();
 //	//test3();
 //	//using namespace question;
-//	question::test1();
+//	//question::test1();
 //	return 0;
 //}
