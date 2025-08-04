@@ -73,7 +73,6 @@ namespace question5 {
 //public:
 //	int _a;
 //};
-//// class B : public A
 //class B :  public A {
 //public:
 //	int _b;
@@ -87,17 +86,15 @@ namespace question5 {
 //public:
 //	int _d;
 //};
-// 探究 virtual 继承的底层原理
+ //探究 virtual 继承的底层原理
 class A {
 public:
 	int _a;
 };
-// class B : public A
 class B : virtual public A {
 public:
 	int _b;
 };
-// class C : public A
 class C : virtual public A {
 public:
 	int _c;
@@ -113,10 +110,11 @@ void test_virtual() {
 	d._b = 3;
 	d._c = 4;
 	d._d = 5;
+	d._a = 0;
 }
-//int main() {
-//	//question5::test1();
-//	// 虚继承是 如何解决 菱形继承的问题的
-//	test_virtual();
-//	return 0;
-//}
+int main() {
+	//question5::test1();
+	// 虚继承是 如何解决 菱形继承的问题的
+	test_virtual();
+	return 0;
+}

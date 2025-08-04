@@ -100,7 +100,7 @@ namespace question2 {
 	}
 }
 
-int main() {
-	question2::test1();
-	return 0;
-}
+//int main() {
+//	question2::test1();
+//	return 0;
+//}

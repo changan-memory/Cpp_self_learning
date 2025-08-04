@@ -131,34 +131,34 @@
 //}
 
 
-#include <iostream>
-using namespace std;
-class Person {
-public:
-	string _name; // 姓名
-	int _age;
-};
-class Student : virtual public Person {
-protected:
-	int _num; //学号
-};
-class Teacher : virtual public Person {
-protected:
-	int _id; // 职工编号
-};
-// 多继承的语法
-class Assistant : public Student, public Teacher {
-protected:
-	string _majorCourse; // 主修课程
-};
-int main() {
-	Assistant a;
-	a.Student::_name = "xxx";
-	a.Teacher::_name = "yyy";
-	a._name = "zzz";
-	a.Person::_name = "www";
-	return 0;
-}
+//#include <iostream>
+//using namespace std;
+//class Person {
+//public:
+//	string _name; // 姓名
+//	int _age;
+//};
+//class Student : virtual public Person {
+//protected:
+//	int _num; //学号
+//};
+//class Teacher : virtual public Person {
+//protected:
+//	int _id; // 职工编号
+//};
+//// 多继承的语法
+//class Assistant : public Student, public Teacher {
+//protected:
+//	string _majorCourse; // 主修课程
+//};
+//int main() {
+//	Assistant a;
+//	a.Student::_name = "xxx";
+//	a.Teacher::_name = "yyy";
+//	a._name = "zzz";
+//	a.Person::_name = "www";
+//	return 0;
+//}
 
 //void test1() {
 //	// 这样会有二义性无法明确知道访问的是哪一个
@@ -174,3 +174,54 @@ int main() {
 //	as._name = "yyy";
 //	as._name = "zzz";
 //}
+
+//#include <iostream>
+//using namespace std;
+//class Base1 { public: int _b1; }; class Base2 { public: int _b2; };
+//class Derive : public Base1, public Base2 { public: int _d; };
+//// 对象模型
+//// 对象在内存中的排布，谁先继承，谁就在上面排布
+//int main() {
+//	Derive d;
+//	Base1* p1 = &d;
+//	Base2* p2 = &d;
+//	Derive* p3 = &d;
+//	printf("%p\n", p1);
+//	printf("%p\n", p2);
+//	printf("%p\n", p3);
+//	return 0;
+//}
+#include <iostream>
+using namespace std;
+class A {
+public:
+	A(const char* s) { cout << s << endl; }
+	~A() {}
+};
+class B :virtual public A {
+public:
+	B(const char* s1, const char* s2) :A(s1) { cout << s2 << endl; }
+};
+class C :virtual public A {
+public:
+	C(const char* s1, const char* s2) :A(s1) { cout << s2 << endl; }
+};
+// B C都继承A，A是最先被声明的
+class D :public B, public C {	
+public:
+	D(const char* s1, const char* s2, const char* s3, const char* s4)
+		:B(s1, s2)
+		,C(s1, s3)
+		,A(s1)
+	{
+		cout << s4 << endl;
+	}
+};
+// D里面只有一份A, A的构造函数只会调用1次
+// 菱形虚拟继承，A既不在B也不在C中
+int main() {
+	D* p = new D("class A", "class B", "class C", "class D");
+	//A B C D // 答案
+	delete p;
+	return 0;
+}
