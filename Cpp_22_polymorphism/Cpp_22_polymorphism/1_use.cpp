@@ -3,7 +3,7 @@ using namespace std;
 
 namespace use_1 {
 	// 多态的条件
-	// 0. 具有继承关系的子类和派生列
+	// 0. 具有继承关系的子类和派生类
 	// 1. 必须通过基类的指针或者引用调用虚函数
 	// 2. 被调用的函数必须是虚函数，且派生类必须对基类的虚函数进行重写
 	class Person {
@@ -44,11 +44,13 @@ namespace use_1 {
 	}
 }
 
-// 析构函数的重写
-// 析构函数加virtual , 算不算虚函数重写
-// 算，因为 类的析构函数，都被处理成了 destructor 这个统一的名字
-// 看起来名字不同，实际相同，因此构成 重写
-// 为什么要这么处理？ 因为要让他们构成重写   为什么要让他们构成重写呢
+ //析构函数可以时虚函数吗，为什么要是虚函数
+ //析构函数的重写
+ //析构函数加virtual , 算不算虚函数重写
+ //算，因为 类的析构函数，都被处理成了 destructor 这个统一的名字，
+ //函数名相同，加了virtual，就是重写
+ //看起来名字不同，实际相同，因此构成 重写
+ //为什么要这么处理？ 因为要让他们构成重写   为什么要让他们构成重写呢
 namespace use_2 {
 	class Person {
 	public:
@@ -58,7 +60,7 @@ namespace use_2 {
 	class Student : public Person {
 	public:
 		//virtual ~Student() { cout << "~Student()" << endl; }
-		~Student() { 
+		virtual ~Student() { 
 			cout << "~Student()" << endl;
 			delete[] _ptr;
 		}
@@ -68,20 +70,23 @@ namespace use_2 {
 	
 	void test1() {
 		Person p;
-		Student s;	// stu 先析构，再析构 父类中的
+		Student stu;	// stu 先析构，再析构 stu中父类的那部分
 	}
 	// 不重写析构函数，会出错的场景
 	void test2() {
 		Person* p = new Person;
 		delete p;
-
-		p = new Student;
-		delete p;
+		p = new Student;	// delete 由两部分构成 先调用该类型的析构函数，再释放空间
+		// 父类的指针 有可能指向父类  也有可能指向子类
+		delete p;	// p->destructor() + operator delete(p)
+					// 不重写时，
+		// 我们期望 p->destructor() 为多态调用
+		// 指向谁，就调用
 	}
 }
-int main() {
-	//use_1::test1();
-	//use_2::test1();
-	use_2::test2();
-	return 0;
-}
+//int main() {
+//	//use_1::test1();
+//	//use_2::test1();
+//	use_2::test2();
+//	return 0;
+//}
