@@ -111,10 +111,28 @@ void test_virtual() {
 	d._c = 4;
 	d._d = 5;
 	d._a = 0;
+	D d1;
+	d1.B::_a = 1;
+	d1.C::_a = 2;
+	d1._b = 3;
+	d1._c = 4;
+	d1._d = 5;
+	d1._a = 0;
+	return;
+}
+void test_virtual2() {
+	B b;
+	D d;
+	B* ptr = &b;
+	ptr->_a = 1;
+
+	ptr = &d;
+	ptr->_a = 2;
 }
 int main() {
 	//question5::test1();
 	// 虚继承是 如何解决 菱形继承的问题的
-	test_virtual();
+	//test_virtual();
+	test_virtual2();
 	return 0;
 }

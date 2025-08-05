@@ -1,4 +1,7 @@
-//#include <iostream>
+#include <iostream>
+using namespace std;
+namespace test_question {
+	//#include <iostream>
 //#include <string>
 //
 //using namespace std;
@@ -191,61 +194,62 @@
 //	printf("%p\n", p3);
 //	return 0;
 //}
-#include <iostream>
-using namespace std;
-class A {
-public:
-	A(const char* s) { cout << s << endl; }
-	~A() {}
-};
-class B :virtual public A {
-public:
-	B(const char* s1, const char* s2) :A(s1) { cout << s2 << endl; }
-};
-class C :virtual public A {
-public:
-	C(const char* s1, const char* s2) :A(s1) { cout << s2 << endl; }
-};
-// B C都继承A，A是最先被声明的
-// D中只有一份A,因此A只会被构造一次
-class D :public B, public C {	
-public:
-	D(const char* s1, const char* s2, const char* s3, const char* s4)
-		:B(s1, s2)
-		,C(s1, s3)
-		,A(s1)
-	{
-		cout << s4 << endl;
-	}
-};
-// D里面只有一份A, A的构造函数只会调用1次
-// 菱形虚拟继承，A既不在B也不在C中
-int main() {
-	D* p = new D("class A", "class B", "class C", "class D");
-	//A B C D // 答案
-	delete p;
-	return 0;
-}
 
-//// virtual节省空间
-//#include <iostream>
-//using namespace std;
-//
-//class A {
-//public:
-//	int a[128];
-//};
-////class B : virtual public A {
-//class B : public A {
-//	int x;
-//};
-//class C : public A {
-//	int y;
-//};
-//class D :  public B, public C {
-//	int z;
-//};
-//int main() {
-//	cout << sizeof(D) << endl;
-//	return 0;
-//}
+	class A {
+	public:
+		A(const char* s) { cout << s << endl; }
+		~A() {}
+	};
+	class B :virtual public A {
+	public:
+		B(const char* s1, const char* s2) :A(s1) { cout << s2 << endl; }
+	};
+	class C :virtual public A {
+	public:
+		C(const char* s1, const char* s2) :A(s1) { cout << s2 << endl; }
+	};
+	// B C都继承A，A是最先被声明的
+	// D中只有一份A,因此A只会被构造一次
+	class D :public B, public C {
+	public:
+		D(const char* s1, const char* s2, const char* s3, const char* s4)
+			:B(s1, s2)
+			, C(s1, s3)
+			, A(s1)
+		{
+			cout << s4 << endl;
+		}
+	};
+	// D里面只有一份A, A的构造函数只会调用1次
+	// 菱形虚拟继承，A既不在B也不在C中
+	int main() {
+		D* p = new D("class A", "class B", "class C", "class D");
+		//A B C D // 答案
+		delete p;
+		return 0;
+	}
+
+	//// virtual节省空间
+	//#include <iostream>
+	//using namespace std;
+	//
+	//class A {
+	//public:
+	//	int a[128];
+	//};
+	////class B : virtual public A {
+	//class B : public A {
+	//	int x;
+	//};
+	//class C : public A {
+	//	int y;
+	//};
+	//class D :  public B, public C {
+	//	int z;
+	//};
+	//int main() {
+	//	cout << sizeof(D) << endl;
+	//	return 0;
+	//}
+
+}
