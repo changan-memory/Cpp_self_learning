@@ -54,8 +54,8 @@ namespace use_1 {
 namespace use_2 {
 	class Person {
 	public:
-		//virtual ~Person() { cout << "~Person()" << endl; }
-		~Person() { cout << "~Person()" << endl; }
+		virtual ~Person() { cout << "~Person()" << endl; }
+		//~Person() { cout << "~Person()" << endl; }
 	};
 	class Student : public Person {
 	public:
@@ -67,7 +67,6 @@ namespace use_2 {
 	protected:
 		int* _ptr = new int[10];
 	};
-	
 	void test1() {
 		Person p;
 		Student stu;	// stu 先析构，再析构 stu中父类的那部分
@@ -78,10 +77,13 @@ namespace use_2 {
 		delete p;
 		p = new Student;	// delete 由两部分构成 先调用该类型的析构函数，再释放空间
 		// 父类的指针 有可能指向父类  也有可能指向子类
+		// 通过父类的
+					// delete分为两部分 调析构 + 释放空间
 		delete p;	// p->destructor() + operator delete(p)
 					// 不重写时，
-		// 我们期望 p->destructor() 为多态调用
-		// 指向谁，就调用
+		// 父类的指针 有可能指向父类  也有可能指向子类
+		// 我们期望 p->destructor() 为多态调用 而不是普通调用
+		// 指向谁，就调用谁的析构函数
 	}
 }
 //int main() {
