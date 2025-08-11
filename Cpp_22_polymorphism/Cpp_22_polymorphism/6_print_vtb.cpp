@@ -33,13 +33,17 @@ void printVTB(FUNC_PTR* table) {
 	printf("\n");
 }
 
-int main() {
-	Base b;
-	Derive d;
+//int main() {
+//	Base b;
+//	Derive d;
+//
+//	int ptb1 = *((int*)&b);
+//	printVTB((FUNC_PTR*)ptb1);
+//	int ptb2 = *((int*)&d);
+//	printVTB((FUNC_PTR*)ptb2);
+//	return 0;
+//}
 
-	int ptb1 = *((int*)&b);
-	printVTB((FUNC_PTR*)ptb1);
-	int ptb2 = *((int*)&d);
-	printVTB((FUNC_PTR*)ptb2);
-	return 0;
-}
+// 多态
+// 静态(编译时)多态: 函数重载
+// 动态(运行时)多态: 继承、虚函数重写 的多态
