@@ -22,6 +22,21 @@ public:
 	BSTree()
 		:_root(nullptr)
 	{ }
+
+	BSTree(const BSTree<K>& tree)
+		:_root(nullptr)
+	{
+		_root = Copy(tree._root);
+	}
+	// 现在写法的赋值
+	// t2 = t1
+	BSTree<K>& operator=(BSTree<K> tmp) {
+		std::swap(_root, tmp._root);
+		return *this;
+	}
+	~BSTree() {
+		Destroy(_root);
+	}
 	// 插入时，找到一个空位置插入即可   默认插入的元素不能重复
 	bool insert(const K& key) {
 		// 插入时为空树
@@ -76,12 +91,8 @@ public:
 		}
 		return false;
 	}
-	// find函数的递归版本
-	// 写了一个子函数，因为递归需要用到Private成员_root，来控制递归子树的分支
-	// 如果不写子函数，需要对外提供一个getRoot供调用者使用
-	bool find_R(const K& key) const {
-		return _find_R(_root, key);
-	}
+	
+	// 这里不能用引用代替指针，因为指针可以改变指向，引用一旦绑定，指向不可修改
 	bool erase(const K& key) {
 		Node* parent = nullptr;
 		Node* curNode = _root;
@@ -173,7 +184,39 @@ public:
 		}
 		return false;
 	}
+	// find函数的递归版本
+	// 写了一个子函数，因为递归需要用到Private成员_root，来控制递归子树的分支
+	// 如果不写子函数，需要对外提供一个getRoot供调用者使用
+	bool find_R(const K& key) const {
+		return _find_R(_root, key);
+	}
+	bool insert_R(const K& key) {
+		return _insert_R(_root, key);
+	}
+	bool erase_R(const K& key) {
+		return _erase_R(_root, key);
+	}
 private:
+	Node* Copy(Node* root) {
+		if (root == nullptr)
+			return nullptr;
+		else {
+			Node* newRoot = new Node(root->_key);
+			// 分别递归拷贝 左右子树，拷贝完后，递归回去连接
+			newRoot->_left = Copy(root->_left);
+			newRoot->_right = Copy(root->_right);
+			return newRoot;
+		}
+	}
+	void Destroy(Node*& root) {
+		if (root == nullptr)
+			return;
+		// 二叉树的析构，走后序遍历删除
+		Destroy(root->_left);
+		Destroy(root->_right);
+		delete root;
+		root = nullptr;
+	}
 	void _Inorder(Node* root = _root) const {
 		if (root == nullptr) {
 			return;
@@ -189,11 +232,59 @@ private:
 			return _find_R(root->_left, key);
 		else if (key > root->_key)
 			return _find_R(root->_right, key);
+		// 不 < 不 > 表明查找成功
 		else
 			return true;
 	}
-	bool _insert_R() {
-
+	// 这里参数root加引用，修改指针
+	bool _insert_R(Node*& root, const K& key) {
+		// 走到空的地方，可以开始插入了
+		// 这里可以记录父节点，修改父节点的指针完成插入。不过比较复杂，这里使用
+		if (root == nullptr) {
+			root = new Node(key);
+			return true;
+		}
+		if (key < root->_key)
+			return _insert_R(root->_left, key);
+		else if (key > root->_key)
+			return _insert_R(root->_right, key);
+		else
+			return false;
+	}
+	bool _erase_R(Node*& root, const K& key) {
+		if (root == nullptr)
+			return false;
+		if (key > root->_key)
+			return _erase_R(root->_right, key);
+		else if (key < root->_key)
+			return _erase_R(root->_left, key);
+		// 相等时要删除
+		else {
+			Node* delNode = root;
+			// 1. curNode 左为空
+			if (root->_left == nullptr) {
+				root = root->_right;
+			}
+			// 2. curNode 右为空
+			else if (root->_right == nullptr) {
+				root = root->_left;
+			}
+			// 3. curNode 左右都不为空
+			else {
+				// 找左子树中最大的结点
+				Node* maxNode = root->_left;
+				while (maxNode->_right) {
+					maxNode = maxNode->_right;
+				}
+				std::swap(maxNode->_key, root->_key);
+				// 交换过后，原来的maxNode是左子树中最大的结点，因此其右子树一定为空
+				// 再去左子树中删除一遍
+				return _erase_R(root->_left, key);
+				//return _erase_R(maxNode, key);	// 不能这么写
+			}
+			delete delNode;
+			return true;
+		}
 	}
 private:
 	Node* _root;
