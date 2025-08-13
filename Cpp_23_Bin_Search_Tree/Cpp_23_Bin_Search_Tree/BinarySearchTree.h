@@ -6,7 +6,7 @@ namespace K {
 	// ¶þ²æËÑË÷Ê÷ version -- K
 	template<class K>
 	struct BSTreeNode {
-		typedef BSTreeNode<K> Node;
+		//typedef BSTreeNode<K> Node;
 		BSTreeNode(const K& key)
 			:_left(nullptr)
 			, _right(nullptr)
@@ -226,7 +226,7 @@ namespace K {
 				return;
 			}
 			_Inorder(root->_left);
-			cout << root->_key << " " << endl;;
+			cout << root->_key << " ";
 			_Inorder(root->_right);
 		}
 		bool _find_R(const Node* root, const K& key) const {
