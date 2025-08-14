@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <array>
 #include <map>
 #include <string>
 using namespace std;
@@ -57,8 +58,106 @@ namespace use_2 {
 		// 以上两行 是不同的语法
 	}
 }
+
+namespace use_3 {
+	// auto
+	void test_auto() {
+		int i = 10;
+		auto p = &i;
+		auto pf = malloc;	// 函数指针类型 也可以 自动识别
+		cout << typeid(p).name() << endl;
+		cout << typeid(pf).name() << endl;
+		map<string, string> dict = { {"sort", "排序"}, {"insert", "插入"} };
+		//map<string, string>::iterator it = dict.begin();
+		auto it = dict.begin();
+	}
+
+	// decltype
+
+	// 场景一，类内的成员变量是个函数指针，但是不想写函数指针这个类型
+	class A {
+	private:
+		decltype(malloc) pf_malloc;
+	};
+	// 场景二
+	template<class Func>
+	class B {
+	private:
+		Func _pf;	// 可以传入函数指针
+	};
+	// 关键字decltype将变量的类型声明为表达式指定的类型
+	void test_decltype() {
+		auto pf = malloc;	// 函数指针类型 也可以 自动识别
+		cout << typeid(pf).name() << endl;
+		// 如何定义一个和pf同类型变量
+		//typeid(pf).name _ptr;	// typeid().name 只能获取到变量的类型，不能用于声明/定义变量
+		
+		// auto 定义是必须初始化
+		auto pf1 = pf;	//
+		// decltype		// decltype 可以先只声明，不进行初始化
+		// decltype 可以推导出变量的类型 ，再定义变量，或者作为模板实参
+		decltype(pf) _ptr = malloc;
+		decltype(malloc) _ptr2;		// 单纯先声明一个变量，不初始化
+		// typeid().name   推导出的类型是一个字符串，只能看，不能使用
+		// decltype 可以推导出变量的类型 ，再定义变量，或者作为模板实参
+		
+		// 实例化 B 类
+		B<decltype(pf)> b1;
+
+		// decltype 推理表达式的类型
+		const int x = 1;
+		double y = 2.2;
+		decltype(x * y) ret; // ret的类型是double
+		decltype(&x) p; // p的类型是int*
+		cout << typeid(ret).name() << endl;
+		cout << typeid(p).name() << endl;
+	}
+
+	// nullptr 相关
+	void Func(int) {
+		cout << "Func(int)" << endl;
+	}
+	void Func(int*){
+		cout << "Func(int*)" << endl;
+	}
+	void test_nullptr() {
+		/*
+		#ifndef NULL
+		#ifdef __cplusplus
+		#define NULL 0
+		#else
+		#define NULL ((void *)0)
+		#endif
+		#endif
+		*/
+		int* p = NULL;	// NULL 是宏，会被替换成0， 不够安全  int* p = 0;
+		Func(NULL);		// Func(0)  期望调用int* 版本，却调用了int版本
+	}
+	// 范围for循环，底层是 迭代器 
+}
+
+namespace new_container {
+	// std::array
+	void test_array() {
+		int a1[10];
+		std::array<int, 10> a2;
+		cout << sizeof(a1) << endl;
+		cout << sizeof(a2) << endl;
+		//a1[15];		//  本质 是 指针的解引用   有些越界读，原生数组无法检查
+		//a2[15];		//  本质 是 operatpr[]函数调用，内部检查了越界  越界读写都能检查出来
+
+		// vector 也可以完成 array的功能，还能初始化，显得arrat很鸡肋
+		vector<int> a3(10, 3);
+	}
+	// std::forward_list
+	// 底层实现是  单链表
+}
 int main() {
 	//use_1::test1();
-	use_1::test2();
+	//use_1::test2();
+	//use_3::test_auto();
+	//use_3::test_decltype();
+	//use_3::test_nullptr();
+	new_container::test_array();
 	return 0;
 }

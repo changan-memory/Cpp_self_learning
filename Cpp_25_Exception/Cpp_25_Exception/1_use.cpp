@@ -110,7 +110,7 @@ namespace use_3 {
 		Exception(const string& errmsg, int id)
 			:_errmsg(errmsg)
 			, _id(id)
-		{
+		{ 
 		}
 		virtual string what() const {
 			return _errmsg;
