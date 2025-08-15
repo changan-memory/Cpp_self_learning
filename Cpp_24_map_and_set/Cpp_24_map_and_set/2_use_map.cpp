@@ -65,13 +65,64 @@ namespace test_map {
 			cout << kv.first << " : " << kv.second << endl;
 		}
 	}
+	// 使用 map 统计次数
+	void test3_map() {
+		// 使用 map 统计水果出现的次数t
+		string arr[] = { "苹果", "西瓜", "苹果", "西瓜", "苹果", "苹果", "西瓜",
+		"苹果", "香蕉", "苹果", "香蕉" };
+		// 模板，任意类型都可以，但是底层，该类型应该支持比较大小
+		// 如果一个类不支持比较大小，我们还可以自己写仿函数控制
+		map<string, int> countMap;
+		for (const auto& e : arr) {
+			auto it = countMap.find(e);
+			if (it == countMap.end()) {
+				countMap.insert(make_pair(e, 1));
+			}
+			else {
+				it->second++;
+			}
+		}
+		for (const auto& e : countMap) {
+			cout << e.first << ": " << e.second << endl;
+		}
+	}
+	void test_operator() {
+		// map 的 operator[] 的 原理要重点掌握
+		map<string, string> dict;
+		dict.insert(make_pair("string", "字符串"));
+		dict.insert(make_pair("sort", "排序"));
+		dict.insert(make_pair("insert", "插入"));
+
+		cout << dict["sort"] << endl;	// 查找 和 读
+		// map 的 []  可以做到用 key 修改 value
+		dict["map"];					// 插入
+		cout << dict["map"] << endl;	// 查找 和 读
+
+		dict["map"] = "映射，地图";		// 修改
+		cout << dict["map"] << endl;	// 查找 和 读
+
+		dict["insert"] = "xxx";			// 修改
+		cout << dict["insert"] << endl;	// 查找 和 读
+
+		dict["set"] = "集合";			// 插入 + 修改
+		cout << dict["set"] << endl;	// 查找 和 读
+
+	}
 }
 
+// multimap 可以有多个 相同的key
+// 相比 map , multimap 少了 operator[] ，insert的功能也不一样了
+// 其他使用基本一样
+// 另外 unordered_map 和 unopdered_set 的使用和 map set 的使用一致
+// 区别在于 unopdered 容器，底层是用哈希实现的，效率更快
+// 但是哈希做不到二叉搜索树的有序遍历，哈希是无序的
 namespace test_multimap {
 
 }
 int main() {
 	//test_map::test1_map();
-	test_map::test2_map();
+	//test_map::test2_map();
+	//test_map::test3_map();
+	test_map::test_operator();
 	return 0;
 }
