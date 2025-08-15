@@ -234,7 +234,7 @@ void Func() {
 	int len, time;
 	cin >> len >> time;
 	cout << Division(len, time) << endl;
-	cout << "delete []" << array << endl;
+
 	delete[] array;*/
 	// 这里可以看到如果发生除0错误抛出异常，会直接跳转到main函数中
 	// 下面的array没有得到释放。
@@ -246,6 +246,7 @@ void Func() {
 		cin >> len >> time;
 		cout << Division(len, time) << endl;
 	}
+	// 异常的重新抛出
 	catch (...) {
 		cout << "delete []" << array << endl;
 		delete[] array;
