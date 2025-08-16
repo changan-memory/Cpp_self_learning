@@ -17,6 +17,7 @@ struct Point {
 	int _y;
 };
 // 特性1 统一的列表初始化 {}
+// 建议日常定义，不要去掉=，但是我们自己要能看懂列表初始化的这个语法
 namespace use_1{
 	// 一切皆可用{}初始化，并且可以不写 赋值的=
 	void test1() {
@@ -24,12 +25,16 @@ namespace use_1{
 		int y(2);	// C++中内置类型也有构造函数
 		int z = { 3 };	// 列表初始化
 		int w{ 4 };		// 不写 赋值的= 的列表初始化
+
+		int a1[] = {1, 2, 3};
+		int a2[] {1, 2, 3};		// C++11
 		// 以下写法 本质都会调用构造函数
 		Point p0(0, 0);
 		Point p1 = { 1, 1 };
 		Point p2{2, 2};
 	}
 	void test2() {
+		// C++ 11 更好地只吃了这种写法
 		int* p1 = new int[3] {1, 2, 3};
 		int* p2 = new int[3]{ 2, 4, 6 };
 
@@ -40,14 +45,14 @@ namespace use_1{
 		Point ptr1 = { 1, 1 };	 //调用构造函数*1
 		Point* ptr2 = new Point[2]{Point(1, 2), Point(3, 4)};	 //调用构造函数*2
 		Point* ptr3 = new Point[2]{ptr0, ptr1};		// 这里没有调用构造函数
-		// 下面这行这里语法的本质是  多参数构造函数的隐式类型转换
-		Point* ptr4 = new Point[2]{ {2, 2}, {3, 3} };	 //调用构造函数*2
+		// 下面这行这里语法的本质是  支持了 多参数构造函数的隐式类型转换
+		Point* ptr4 = new Point[2]{ {2, 2}, {3, 3} };	 //调用构造函数 *2
 
 		// {1, 8}会生成一个Point的临时对象，临时对象具有常性，需要用常引用
 		//Point& rp0 = { 1, 8 };
 		const Point& rp = { 1, 8 };
 	}
-	// 简易日常定义，不要去掉=，但是我们自己要能看懂列表初始化的这个语法
+	// 建议日常定义，不要去掉=，但是我们自己要能看懂列表初始化的这个语法
 }
 
 // 特性2  std::initializer_list 先跳过了
@@ -74,7 +79,7 @@ namespace use_3 {
 
 	// decltype
 
-	// 场景一，类内的成员变量是个函数指针，但是不想写函数指针这个类型
+	// 场景一，类内的成员变量是个函数指针，但是不想写函数指针这个类型声明变量
 	class A {
 	private:
 		decltype(malloc) pf_malloc;
@@ -101,7 +106,7 @@ namespace use_3 {
 		// typeid().name   推导出的类型是一个字符串，只能看，不能使用
 		// decltype 可以推导出变量的类型 ，再定义变量，或者作为模板实参
 		
-		// 实例化 B 类
+		// 实例化 B 类  // decltype 作为模板实参时很好用
 		B<decltype(pf)> b1;
 
 		// decltype 推理表达式的类型
@@ -130,7 +135,7 @@ namespace use_3 {
 		#endif
 		#endif
 		*/
-		int* p = NULL;	// NULL 是宏，会被替换成0， 不够安全  int* p = 0;
+		int* p = NULL;	// NULL 是宏，预处理阶段 会被替换成0， 不够安全  int* p = 0;
 		Func(NULL);		// Func(0)  期望调用int* 版本，却调用了int版本
 	}
 	// 范围for循环，底层是 迭代器 
