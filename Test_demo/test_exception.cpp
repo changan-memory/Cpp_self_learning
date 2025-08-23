@@ -1,13 +1,38 @@
-#include <iostream>
-using namespace std;
+#define _CRT_SECURE_NO_WARNINGS 1
 
+#include <stdio.h>
+#include <stdlib.h>
+typedef char BTDataType;
+// 二叉树结点
+typedef struct BinTreeNode {
+    struct BinTreeNode* left;
+    struct BinTreeNode* right;
+    BTDataType data;
+} BinTNode;
+
+BinTNode* creatTree(char* arr, int* pi) {
+    if (arr[*pi] == '#') {
+        (*pi)++;
+        return NULL;
+    }
+    BinTNode* root = (BinTNode*)malloc(sizeof(BinTNode));
+    root->data = arr[(*pi)++];
+    root->left = creatTree(arr, pi);
+    root->right = creatTree(arr, pi);
+    return root;
+}
+void InOrder(BinTNode* root) {
+    if (root == NULL)
+        return;
+    InOrder(root->left);
+    printf("%c ", root->data);
+    InOrder(root->right);
+}
 int main() {
-	// decltype 推理表达式的类型
-	const int x = 1;
-	double y = 2.2;
-	decltype(x * y) ret;		// ret的类型是double
-	decltype(&x) p;				// p的类型是int*
-	cout << typeid(ret).name() << endl;
-	cout << typeid(p).name() << endl;
-	return 0;
+    char arr[100];
+    scanf("%s", arr);
+    int i = 0;
+    BinTNode* root = creatTree(arr, &i);
+    InOrder(root);
+    return 0;
 }

@@ -64,9 +64,12 @@ namespace K {
 					return false;
 				}
 			}
-			// 走到这里，意味着curNode已经找到了正确的位置,此时curNode为nullptr
+			// 走到这里，意味着curNode已经找到了位置,此时curNode为nullptr
 			// parent 为curNode的父节点
 			// curNode 为 结点指针的拷贝，修改curNode不能修改结点指针的指向
+			//走完循环curNode 找到了可以插入的位置
+			// 但要插入结点，必须修改父节点的指针，父节点并不知道key是比自己大还是自己小，只知道下面可以插
+			// 因此要再比较一次
 			curNode = new Node(key);
 			if (key > parent->_key) {
 				parent->_right = curNode;
