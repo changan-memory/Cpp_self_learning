@@ -21,6 +21,8 @@ struct AVLTreeNode {
 	{ }
 
 	// 我们使用 平衡因子 = 右子树的高度 - 左子树的高度
+	// AVL 树的实现不是一定需要平衡因子，也可以动态的计算高度来判断
+	// 使用平衡因子实现只是其中一种方式
 };
 
 // 左右子树高度之差的绝对值 小于等于 1(-1 0 1)
@@ -94,31 +96,72 @@ public:
 		return true;
 	}
 private:
-	// 左单旋
+	// 左单旋   核心操作是 
+	// parent->right = curNode->left   curNode->left = parent
 	// 右子树的高度特别高时，进行左单旋
 	void RotateLeft(Node* parent) {
 		Node* curNode = parent->_right;
 		Node* curLeft = curNode->_left;
+		Node* ppNode = parent->_parent;
 		
+		// 更新 curNode 的链接关系
+		curNode->_left = parent;
+
+		// 更新 parent 的 链接关系
+		parent->_parent = curNode;
+		parent->_right = curLeft;
+		if (curLeft != nullptr)
+			curLeft->_parent = parent;
+
+		// 判断区分 parent 是否为 根节点
 		if (parent == _root) {
 			_root = curNode;
-			curNode->_left = parent;
 			curNode->_parent = nullptr;
-
-			parent->_parent = curNode;
-			parent->_right = curLeft;
 		}
 		// parent != _root
 		else {
-			Node* ppNode = parent->_parent;
-			// 判断 parent 时 ppNode 的左还是有
-			if (parent == ppNode->_left) {
-				ppNode->_left = curNode;
-			}
-			else {
+			// 判断 parent 是 ppNode 的左还是右
+			if (parent == ppNode->_right)
 				ppNode->_right = curNode;
-			}
+			else
+				ppNode->_left = curNode;
 			curNode->_parent = ppNode;
 		}
+		parent->_balanceFactor = curNode->_balanceFactor = 0;
+	}
+
+	// 右单旋   核心操作是 
+	// parent->left = curNode->right   curNode->right = parent
+	// 左子树的高度特别高时，进行右单旋
+	void RotateRight(Node* parent) {
+		Node* curNode = parent->_left;
+		Node* curRight = curNode->_right;
+		Node* ppNode = parent->_parent;
+
+		// 更新 curNode 的链接关系
+		curNode->_right = parent;
+
+		// 更新 parent 的 链接关系
+		parent->_parent = curNode;
+		parent->_left = curRight;
+		if (curRight != nullptr)
+			curRight->_parent = parent;
+
+		// 判断区分 parent 是否为 根节点
+		if (parent == _root) {
+			_root = curNode;
+			curNode->_parent = nullptr;
+		}
+		// parent != _root
+		else {
+			// 判断 parent 是 ppNode 的左还是右
+			if (parent == ppNode->_right)
+				ppNode->_right = curNode;
+			else
+				ppNode->_left = curNode;
+
+			curNode->_parent = ppNode;
+		}
+		parent->_balanceFactor = curNode->_balanceFactor = 0;
 	}
 };
