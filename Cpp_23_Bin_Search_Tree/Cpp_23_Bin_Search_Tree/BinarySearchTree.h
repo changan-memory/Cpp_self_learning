@@ -104,8 +104,8 @@ namespace K {
 			Node* parent = nullptr;
 			Node* curNode = _root;
 			// _root为空时，进不去while循环，会直接return false 
-			// 找节点
 			while (curNode) {
+				// 先找要被删除的节点
 				if (key > curNode->_key) {
 					parent = curNode;
 					curNode = curNode->_right;
@@ -122,12 +122,13 @@ namespace K {
 						if (curNode == _root)
 							_root = curNode->_right;
 
-						// 托孤
-						// 当前结点是父的左节点
+						// 托孤，需要知道孤儿 应该称为 父节点的左子树还是右子树
+						// 需要先找孤儿在左右那个子树
+						// 孤儿在左子树
 						else if (curNode == parent->_left) {
 							parent->_left = curNode->_right;
 						}
-						// 当前结点是父的右节点
+						// 孤儿在左子树
 						else {
 							parent->_right = curNode->_right;
 						}
@@ -158,8 +159,8 @@ namespace K {
 						// 这里找左子树中最大的结点
 						Node* maxNode = curNode->_left;
 						Node* maxParent = curNode;
-						// 有可能进不去while循环，对应与删除时的 else 条件
-						// 进不去while时，此时maxNode初识就是左子树的最大结点，parent和curNode重合
+						// 有可能进不去while循环，对应于删除时的 else 条件
+						// 进不去while时，此时maxNode初始就是左子树的最大结点，parent和curNode重合
 						while (maxNode->_right != nullptr) {
 							maxParent = maxNode;
 							maxNode = maxNode->_right;
@@ -191,6 +192,7 @@ namespace K {
 			}
 			return false;
 		}
+
 		// find函数的递归版本
 		// 写了一个子函数，因为递归需要用到Private成员_root，来控制递归子树的分支
 		// 如果不写子函数，需要对外提供一个getRoot供调用者使用
@@ -267,7 +269,8 @@ namespace K {
 				return _erase_R(root->_left, key);
 			// 相等时要删除
 			else {
-				Node* delNode = root;
+				Node* delNode = root;	
+				// 这里的 root 等价于 curNode，写成curNode是为了和迭代删除法的形式匹配
 				// 1. curNode 左为空
 				if (root->_left == nullptr) {
 					root = root->_right;

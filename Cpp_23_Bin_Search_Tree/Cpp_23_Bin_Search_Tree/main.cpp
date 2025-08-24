@@ -119,12 +119,12 @@ namespace K_V {
 	}
 }
 int main() {
-	K::test_insert();
+	/*K::test_insert();
 	K::test_erase();
 	K::test_erase_R();
 	K::test_destructor();
-	K::test_copyConstructor();
+	K::test_copyConstructor();*/
 	//K_V::test1();
-	//K_V::test2();
+	K_V::test2();
 	return 0;
 }
