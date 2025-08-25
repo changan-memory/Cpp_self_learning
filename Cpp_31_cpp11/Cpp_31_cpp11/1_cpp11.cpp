@@ -19,7 +19,7 @@ struct Point {
 // 特性1 统一的列表初始化 {}
 // 建议日常定义，不要去掉=，但是我们自己要能看懂列表初始化的这个语法
 namespace use_1{
-	// 一切皆可用{}初始化，并且可以不写 赋值的=
+	// 一切皆可用{}初始化，并且可以不写 赋值的 =
 	void test1() {
 		int x = 1;	// 赋值
 		int y(2);	// C++中内置类型也有构造函数
@@ -34,7 +34,7 @@ namespace use_1{
 		Point p2{2, 2};
 	}
 	void test2() {
-		// C++ 11 更好地只吃了这种写法
+		// C++ 11 更好地支持了这种写法
 		int* p1 = new int[3] {1, 2, 3};
 		int* p2 = new int[3]{ 2, 4, 6 };
 
@@ -48,6 +48,7 @@ namespace use_1{
 		// 下面这行这里语法的本质是  支持了 多参数构造函数的隐式类型转换
 		Point* ptr4 = new Point[2]{ {2, 2}, {3, 3} };	 //调用构造函数 *2
 
+		Point* ptr5 = new Point[1]{ {1, 1} };	// new 调用构造函数 * 1
 		// {1, 8}会生成一个Point的临时对象，临时对象具有常性，需要用常引用
 		//Point& rp0 = { 1, 8 };
 		const Point& rp = { 1, 8 };
@@ -55,12 +56,15 @@ namespace use_1{
 	// 建议日常定义，不要去掉=，但是我们自己要能看懂列表初始化的这个语法
 }
 
-// 特性2  std::initializer_list 先跳过了
+// 特性2  std::initializer_list 
 namespace use_2 {
 	void test1() {
-		vector<int> v = { 1, 2, 3 };	// 这里的语法不是 {}列表初始化
-		Point p = { 1, 2 };	// vector可以在后面加
-		// 以上两行 是不同的语法
+		vector<int> v = { 1, 2, 3 };	// 这里的语法不是 {}列表初始化   调用的是构造函数
+		Point p = { 1, 2 };			// 多参数的构造函数支持隐式类型转换
+		// 以上两行 是不同的语法	// vector可以在后面加多个值，但Point只能有两个参数
+
+		//initializer_list 此类型用于访问c++ 列表初始化 中的值，该列表是const T类型元素的列表。
+
 	}
 }
 
@@ -159,10 +163,10 @@ namespace new_container {
 }
 int main() {
 	//use_1::test1();
-	//use_1::test2();
+	use_1::test2();
 	//use_3::test_auto();
 	//use_3::test_decltype();
 	//use_3::test_nullptr();
-	new_container::test_array();
+	//new_container::test_array();
 	return 0;
 }
