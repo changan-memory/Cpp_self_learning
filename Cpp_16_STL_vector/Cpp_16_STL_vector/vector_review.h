@@ -72,6 +72,13 @@ namespace mm_vector {
 			}
 		}
 
+		// 补充支持 initializer_list 的构造函数
+		vector(std::initializer_list<T> il) {
+			reserve(il.size());
+			for (auto& e : il)
+				push_back(e);
+		}
+
 		// 拷贝构造函数
 		vector(const vector<T>& v)
 			:_start(nullptr)

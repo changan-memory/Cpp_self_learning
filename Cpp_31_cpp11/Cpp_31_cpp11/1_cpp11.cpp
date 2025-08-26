@@ -61,10 +61,17 @@ namespace use_2 {
 	void test1() {
 		vector<int> v = { 1, 2, 3 };	// 这里的语法不是 {}列表初始化   调用的是构造函数
 		Point p = { 1, 2 };			// 多参数的构造函数支持隐式类型转换
-		// 以上两行 是不同的语法	// vector可以在后面加多个值，但Point只能有两个参数
+		// 以上两行 是不同的语法  vector可以在后面加多个值，但Point只能有两个参数
 
-		//initializer_list 此类型用于访问c++ 列表初始化 中的值，该列表是const T类型元素的列表。
+		//initializer_list 此类型的对象由编译器从 初始化列表声明 中自动构造，
+		// 初始化列表声明是用大括号括起来的逗号分隔的 常量的列表 存储在内存的常量区
+		auto il = { 1, 2, 5 };
+		cout << typeid(il).name() << endl;
+		cout << sizeof(il) << endl;
 
+		/*const int* arr = { 1, 2, 3 };
+		int* arr = { 1, 2, 3 };*/
+		map<string, string> dict = { {"sort", "排序"}, {"insert", "插入"}};
 	}
 }
 
@@ -163,7 +170,8 @@ namespace new_container {
 }
 int main() {
 	//use_1::test1();
-	use_1::test2();
+	//use_1::test2();
+	use_2::test1();
 	//use_3::test_auto();
 	//use_3::test_decltype();
 	//use_3::test_nullptr();

@@ -220,16 +220,22 @@ void testVector8() {
 	mm_vector::vector<int> v(10, 33);
 	cout << v;
 }
-
+void testVector9() {
+	mm_vector::vector<int> v = { 1, 2, 3, 4, 6, 7 ,10};
+	for (auto e : v)
+		cout << e << " ";
+	cout << endl;
+}
 int main() {
 	//testVector1();
 	//testVector2();
-	testVector3();
+	//testVector3();
 	//testVector4();
 	//testVector5();
 	//testVector6();
 	//testVector7();
 	//testVector8();
+	testVector9();
 
 	return 0;
 }
