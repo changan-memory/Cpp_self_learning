@@ -168,13 +168,13 @@ namespace new_container {
 	// std::forward_list
 	// 底层实现是  单链表
 }
-int main() {
-	//use_1::test1();
-	//use_1::test2();
-	use_2::test1();
-	//use_3::test_auto();
-	//use_3::test_decltype();
-	//use_3::test_nullptr();
-	//new_container::test_array();
-	return 0;
-}
+//int main() {
+//	//use_1::test1();
+//	//use_1::test2();
+//	use_2::test1();
+//	//use_3::test_auto();
+//	//use_3::test_decltype();
+//	//use_3::test_nullptr();
+//	//new_container::test_array();
+//	return 0;
+//}

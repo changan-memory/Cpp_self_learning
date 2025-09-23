@@ -28,11 +28,11 @@ void InOrder(BinTNode* root) {
     printf("%c ", root->data);
     InOrder(root->right);
 }
-int main() {
-    char arr[100];
-    scanf("%s", arr);
-    int i = 0;
-    BinTNode* root = creatTree(arr, &i);
-    InOrder(root);
-    return 0;
-}
+//int main() {
+//    char arr[100];
+//    scanf("%s", arr);
+//    int i = 0;
+//    BinTNode* root = creatTree(arr, &i);
+//    InOrder(root);
+//    return 0;
+//}
