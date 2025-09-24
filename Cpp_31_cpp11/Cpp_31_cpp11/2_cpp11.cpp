@@ -111,11 +111,27 @@ void test5() {
 	int a = 0;
 	int b = 20;
 	func1(a);	// 这里两个func1都可以调用，但这里不会出现歧义，编译器回去调用最匹配的那个函数
-	func1(a + b);	// a + b 是右值，因此调用右值引用版本
+	func1(a + b);	// a + b 是右值，右值引用版本 最匹配，因此调用右值引用版本
+}
+
+#include "string_me.h"
+
+m_string::string test6() {
+	m_string::string str("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+	// ...
+	return str;
+}
+void test7() {
+	//m_string::string ret1 = test6();	// 连续的拷贝和构造  优化为直接构造
+
+	m_string::string ret2;
+	// ...
+	ret2 = test6();
 }
 int main() {
 	//test1();
 	//test2();
-	test5();
+	//test5();
+	test7();
 	return 0;
 }
