@@ -197,21 +197,22 @@ namespace use_1 {
 
 	// 值捕获  和 引用捕获  混合
 	void test7() {
-		// 仅引用捕获
 		int a = 1, b = 2, c = 3, d = 4;
 		const int e = 6;
 
+		cout << a << " " << b << " " << c << " " << d << e << endl;
 		// 引用捕获副 父作用域所有变量，值捕获 c 变量
 		cout << &e << endl;
 		auto func1 = [&, c]() {
 			++a;
 			++b;
-			//++c;	// 默认 c 不可修改
+			//++c;	// 值捕获的 c 不可修改
 			++d;
 			cout << &e << endl;
 			cout << typeid(e).name() << endl;
 			};
 		func1();
+		cout << a << " " << b << " " << c << " " << d << e << endl;
 	}
 
 	// Lambda 之间不能赋值
@@ -250,15 +251,15 @@ namespace use_1 {
 		r2(10000, 2);
 	}
 }
-int main() {
-	//use_1::test1();
-	//use_1::test3();
-	//use_1::test4();
-	//use_1::test5();
-	//use_1::test6();
-	//use_1::test7();
-	//use_1::test8();
-	use_1::test9();
-
-	return 0;
-}
+//int main() {
+//	//use_1::test1();
+//	//use_1::test3();
+//	//use_1::test4();
+//	//use_1::test5();
+//	//use_1::test6();
+//	//use_1::test7();
+//	//use_1::test8();
+//	use_1::test9();
+//
+//	return 0;
+//}

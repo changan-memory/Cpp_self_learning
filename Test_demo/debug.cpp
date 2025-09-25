@@ -17,13 +17,21 @@ private:
 };
 
 int main() {
-	// 函数对象
-	double rate = 0.49;
-	Rate r1(rate);
-	r1(10000, 2);
+	int a = 1, b = 2, c = 3, d = 4;
+	const int e = 6;
 
-	// lambda
-	auto r2 = [=](double monty, int year)->double {return monty * rate * year;
+	cout << a << " " << b << " " << c << " " << d << " " << e << endl;
+	// 引用捕获副 父作用域所有变量，值捕获 c 变量
+	cout << &e << endl;
+	auto func1 = [&, c]() {
+		++a;
+		++b;
+		//++c;	// 值捕获的 c 不可修改
+		++d;
+		cout << &e << endl;
+		cout << typeid(e).name() << endl;
 		};
-	r2(10000, 2);
+	func1();
+	cout << a << " " << b << " " << c << " " << d << " " << e << endl;
+	return 0;
 }
