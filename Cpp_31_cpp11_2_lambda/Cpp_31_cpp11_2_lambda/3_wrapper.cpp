@@ -24,15 +24,15 @@ struct Functor {
 	}
 };
 
-//int main() {
-//	// 函数名
-//	cout << useF(f, 11.11) << endl;
-//
-//	// 函数对象
-//	cout << useF(Functor(), 11.11) << endl;
-//
-//	// lamber表达式
-//	cout << useF([](double d)->double { return d / 4; }, 11.11) << endl;
-//
-//	return 0;
-//}
+int main() {
+	// 函数名
+	cout << useF(f, 11.11) << endl;
+
+	// 函数对象
+	cout << useF(Functor(), 11.11) << endl;
+
+	// lamber表达式
+	cout << useF([](double d)->double { return d / 4; }, 11.11) << endl;
+
+	return 0;
+}
