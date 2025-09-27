@@ -123,17 +123,18 @@ namespace use_1 {
 	void test4() {
 		int a = 1, b = 3;
 		auto add1 = [](int x, int y)->int { return x + y; };
-		auto add2 = [](int x, int y) { return x + y; };
+		auto add2 = [](int x, int y) { return x + y; };		// 返回值可省略
 		cout << add1(1, 3) << endl;
 		cout << add2(1, 3) << endl;
 		// 交换
-		auto swap1 = [](int& left, int& right)->void {
+		auto swap1 = [&add1](int& left, int& right)->void {
 			int tmp = left;
 			left = right;
 			right = tmp;
+			add1(1, 2);
 			};
 		swap1(a, b);
-		// lambda 表达式中不能调用局部函数，但可以调用全局函数
+		// lambda 表达式中不能调用未捕获的局部函数，但可以调用全局函数
 		auto swap2 = [](int& left, int& right)->void {
 			int tmp = left;
 			left = right;
