@@ -7,6 +7,10 @@ using namespace std;
 //template<typename T, typename ...Args>
 //void showList(T value, Args... args) {
 //	cout << sizeof...(args) << endl;
+//
+//	for (int i = 0; i < sizeof...(args); ++i) {
+//		cout << args[i] << endl;	// 报错 “args”: 必须在此上下文中扩展参数包
+//	}
 //}
 //
 //int main() {
@@ -119,19 +123,19 @@ using namespace std;
 //	return 0;
 //}
 
-// 使用逗号表达式的简化写法
-template <class T>
-int PrintArg(T t) {
-	cout << t << " ";
-	return 0;
-}
-
-//展开函数
-template <class ...Args>
-void ShowList(Args... args) {
-	int arr[] = { PrintArg(args)... };
-	cout << endl;
-}
+//// 使用逗号表达式的简化写法
+//template <class T>
+//int PrintArg(T t) {
+//	cout << t << " ";
+//	return 0;
+//}
+//
+////展开函数
+//template <class ...Args>
+//void ShowList(Args... args) {
+//	int arr[] = { PrintArg(args)... };
+//	cout << endl;
+//}
 //int main() {
 //	ShowList(1);
 //	ShowList(1, 'A');
