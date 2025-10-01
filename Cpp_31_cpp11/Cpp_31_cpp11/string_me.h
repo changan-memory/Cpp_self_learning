@@ -45,7 +45,7 @@ namespace m_string {
 		//string(const char* str = "\0")	//这个写法会让结尾有两个"\0"
 		//字符串的结束位置必须有\0
 		string(const char* str = "") {	//用c风格的字符串进行构造，默认以\0为结束符
-			//cout << "string(const char* str = "") -- 直接构造" << endl;
+			// cout << "string(const char* str = "") -- 直接构造" << endl;
 
 			_size = strlen(str);
 			_capacity = _size;	//capacity表示可以存放的下的字符个数
@@ -71,12 +71,11 @@ namespace m_string {
 			_size = str._size;
 			_capacity = str._capacity;
 		}
-
 		// 移动构造
-		string(string&& str) {
-			cout << "string(const string& str) -- 移动构造" << endl;
+		/*string(string&& str) {
+			cout << "string(string&& str) -- 移动构造" << endl;
 			swap(str);
-		}
+		}*/
 
 
 		//以下是string的构造函数的现代写法，这种写法在遇到中间含有\0字符串会有问题
@@ -111,19 +110,25 @@ namespace m_string {
 
 		//赋值的现代写法
 		string& operator=(const string& str) {
-			cout << "string& operator=(string tmp) -- 深拷贝" << endl;
 			string tmp(str);
-			//可以直接
 			this->swap(tmp);
 			return *this;
 		}
+		
+		//string& operator=(string tmp) {
+		//	cout << "string& operator=(string str) -- 深拷贝赋值" << endl;
+		//	//可以直接
+		//	this->swap(tmp);
+		//	return *this;
+		//}
 
-		//右值引用的移动拷贝写法
+		// 用右值引用 实现移动赋值 的写法
 		string& operator=(string&& str) {
 			cout << "string& operator=(string&& str) -- 移动赋值" << endl;
 			swap(str);
 			return *this;
 		}
+		
 
 		// 交换两个string对象成员变量的内容
 		void swap(string& str) {		

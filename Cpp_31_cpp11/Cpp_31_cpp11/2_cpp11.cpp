@@ -15,6 +15,7 @@ void test1() {
 	int q = 1;
 	const int x = 2;
 
+
 	"xxxxxx";  // 该表达式的含义是 该字符串首元素的地址
 	const char* px = "xxxxxx"; // 该表达式的含义是，把 "xxxxxx" 首元素的地址赋值给 px
 	p[2];
@@ -39,17 +40,17 @@ void test2() {
 	// 以下几个都是常见的右值
 	10;
 	x + y;
-	fmin(x, y);	// 这里的右值指的 是 函数返回值 中的 传值返回，返回的那个临时对象
+	fmin(x, y);	// 这里的右值指的 是 函数传值返回时，返回的 拷贝出来的 那个临时对象
 	// 右值不能取地址
 	/*cout << &10 << endl;
 	cout << &(x + y) << endl;
 	cout << &fmin(1, 2) << endl;*/
 }
 
-// 左值引用 右值引用
-// 引用是取别名
-// 左值引用 :  给左值取别名
-// 右值引用 :  给右值取别名
+ //左值引用 右值引用
+ //引用是取别名
+ //左值引用 :  给左值取别名
+ //右值引用 :  给右值取别名
 void test3() {
 	double x = 1.5, y = 2.5;
 
@@ -57,8 +58,8 @@ void test3() {
 	int a = 10;
 	int& r1 = a;
 
-	// 左值引用能否给右值取别名？
-	// const 左值引用可以
+	/* 左值引用能否给右值取别名？
+	 const 左值引用可以*/
 	const int& r2 = 20;
 	const double r3 = x + y;
 
@@ -67,25 +68,26 @@ void test3() {
 	//double& r6 = x + y;		// 编译不通过
 	double&& r6 = x + y;
 
-	// 右值引用是否可以给左值取别名
-	// 右值引用可以引用 move 以后的左值
+	/* 右值引用是否可以给左值取别名
+	 右值引用可以引用 move 以后的左值*/
 	//int&& r7 = a;	// 编译报错
 	int&& r7 = std::move(a);	// 右值引用引用 move 以后的左值
 
 	// 总结一下
-	// 左值和右值的区别是  能否取地址
-	// 左值引用 :  给左值取别名
-	// 右值引用 :  给右值取别名
+	// 左值和右值的本质区别是  能否取地址
+	// 左值引用 :  给左值取别名    左值引用可以直接给左值取别名
+	// 右值引用 :  给右值取别名    右值引用可以直接给右值取别名
 	// const 左值引用可以 给右值取别名
-	// 右值引用可以 给 move后的左值 取别名
+	// 右值引用可以 给 move后的左值 取别名， 不能直接给左值取别名
 }
 
 // 左值引用的使用场景和价值是什么？
-// 适用场景 1. 减少拷贝，做输出型参数   2. 做返回值
-// 价值:  减少拷贝  缺陷: 局部对象做返回值，不能用左值引用返回
+ //适用场景 1. 做输出型参数，减少拷贝，   2. 做返回值
+ //价值:  减少拷贝  缺陷: 局部对象做返回值，不能用左值引用返回
 string Func1() {
 	string str;
 	cin >> str;
+	// ...
 	return str;
 }
 // Func 函数中的场景只能传值返回
@@ -100,7 +102,10 @@ void test4() {
 	ret2 = Func1();
 }
 
-// 以下两个函数构成函数重载 
+// 以下三个函数构成函数重载 
+void func1(int& r) {
+	cout << "void func1(int& r)" << endl;
+}
 void func1(const int& r) {
 	cout << "void func1(const int& r)" << endl;
 }
@@ -109,20 +114,23 @@ void func1(int&& r2) {
 }
 void test5() {
 	int a = 0;
-	int b = 20;
-	func1(a);	// 这里两个func1都可以调用，但这里不会出现歧义，编译器回去调用最匹配的那个函数
+	const int b = 20;
+	func1(a);	// 这里两个func1都可以调用，但这里不会出现歧义，编译器会去调用最匹配的那个函数
+	func1(b);
 	func1(a + b);	// a + b 是右值，右值引用版本 最匹配，因此调用右值引用版本
 }
 
 #include "string_me.h"
 
 m_string::string test6() {
-	m_string::string str("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+	m_string::string str("xxxxxxxxxxxxxxxxxxx");
 	// ...
 	return str;
 }
 void test7() {
 	//m_string::string ret1 = test6();	// 连续的拷贝和构造  优化为直接构造
+
+	//m_string::string ret1 = test6();	
 
 	m_string::string ret2;
 	// ...
