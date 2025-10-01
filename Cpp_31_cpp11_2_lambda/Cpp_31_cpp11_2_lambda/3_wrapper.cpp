@@ -72,9 +72,9 @@ void test3() {
 }
 
 void test4() {
-	std::function<double(double)> func1 = f;
-	std::function<double(double)> func2 = Functor();
-	std::function<double(double)> func3 = [](double d)->double { return d / 4; };
+	std::function<double(double)> func1 = f;	// 函数指针
+	std::function<double(double)> func2 = Functor();	// 仿函数
+	std::function<double(double)> func3 = [](double d)->double { return d / 4; };	// Lambda
 
 	// 统一传入包装器进行调用
 	cout << useF(func1, 11.11) << endl;
