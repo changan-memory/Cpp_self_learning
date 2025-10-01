@@ -125,7 +125,8 @@ void test5() {
 m_string::string test6() {
 	m_string::string str("xxxxxxxxxxxxxxxxxxx");
 	// ...
-	return str;
+	return std::move(str);
+	//return str;
 }
 void test7() {
 	//m_string::string ret1 = test6();	// 连续的拷贝和构造  优化为直接构造
