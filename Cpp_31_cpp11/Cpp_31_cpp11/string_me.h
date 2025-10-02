@@ -45,7 +45,7 @@ namespace m_string {
 		//string(const char* str = "\0")	//这个写法会让结尾有两个"\0"
 		//字符串的结束位置必须有\0
 		string(const char* str = "") {	//用c风格的字符串进行构造，默认以\0为结束符
-			 //cout << "string(const char* str = "") -- 直接构造" << endl;
+			 cout << "string(const char* str = "") -- 直接构造" << endl;
 
 			_size = strlen(str);
 			_capacity = _size;	//capacity表示可以存放的下的字符个数
@@ -368,9 +368,9 @@ namespace m_string {
 			return !(*this == str);
 		}
 	private:
+		char* _str = nullptr;
 		size_t _size;
 		size_t _capacity;	//_capacity一般不包含\0
-		char* _str = nullptr;
 		//static::size_t npos = -1;	//静态成员变量不能给缺省值，缺省值是给初始化列表用的
 		//可以这么用，但是不建议
 	public:

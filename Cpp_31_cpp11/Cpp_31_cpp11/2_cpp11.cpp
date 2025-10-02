@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <list>
 
 using namespace std;
 
@@ -128,19 +130,61 @@ m_string::string test6() {
 	return std::move(str);
 	//return str;
 }
+std::string test6_std() {
+	std::string str("xxxxxxxxxxxxxxxxxxx");
+	// ...
+	return std::move(str);
+	//return str;
+}
 void test7() {
 	//m_string::string ret1 = test6();	// 连续的拷贝和构造  优化为直接构造
 
-	//m_string::string ret1 = test6();	
+	m_string::string ret1 = test6();	
 
-	m_string::string ret2;
-	// ...
-	ret2 = test6();
+	//m_string::string ret2;
+	//// ...
+	//ret2 = test6();
+}
+
+// 场景一、 自定义类型中深拷贝的类，必须传值返回的场景，移动语义提升性能
+void test8() {
+	m_string::string ret1 = test6();	// 移动拷贝
+	m_string::string ret3("1111111111111111111111");
+	m_string::string copy1 = ret3;	// 深拷贝
+	move(ret3);	
+	m_string::string copy2 = ret3;	// 深拷贝
+	m_string::string copy3 = move(ret3);	// 移动拷贝
+}
+void test9() {
+	std::string ret1 = test6_std();	// 移动拷贝
+	std::string ret3("111111111");
+	std::string copy1 = ret3;	// 深拷贝
+	move(ret3);
+	std::string copy2 = ret3;	// 深拷贝
+	std::string copy3 = move(ret3);	// 移动拷贝
+}
+
+// 场景二、
+// 容器的插入接口，如果插入对象是右值，可以利用移动构造转移资源给数据结构中的对象。也可以减少。
+void test10() {
+	list<m_string::string> lt;
+	m_string::string s1("111111111111111111111");
+	lt.push_back(s1);
+
+	cout << endl;
+	m_string::string s2("111111111111111111111");
+	lt.push_back(move(s2));
+
+	cout << endl;
+	lt.push_back("22222222222222222222222222");
 }
 int main() {
 	//test1();
 	//test2();
 	//test5();
-	test7();
+	//test7();
+	//test8();
+	//test9();
+	test10();
 	return 0;
 }
