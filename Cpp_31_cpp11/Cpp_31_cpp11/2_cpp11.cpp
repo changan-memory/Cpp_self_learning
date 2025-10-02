@@ -1,7 +1,9 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <vector>
 #include <list>
+
 
 using namespace std;
 
@@ -20,6 +22,7 @@ void test1() {
 
 	"xxxxxx";  // 该表达式的含义是 该字符串首元素的地址
 	const char* px = "xxxxxx"; // 该表达式的含义是，把 "xxxxxx" 首元素的地址赋值给 px
+	
 	p[2];
 	cout << &"xxxxx" << endl;	// 可以取地址， 左值
 	cout << &px[2] << endl;		// 可以取地址， 左值
@@ -178,13 +181,15 @@ void test10() {
 	cout << endl;
 	lt.push_back("22222222222222222222222222");
 }
-int main() {
-	//test1();
-	//test2();
-	//test5();
-	//test7();
-	//test8();
-	//test9();
-	test10();
-	return 0;
-}
+
+
+//int main() {
+//	//test1();
+//	//test2();
+//	//test5();
+//	//test7();
+//	//test8();
+//	//test9();
+//	test10();
+//	return 0;
+//}
