@@ -127,14 +127,15 @@ void test5() {
 
 #include "string_me.h"
 
-m_string::string test6() {
-	m_string::string str("xxxxxxxxxxxxxxxxxxx");
+
+std::string test6_std() {
+	std::string str("xxxxxxxxxxxxxxxxxxx");
 	// ...
 	return std::move(str);
 	//return str;
 }
-std::string test6_std() {
-	std::string str("xxxxxxxxxxxxxxxxxxx");
+m_string::string test6() {
+	m_string::string str("xxxxxxxxxxxxxxxxxxx");
 	// ...
 	return std::move(str);
 	//return str;
@@ -142,11 +143,11 @@ std::string test6_std() {
 void test7() {
 	//m_string::string ret1 = test6();	// 连续的拷贝和构造  优化为直接构造
 
-	m_string::string ret1 = test6();	
+	//m_string::string ret1 = test6();	
 
-	//m_string::string ret2;
-	//// ...
-	//ret2 = test6();
+	m_string::string ret2;
+	// ...
+	ret2 = test6();
 }
 
 // 场景一、 自定义类型中深拷贝的类，必须传值返回的场景，移动语义提升性能
@@ -183,13 +184,13 @@ void test10() {
 }
 
 
-//int main() {
-//	//test1();
-//	//test2();
-//	//test5();
-//	//test7();
-//	//test8();
-//	//test9();
-//	test10();
-//	return 0;
-//}
+int main() {
+	//test1();
+	//test2();
+	//test5();
+	test7();
+	//test8();
+	//test9();
+	//test10();
+	return 0;
+}
