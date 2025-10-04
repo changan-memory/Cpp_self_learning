@@ -153,10 +153,13 @@ void test7() {
 // 场景一、 自定义类型中深拷贝的类，必须传值返回的场景，移动语义提升性能
 void test8() {
 	m_string::string ret1 = test6();	// 移动拷贝
+
 	m_string::string ret3("1111111111111111111111");
 	m_string::string copy1 = ret3;	// 深拷贝
+
 	move(ret3);	
 	m_string::string copy2 = ret3;	// 深拷贝
+
 	m_string::string copy3 = move(ret3);	// 移动拷贝
 }
 void test9() {
@@ -188,9 +191,9 @@ int main() {
 	//test1();
 	//test2();
 	//test5();
-	test7();
+	//test7();
 	//test8();
 	//test9();
-	//test10();
+	test10();
 	return 0;
 }

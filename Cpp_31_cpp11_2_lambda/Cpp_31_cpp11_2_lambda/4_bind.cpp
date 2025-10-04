@@ -75,11 +75,11 @@ void test8() {
 	// 以上的底层实现 都是仿函数
 	// 本质都调用了 operator()
 }
-int main() {
-	//test5();
-	//test6();
-	//test7();
-	test8();
-
-	return 0;
-}
+//int main() {
+//	//test5();
+//	//test6();
+//	//test7();
+//	test8();
+//
+//	return 0;
+//}

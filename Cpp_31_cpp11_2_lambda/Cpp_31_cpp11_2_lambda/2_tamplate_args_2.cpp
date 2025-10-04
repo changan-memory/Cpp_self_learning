@@ -17,18 +17,21 @@ using namespace std;
 //};
 //
 //// 之前的可变参数包的获取，都是把参数一个一个取出来的
-//// 但是我想 一次性取出来参数包中的参数，去调用构造函数
+//// 但是我想 一次性取出来参数包中的参数，去调用某个类的构造函数
 //template<class ...Args>
-//Date* creat(Args... args) {
+//Date* Create(Args... args) {
 //	Date* ret = new Date(args...);
 //	return ret;
 //}
+
 //int main() {
-//	Date* p1 = creat(2025, 9);
-//	Date* p2 = creat(2025, 10, 10);
+//	Date* p0 = Create();
+//	Date* p1 = Create(2025);
+//	Date* p2 = Create(2025, 9);
+//	Date* p3 = Create(2025, 10, 10);
 //
 //	Date d(2023);
-//	Date* p3 = creat(d);	// 可变模板参数 用一个已有对象构造
+//	Date* p4 = Create(d);	// 可变模板参数 用一个已有对象构造
 //
 //	return 0;
 //}
