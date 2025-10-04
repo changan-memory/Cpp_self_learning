@@ -112,6 +112,52 @@ void test13() {
 	(*p)++;
 	cout << *p << " " << N << endl;
 }
+
+namespace dynamic {
+	// C++中的类型转换 dynamic_cast
+	class A {
+	public:
+		virtual void f() {}
+		int _x = 0;
+	};
+	class B : public A {
+	public:
+		int _y = 1;
+	};
+	void func1(A* pa) {
+		//B* pb = (B*)pa;
+		B* pb = dynamic_cast<B*>(pa);
+		if (pb) {
+			cout << "转换成功" << endl;
+			pb->_x++;
+			pb->_y++;
+		}
+		else {
+			cout << "转换失败" << endl;
+		}
+		
+	}
+	void func2(A* pa) {
+		// dynamic_cast会先检查是否能转换成功，能成功则转换，不能则返回
+		B* pb1 = static_cast<B*>(pa);
+		B* pb2 = dynamic_cast<B*>(pa);
+		cout << "pb1:" << pb1 << endl;
+		cout << "pb2:" << pb2 << endl;
+	}
+	void test14() {
+		A a;
+		B b;
+		func1(&a);
+		func1(&b);
+	}
+	void test15() {
+		A a;
+		B b;
+		func2(&a);
+		func2(&b);
+	}
+}
+
 int main() {
 	//test1();
 	//test2();
@@ -122,6 +168,9 @@ int main() {
 
 	//test11();
 	//test12();
-	test13();
+	//test13();
+
+	//dynamic::test14();
+	dynamic::test15();
 	return 0;
 }
