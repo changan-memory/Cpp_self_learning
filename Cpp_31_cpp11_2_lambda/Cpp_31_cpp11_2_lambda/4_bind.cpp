@@ -25,13 +25,13 @@ double PPPlus(int a, double rate, int b) {
 }
 void test6() {
 	// 缺省参数是写死的，只能有一个值。bind 可以传多个不同值的参数
-	function<double(int, int)> plus1 = bind(Plus, placeholders::_1, placeholders::_2, 4.1);
+	/*function<double(int, int)> plus1 = bind(Plus, placeholders::_1, placeholders::_2, 4.1);
 	function<double(int, int)> plus2 = bind(Plus, placeholders::_1, placeholders::_2, 5.1);
 	function<double(int, int)> plus3 = bind(Plus, placeholders::_1, placeholders::_2, 6.1);
 	cout << plus1(5, 3) << endl;
 	cout << plus2(5, 3) << endl;
 	cout << plus3(5, 3) << endl;
-	cout << endl;
+	cout << endl;*/
 
 	function<double(int, int)> plus = bind(Plus, placeholders::_1, placeholders::_2, 4.1);
 	function<double(int, int)> pplus = bind(PPlus, 4.2, placeholders::_1, placeholders::_2);
@@ -75,11 +75,11 @@ void test8() {
 	// 以上的底层实现 都是仿函数
 	// 本质都调用了 operator()
 }
-//int main() {
-//	//test5();
-//	//test6();
-//	//test7();
-//	test8();
-//
-//	return 0;
-//}
+int main() {
+	//test5();
+	//test6();
+	//test7();
+	test8();
+
+	return 0;
+}
