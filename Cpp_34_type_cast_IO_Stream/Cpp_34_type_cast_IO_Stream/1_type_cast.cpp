@@ -120,6 +120,7 @@ namespace dynamic {
 		virtual void f() {}
 		int _x = 0;
 	};
+
 	class B : public A {
 	public:
 		int _y = 1;
