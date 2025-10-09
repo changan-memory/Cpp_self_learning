@@ -286,6 +286,11 @@ public:
 						RotateLeft(parent);
 						break;
 					}
+					else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == -1)
+					{
+						RotateRight(parent);
+						break;
+					}
 				}
 				else
 				{
@@ -306,7 +311,7 @@ private:
 		Node* curLeft = curNode->_left;	// curLeft 有可能为空
 
 		// 先处理 curNode 的 left 结点
-		parent->_right = curNode->_left;
+		parent->_right = curLeft;
 		if(curLeft)
 			curLeft->_parent = parent;
 		
@@ -314,13 +319,14 @@ private:
 		// parent 有可能是根节点，也有可能是子树的根节点
 		if (parent == _root)
 		{
-			// 先挂旧根
+			// 先立新根
+			_root = curNode;
+			curNode->_parent = nullptr;
+
+			// 再挂旧根
 			parent->_parent = curNode;
 			curNode->_left = parent;
 
-			// 再立新根
-			_root = curNode;
-			curNode->_parent = nullptr;
 		}
 		else
 		{
@@ -334,12 +340,53 @@ private:
 			{
 				ppNode->_right = curNode;
 			}
+			curNode->_parent = ppNode;
 
+			// 挂 parent
 			parent->_parent = curNode;
 			curNode->_left = parent;
 
-			curNode->_parent = ppNode;
 		}
 		parent->_balanceFactor = curNode->_balanceFactor = 0;
+	}
+
+	// 右单旋
+	void RotateRight(Node* parent)
+	{
+		if (parent == nullptr || parent->_left == nullptr)
+			return;
+		Node* curNode = parent->_left;
+		Node* curRight = curNode->_right;
+
+		parent->_left = curRight;
+		if (curRight)
+			curRight->_parent = parent;
+
+		if (parent == _root)
+		{
+			// 先立新根
+			_root = curNode;
+			curNode->_parent = nullptr;
+			// 再挂旧根
+			curNode->_right = parent;
+			parent->_parent = curNode;
+		}
+		else
+		{
+			Node* ppNode = parent->_parent;
+			if (parent == ppNode->_left)
+			{
+				ppNode->_left = curNode;
+			}
+			else
+			{
+				ppNode->_right = curNode;
+			}
+			curNode->_parent = ppNode;
+			// 挂 parent
+			curNode->_right = parent;
+			parent->_parent = curNode;
+		}
+		curNode->_balanceFactor = parent->_balanceFactor = 0;
 	}
 };
