@@ -266,6 +266,7 @@ public:
 				{
 					++parent->_balanceFactor;
 				}
+
 				// 当前parent结点更新完了，判断是否还需要再往上更新
 				if (parent->_balanceFactor == 0)	// parent所在子树高度不变，无需更新
 				{
@@ -281,16 +282,34 @@ public:
 				{
 					// 当前子树不平衡了，需要旋转
 					// 左单旋 “右子树右高”的一种情况
+
+					//  2   1  newNode 排成直线，左单旋
 					if (parent->_balanceFactor == 2 && curNode->_balanceFactor == 1) 
 					{
-						RotateLeft(parent);
-						break;
+						RotateL(parent);
 					}
+					// -2  -1  newNode 排成直线，右单旋
 					else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == -1)
 					{
-						RotateRight(parent);
-						break;
+						RotateR(parent);
 					}
+					// 2 -1 newNode 排成折线  右左双旋
+					else if (parent->_balanceFactor == 2 && curNode->_balanceFactor == -1)
+					{
+						RotateRL(parent);
+					}
+					// -2 1 newNode 排成折线  左右双旋
+					else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == 1)
+					{
+						RotateLR(parent);
+					}
+
+					else
+					{
+
+					}
+					break;
+
 				}
 				else
 				{
@@ -300,9 +319,44 @@ public:
 		}
 		return true;
 	}
+
+	// 判断是否是 AVL 树
+	bool isBalance()
+	{
+		return _IsBalance(_root);
+	}
 private:
+	bool _IsBalance(Node* root)
+	{
+		if (root == nullptr)
+			return true;
+		int leftHeight = Height(root->_left);
+		int rightHeight = Height(root->_right);
+		// 加一层暴涨
+		if (rightHeight - leftHeight != root->_balanceFactor)
+		{
+			cout << " 平衡因子异常: " << root->_kv.first << "->" << root->_balanceFactor << endl;
+			return false;
+		}
+
+		return abs(rightHeight - leftHeight) < 2
+			&& _IsBalance(root->_left)
+			&& _IsBalance(root->_right);
+	}
+
+	int Height(Node* root)
+	{
+		if (root == nullptr)
+			return 0;
+		// 分别求左右子树的高度
+		int leftHeight = Height(root->_left);
+		int rightHeight = Height(root->_right);
+		// 左右子树中 高度更大的那个 + 1
+		return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
+	}
+
 	// 左单旋
-	void RotateLeft(Node* parent)
+	void RotateL(Node* parent)
 	{
 		if (parent == nullptr || parent->_right == nullptr)
 			return;
@@ -351,13 +405,16 @@ private:
 	}
 
 	// 右单旋
-	void RotateRight(Node* parent)
+	void RotateR(Node* parent)
 	{
+		// parent 为空 或 curNode 为空的情况
 		if (parent == nullptr || parent->_left == nullptr)
 			return;
+
 		Node* curNode = parent->_left;
 		Node* curRight = curNode->_right;
-
+		
+		// 把 curNode 的 right 给给 parent 的 left
 		parent->_left = curRight;
 		if (curRight)
 			curRight->_parent = parent;
@@ -374,6 +431,7 @@ private:
 		else
 		{
 			Node* ppNode = parent->_parent;
+			// 找 parent 是 ppNode 的左还是右
 			if (parent == ppNode->_left)
 			{
 				ppNode->_left = curNode;
@@ -388,5 +446,74 @@ private:
 			parent->_parent = curNode;
 		}
 		curNode->_balanceFactor = parent->_balanceFactor = 0;
+	}
+
+	// 右左双旋
+	void RotateRL(Node* parent) 
+	{
+		Node* curNode = parent->_right;
+		Node* curLeft = curNode->_left;
+		int bf = curLeft->_balanceFactor;
+
+		RotateR(parent->_right);
+		RotateL(parent);
+		// 双旋  这里的麻烦事 是平衡因子的更新
+
+		if (bf == 0)
+		{
+			parent->_balanceFactor = 0;
+			curNode->_balanceFactor = 0;
+			curLeft->_balanceFactor = 0;
+		}
+		else if (bf == 1)
+		{
+			parent->_balanceFactor = -1;
+			curNode->_balanceFactor = 0;
+			curLeft->_balanceFactor = 0;
+		}
+		else if (bf == -1)
+		{
+			parent->_balanceFactor = 0;
+			curNode->_balanceFactor = 1;
+			curLeft->_balanceFactor = 0;
+		}
+		else
+		{
+			assert(false);
+		}
+	}
+
+	void RotateLR(Node* parent)
+	{
+		Node* curNode = parent->_left;
+		Node* curRight = curNode->_right;
+		int bf = curRight->_balanceFactor;
+
+		RotateL(parent->_left);
+		RotateR(parent);
+		// 双旋  这里的麻烦事 是平衡因子的更新
+
+		if (bf == 0)
+		{
+			parent->_balanceFactor = 0;
+			curNode->_balanceFactor = 0;
+			curRight->_balanceFactor = 0;
+		}
+		else if (bf == 1)
+		{
+			parent->_balanceFactor = 0;
+			curNode->_balanceFactor = -1;
+			curRight->_balanceFactor = 0;
+		}
+		else if (bf == -1)
+		{
+			parent->_balanceFactor = 1;
+			curNode->_balanceFactor = 0;
+			curRight->_balanceFactor = 0;
+		}
+		else
+		{
+			assert(false);
+		}
 	}
 };
