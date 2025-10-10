@@ -231,12 +231,9 @@ public:
 					parent = curNode;
 					curNode = curNode->_right;
 				}
-				// 搜索树中不允许有重复的值
+				// 搜索树中不允许有重复的值  对于已有值，不插入
 				else
-				{
-					// 对于已有值，不插入
 					return false;
-				}
 			}
 			// while 循环结束后，代表找到了可以插入的位置
 			// 找到位置了，但父节点不知道 新结点比自己大还是比自己小
@@ -454,11 +451,12 @@ private:
 		Node* curNode = parent->_right;
 		Node* curLeft = curNode->_left;
 		int bf = curLeft->_balanceFactor;
-
+		// 旋转
 		RotateR(parent->_right);
 		RotateL(parent);
 		// 双旋  这里的麻烦事 是平衡因子的更新
 
+		// 更新平衡因子
 		if (bf == 0)
 		{
 			parent->_balanceFactor = 0;
@@ -482,17 +480,20 @@ private:
 			assert(false);
 		}
 	}
-
+	
+	// 左右双旋
 	void RotateLR(Node* parent)
 	{
 		Node* curNode = parent->_left;
 		Node* curRight = curNode->_right;
 		int bf = curRight->_balanceFactor;
 
+		// 旋转
 		RotateL(parent->_left);
 		RotateR(parent);
 		// 双旋  这里的麻烦事 是平衡因子的更新
 
+		// 更新平衡因子
 		if (bf == 0)
 		{
 			parent->_balanceFactor = 0;
