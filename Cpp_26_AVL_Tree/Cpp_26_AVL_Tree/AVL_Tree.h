@@ -167,13 +167,16 @@
 //		parent->_balanceFactor = curNode->_balanceFactor = 0;
 //	}
 //};
+
+
 #pragma once
 #include <iostream>
 #include <assert.h>
 using namespace std;
 
 template<class K, class V>
-struct AVLTreeNode {
+struct AVLTreeNode 
+{
 	pair<K, V> _kv;		// 键值对
 	// 三叉链
 	AVLTreeNode<K, V>* _left;
@@ -215,103 +218,103 @@ public:
 			_root = new Node(kv);
 			return true;
 		}
-		else {
-			Node* parent = nullptr;
-			Node* curNode = _root;
-			// 先找空，找到一个可以插入的位置
-			while (curNode)
+		// _root 不为空时，二叉搜索树的逻辑
+		Node* parent = nullptr;
+		Node* curNode = _root;
+		// 先找空，找到一个可以插入的位置
+		while (curNode)
+		{
+			if (kv.first < curNode->_kv.first)
 			{
-				if (kv.first < curNode->_kv.first)
-				{
-					parent = curNode;
-					curNode = curNode->_left;
-				}
-				else if (kv.first > curNode->_kv.first)
-				{
-					parent = curNode;
-					curNode = curNode->_right;
-				}
-				// 搜索树中不允许有重复的值  对于已有值，不插入
-				else
-					return false;
+				parent = curNode;
+				curNode = curNode->_left;
 			}
-			// while 循环结束后，代表找到了可以插入的位置
-			// 找到位置了，但父节点不知道 新结点比自己大还是比自己小
-			curNode = new Node(kv);
-			if (curNode->_kv.first < parent->_kv.first)
+			else if (kv.first > curNode->_kv.first)
 			{
-				parent->_left = curNode;
+				parent = curNode;
+				curNode = curNode->_right;
 			}
-			else 
+			// 搜索树中不允许有重复的值  对于已有值，不插入
+			else
+				return false;
+		}
+		// while 循环结束后，代表找到了可以插入的位置
+		// 找到位置了，但父节点不知道 新结点比自己大还是比自己小
+		curNode = new Node(kv);
+		if (curNode->_kv.first < parent->_kv.first)
+		{
+			parent->_left = curNode;
+		}
+		else
+		{
+			parent->_right = curNode;
+		}
+		curNode->_parent = parent;
+
+		// 以上是二叉搜索树的插入逻辑，这样插入可能导致树不平衡，从而导致查找效率退化为 O(n)
+		// 以下是AVL树对二叉搜索树 进行的 控制平衡 操作
+		// 控制平衡 ... 
+
+		// 插入后 ，先更新平衡因子
+		// 插入后，最坏情况时: 可能root的平衡因子需要更新，只有root的parent为空
+		while (parent)
+		{
+			// 更新平衡因子
+			if (curNode == parent->_left)
+				--parent->_balanceFactor;
+			else // if (curNode == parent->_right)
+				++parent->_balanceFactor;
+
+			// 当前parent结点更新完了，判断是否还需要再往上更新  
+			// 处理平衡因子更新后有三种情况
+
+			// 情况一 parent所在子树高度不变且平衡，无需更新 和 旋转 结束循环
+			if (parent->_balanceFactor == 0)
 			{
-				parent->_right = curNode;
+				break;
 			}
-			curNode->_parent = parent;
-			// 以上是二叉搜索树的插入逻辑，这样插入可能导致树不平衡，从而导致查找效率退化为 O(n)
-			// 以下是AVL树对二叉搜索树 进行的 控制平衡 操作
-			// 控制平衡 ... 
-
-			// 插入后 ，先更新平衡因子
-			// 插入后，最坏可能root的平衡因子需要更新，只有root的parent为空
-			while (parent)
+			// 情况二 parent所在子树高度变了，继续往上更新
+			else if (parent->_balanceFactor == 1 || parent->_balanceFactor == -1) 
 			{
-				if (curNode == parent->_left)
+				curNode = parent;
+				parent = parent->_parent;
+			}
+			// 情况三  当前子树不平衡了，需要旋转
+			else if (parent->_balanceFactor == 2 || parent->_balanceFactor == -2) 
+			{
+				// 左单旋 “右子树右高”的一种情况
+
+				//  2   1  newNode 排成直线，左单旋
+				if (parent->_balanceFactor == 2 && curNode->_balanceFactor == 1)
 				{
-					--parent->_balanceFactor;
+					RotateL(parent);
 				}
-				else // if (curNode == parent->_right)
+				// -2  -1  newNode 排成直线，右单旋
+				else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == -1)
 				{
-					++parent->_balanceFactor;
+					RotateR(parent);
+				}
+				// 2 -1 newNode 排成折线  右左双旋
+				else if (parent->_balanceFactor == 2 && curNode->_balanceFactor == -1)
+				{
+					RotateRL(parent);
+				}
+				// -2 1 newNode 排成折线  左右双旋
+				else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == 1)
+				{
+					RotateLR(parent);
 				}
 
-				// 当前parent结点更新完了，判断是否还需要再往上更新
-				if (parent->_balanceFactor == 0)	// parent所在子树高度不变，无需更新
-				{
-					break;
-				}
-				 // parent所在子树高度变了，继续往上更新
-				else if (parent->_balanceFactor == 1 || parent->_balanceFactor == -1)
-				{
-					curNode = parent;
-					parent = parent->_parent;
-				}
-				else if (parent->_balanceFactor == 2 || parent->_balanceFactor == -2)
-				{
-					// 当前子树不平衡了，需要旋转
-					// 左单旋 “右子树右高”的一种情况
-
-					//  2   1  newNode 排成直线，左单旋
-					if (parent->_balanceFactor == 2 && curNode->_balanceFactor == 1) 
-					{
-						RotateL(parent);
-					}
-					// -2  -1  newNode 排成直线，右单旋
-					else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == -1)
-					{
-						RotateR(parent);
-					}
-					// 2 -1 newNode 排成折线  右左双旋
-					else if (parent->_balanceFactor == 2 && curNode->_balanceFactor == -1)
-					{
-						RotateRL(parent);
-					}
-					// -2 1 newNode 排成折线  左右双旋
-					else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == 1)
-					{
-						RotateLR(parent);
-					}
-
-					else
-					{
-
-					}
-					break;
-
-				}
 				else
 				{
-					assert(false);	// 平衡因子不是 0 1 -1 2 -2  直接报错
+					assert(false);
 				}
+				// 旋转后，让这棵树平衡，切降低了这棵树的高度, 旋转后 就无需再更新平衡因子了
+				break;
+			}
+			else
+			{
+				assert(false);	// 平衡因子不是 0 1 -1 2 -2  直接报错
 			}
 		}
 		return true;

@@ -23,7 +23,7 @@ void test1()
 // 使用多个随机值再进行测试
 void test2()
 {
-	const int N = 1000000;
+	const int N = 2000000;
 	vector<int> v;
 	v.reserve(N);
 
