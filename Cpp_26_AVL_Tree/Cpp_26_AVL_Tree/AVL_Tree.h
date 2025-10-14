@@ -285,11 +285,13 @@ public:
 				// 左单旋 “右子树右高”的一种情况
 
 				//  2   1  newNode 排成直线，单纯的右边高，进行 左单旋
+				// 2 -> 右高，1 -> 右高，右右 左单旋
 				if (parent->_balanceFactor == 2 && curNode->_balanceFactor == 1)
 				{
 					RotateL(parent);
 				}
 				// -2  -1  newNode 排成直线，单纯的右边高，进行，右单旋
+				// -2 -> 左高，-1 -> 左高，左左 右单旋
 				else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == -1)
 				{
 					RotateR(parent);
@@ -480,40 +482,38 @@ private:
 		curNode->_balanceFactor = parent->_balanceFactor = 0;
 	}
 
-	// 右左双旋
+	// 右左双旋  parent 的平衡因子为 2 或 -2
 	void RotateRL(Node* parent) 
 	{
 		Node* curNode = parent->_right;
 		Node* curLeft = curNode->_left;
-		int bf = curLeft->_balanceFactor;
+		int bf_curLeft = curLeft->_balanceFactor;
 		// 旋转
 		RotateR(parent->_right);
 		RotateL(parent);
 		// 双旋  这里的麻烦事 是平衡因子的更新
 
 		// 更新平衡因子
-		if (bf == 0)
+		if (bf_curLeft == 0)		
 		{
 			parent->_balanceFactor = 0;
 			curNode->_balanceFactor = 0;
 			curLeft->_balanceFactor = 0;
 		}
-		else if (bf == 1)
+		else if (bf_curLeft == 1)
 		{
 			parent->_balanceFactor = -1;
 			curNode->_balanceFactor = 0;
 			curLeft->_balanceFactor = 0;
 		}
-		else if (bf == -1)
+		else if (bf_curLeft == -1)
 		{
 			parent->_balanceFactor = 0;
 			curNode->_balanceFactor = 1;
 			curLeft->_balanceFactor = 0;
 		}
 		else
-		{
 			assert(false);
-		}
 	}
 	
 	// 左右双旋
@@ -521,7 +521,7 @@ private:
 	{
 		Node* curNode = parent->_left;
 		Node* curRight = curNode->_right;
-		int bf = curRight->_balanceFactor;
+		int bf_curRight = curRight->_balanceFactor;
 
 		// 旋转
 		RotateL(parent->_left);
@@ -529,27 +529,25 @@ private:
 		// 双旋  这里的麻烦事 是平衡因子的更新
 
 		// 更新平衡因子
-		if (bf == 0)
+		if (bf_curRight == 0)	// 
 		{
 			parent->_balanceFactor = 0;
 			curNode->_balanceFactor = 0;
 			curRight->_balanceFactor = 0;
 		}
-		else if (bf == 1)
+		else if (bf_curRight == 1)
 		{
 			parent->_balanceFactor = 0;
 			curNode->_balanceFactor = -1;
 			curRight->_balanceFactor = 0;
 		}
-		else if (bf == -1)
+		else if (bf_curRight == -1)
 		{
 			parent->_balanceFactor = 1;
 			curNode->_balanceFactor = 0;
 			curRight->_balanceFactor = 0;
 		}
 		else
-		{
 			assert(false);
-		}
 	}
 };
