@@ -284,12 +284,12 @@ public:
 			{
 				// 左单旋 “右子树右高”的一种情况
 
-				//  2   1  newNode 排成直线，左单旋
+				//  2   1  newNode 排成直线，单纯的右边高，进行 左单旋
 				if (parent->_balanceFactor == 2 && curNode->_balanceFactor == 1)
 				{
 					RotateL(parent);
 				}
-				// -2  -1  newNode 排成直线，右单旋
+				// -2  -1  newNode 排成直线，单纯的右边高，进行，右单旋
 				else if (parent->_balanceFactor == -2 && curNode->_balanceFactor == -1)
 				{
 					RotateR(parent);
@@ -304,12 +304,13 @@ public:
 				{
 					RotateLR(parent);
 				}
-
 				else
 				{
 					assert(false);
 				}
-				// 旋转后，让这棵树平衡，切降低了这棵树的高度, 旋转后 就无需再更新平衡因子了
+
+				// 旋转后，让这棵树平衡，且降低了这棵树的高度,
+				// 旋转后 就无需再更新平衡因子了，可以跳出循环
 				break;
 			}
 			else
@@ -355,22 +356,18 @@ private:
 		return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
 	}
 
-	// 左单旋
-	void RotateL(Node* parent)
-	{
+	// 左单旋 复习版
+	void RotateL_review(Node* parent) {
 		if (parent == nullptr || parent->_right == nullptr)
 			return;
-
 		Node* curNode = parent->_right;
-		Node* curLeft = curNode->_left;	// curLeft 有可能为空
+		Node* curLeft = curNode->_left;
 
-		// 先处理 curNode 的 left 结点
 		parent->_right = curLeft;
-		if(curLeft)
+		if (curLeft)		// curLeft 可能为空
 			curLeft->_parent = parent;
-		
-		// 再处理 curNode 结点
-		// parent 有可能是根节点，也有可能是子树的根节点
+
+		// parent 可能是根节点，也可能是一颗子树
 		if (parent == _root)
 		{
 			// 先立新根
@@ -380,31 +377,69 @@ private:
 			// 再挂旧根
 			parent->_parent = curNode;
 			curNode->_left = parent;
+		}
+		else
+		{
+			Node* ppNode = parent->_parent;
+			// 先立新根
+			// 这里不知道 parent 是 ppNode 的左 还是右
+			if (parent == ppNode->_left)
+				ppNode->_left = curNode;
+			else
+				ppNode->_right = curNode;
 
+			curNode->_parent = ppNode;
+			
+			// 再挂parent
+			parent->_parent = curNode;
+			curNode->_left = parent;
+		}
+		parent->_balanceFactor = curNode->_balanceFactor = 0;
+	}
+	// 左单旋  2 1 newNode 练成线，单纯的右边高
+	void RotateL(Node* parent)
+	{
+		if (parent == nullptr || parent->_right == nullptr)
+			return;
+		Node* curNode = parent->_right;
+		Node* curLeft = curNode->_left;	// curLeft 有可能为空
+
+		// 先处理 curNode 的 left 结点，curLeft 有可能是空
+		parent->_right = curLeft;
+		if(curLeft)	
+			curLeft->_parent = parent;
+		
+		// 再处理 curNode 结点
+		// parent 有可能是根节点，也有可能是子树的根节点
+		if (parent == _root) 
+		{
+			// 先立新根
+			_root = curNode;
+			curNode->_parent = nullptr;
+
+			// 再挂旧根
+			parent->_parent = curNode;
+			curNode->_left = parent;
 		}
 		else
 		{
 			Node* ppNode = parent->_parent;
 			// 这里不知道 parent 是 ppNode 的 左孩子 还是 右孩子 
 			if (parent == ppNode->_left)
-			{
 				ppNode->_left = curNode;
-			}
 			else
-			{
 				ppNode->_right = curNode;
-			}
+
 			curNode->_parent = ppNode;
 
 			// 挂 parent
 			parent->_parent = curNode;
 			curNode->_left = parent;
-
 		}
 		parent->_balanceFactor = curNode->_balanceFactor = 0;
 	}
 
-	// 右单旋
+	// 右单旋 -2 -1 newNode 连成线，单纯的左边高
 	void RotateR(Node* parent)
 	{
 		// parent 为空 或 curNode 为空的情况
@@ -433,13 +468,10 @@ private:
 			Node* ppNode = parent->_parent;
 			// 找 parent 是 ppNode 的左还是右
 			if (parent == ppNode->_left)
-			{
 				ppNode->_left = curNode;
-			}
 			else
-			{
 				ppNode->_right = curNode;
-			}
+			
 			curNode->_parent = ppNode;
 			// 挂 parent
 			curNode->_right = parent;
