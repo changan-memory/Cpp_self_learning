@@ -326,10 +326,11 @@ public:
 	// ÅÐ¶ÏÊÇ·ñÊÇ AVL Ê÷
 	bool isBalance()
 	{
-		return _IsBalance(_root);
+		return _isBalance(_root);
 	}
 private:
-	bool _IsBalance(Node* root)
+	
+	bool _isBalance(Node* root)
 	{
 		if (root == nullptr)
 			return true;
@@ -343,8 +344,8 @@ private:
 		}
 
 		return abs(rightHeight - leftHeight) < 2
-			&& _IsBalance(root->_left)
-			&& _IsBalance(root->_right);
+			&& _isBalance(root->_left)
+			&& _isBalance(root->_right);
 	}
 
 	int Height(Node* root)

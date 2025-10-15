@@ -171,7 +171,7 @@ int main() {
 	//test12();
 	//test13();
 
-	//dynamic::test14();
-	dynamic::test15();
+	dynamic::test14();
+	//dynamic::test15();
 	return 0;
 }
