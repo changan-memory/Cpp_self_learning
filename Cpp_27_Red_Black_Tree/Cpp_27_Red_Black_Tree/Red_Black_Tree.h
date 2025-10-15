@@ -16,15 +16,15 @@ struct RBTreeNode
 	RBTreeNode<K, V>* _parent;
 
 	pair<K, V> _kv;
-
 	Colour _col;
 
-	RBTreeNode(const pair<K, V>& kv)
+	// 新结点默认是红色的
+	RBTreeNode(const pair<K, V>& kv, Colour col = Red)
 		:_left(nullptr)
 		,_right(nullptr)
 		,_parent(nullptr)
 		,_kv(kv)
-		,_col(Red)
+		,_col(col)
 	{ }
 };
 
@@ -42,7 +42,7 @@ public:
 		if (_root == nullptr)
 		{
 			_root = new Node(kv);
-			_root->_col = Red;
+			_root->_col = Black;	// 性质 根节点是黑色的
 			return true;
 		}
 		// _root 不为空时，二叉搜索树的逻辑
@@ -69,13 +69,10 @@ public:
 		// 找到位置了，但父节点不知道 新结点比自己大还是比自己小
 		curNode = new Node(kv);
 		if (curNode->_kv.first < parent->_kv.first)
-		{
 			parent->_left = curNode;
-		}
 		else
-		{
 			parent->_right = curNode;
-		}
+		
 		curNode->_parent = parent;
 
 		// 以上是二叉搜索树的插入逻辑，这样插入可能导致树不平衡，从而导致查找效率退化为 O(n)

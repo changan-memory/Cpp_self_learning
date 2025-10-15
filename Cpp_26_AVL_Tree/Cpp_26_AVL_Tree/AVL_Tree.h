@@ -335,7 +335,7 @@ private:
 			return true;
 		int leftHeight = Height(root->_left);
 		int rightHeight = Height(root->_right);
-		// 加一层暴涨
+		// 加一层保障
 		if (rightHeight - leftHeight != root->_balanceFactor)
 		{
 			cout << " 平衡因子异常: " << root->_kv.first << "->" << root->_balanceFactor << endl;
