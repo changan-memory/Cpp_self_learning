@@ -8,43 +8,59 @@ enum Colour {
 	Black
 };
 
-template<class K, class V>
+template<class T>
 struct RBTreeNode
 {
-	RBTreeNode<K, V>* _left;
-	RBTreeNode<K, V>* _right;
-	RBTreeNode<K, V>* _parent;
+	RBTreeNode<T>* _left;
+	RBTreeNode<T>* _right;
+	RBTreeNode<T>* _parent;
 
-	pair<K, V> _kv;
+	T _data;
+
 	Colour _col;
 
 	// 新结点默认是红色的
-	RBTreeNode(const pair<K, V>& kv)
+	RBTreeNode(const T& data)
 		:_left(nullptr)
 		,_right(nullptr)
 		,_parent(nullptr)
-		,_kv(kv)
+		,_data(data)
 		,_col(Red)
 	{ }
 };
 
-template<class K, class V>
+template<class K, class T, class KeyOfT>
 class RBTree
 {
 //public:
 //	int _rotateCount = 0;
 
 private:
-	typedef RBTreeNode<K, V> Node;
-	RBTreeNode<K, V>* _root = nullptr;
+	typedef RBTreeNode<T> Node;
+	RBTreeNode<T>* _root = nullptr;
 
+	Node* find(const K& key) const
+	{
+		Node* curNode = _root;
+		KeyOfT kot;
+		while (curNode)
+		{
+			if (key > kot(curNode->_data))
+				curNode = curNode->_right;
+			else if (key < kot(curNode->_data))
+				curNode = curNode->_left;
+			else
+				return curNode;
+		}
+		return nullptr;
+	}
 public:
-	bool insert(const pair<K, V>& kv)
+	bool insert(const T& data)
 	{
 		// 先走二叉搜索树的插入逻辑
 		if (_root == nullptr)
 		{
-			_root = new Node(kv);
+			_root = new Node(data);
 			_root->_col = Black;	// 性质 根节点是黑色的
 			return true;
 		}
@@ -52,14 +68,18 @@ public:
 		Node* parent = nullptr;
 		Node* curNode = _root;
 		// 先找空，找到一个可以插入的位置
+
+		// 使用 萃取器 取出 Key
+		KeyOfT kot;
+
 		while (curNode)
 		{
-			if (kv.first < curNode->_kv.first)
+			if (kot(data) < kot(curNode->_data))
 			{
 				parent = curNode;
 				curNode = curNode->_left;
 			}
-			else if (kv.first > curNode->_kv.first)
+			else if (kot(data) > kot(curNode->_data))
 			{
 				parent = curNode;
 				curNode = curNode->_right;
@@ -70,8 +90,8 @@ public:
 		}
 		// while 循环结束后，代表找到了可以插入的位置
 		// 找到位置了，但父节点不知道 新结点比自己大还是比自己小
-		curNode = new Node(kv);
-		if (curNode->_kv.first < parent->_kv.first)
+		curNode = new Node(data);
+		if (kot(curNode->_data) < kot(parent->_data))
 			parent->_left = curNode;
 		else
 			parent->_right = curNode;
