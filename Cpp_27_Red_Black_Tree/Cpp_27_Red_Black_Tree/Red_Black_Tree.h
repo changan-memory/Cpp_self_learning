@@ -84,8 +84,12 @@ public:
 
 		// while 循环控制 颜色继续往上更新
 
-		// 新插入的结点为红色 因此 parent 存在且 parent 为红色时，才需要更新颜色
+		// 新插入的结点为红色 因此 parent 存在且 parent 为红色时，才需要更新颜色 或者调整
 		// 
+		// 循环的各种情况
+		//		1. curNode 为根节点时，parent为空，直接将 _root 设为黑色
+		//		2. parent 为黑色时，进不去循环
+		//		3. parent 为红色时，接着进入循环 向上调整
 		while (parent && parent->_col == Red)
 		{
 			Node* grandFather = parent->_parent;
@@ -185,7 +189,8 @@ public:
 			}
 		}
 		// 继续向上处理 parent = curNode->_parent  如果 parent == nullptr 会结束循环
-		// parent == nullptr 结束循环时，curNode为_root结点，需要对 _root 节点变色
+		// parent == nullptr 结束循环时，此时curNode为_root结点，需要对 _root 节点变色
+		// 根节点始终是黑色的
 		_root->_col = Black;	// 粗暴的处理，直接将根节点设为黑色，根节点为黑色总是正确的
 
 		return true;
