@@ -61,7 +61,7 @@ namespace test_set {
 		// 给的区间 [30, 60] 都会删掉
 		itlow = myset.lower_bound(30);                //   找 >= 30 的那个值  itlow是30的位置
 		itup = myset.upper_bound(60);                 //   找 > 60 的那个值   itup是70的位置
-		// 这么设计是为了配合erase 的左闭右开
+		// 这么设计是为了配合erase， erase 删除时 是左闭右开
 		cout << *itlow << " " << *itup << endl;
 		// 删除的是 [itlow, itup)
 		myset.erase(itlow, itup);                     // 10 20 70 80 90
@@ -75,10 +75,12 @@ namespace test_set {
 	void test3_set() {
 		std::set<int> myset;
 
-		for (int i = 1; i <= 5; i++) myset.insert(i * 10);   // myset: 10 20 30 40 50
+		for (int i = 1; i <= 5; i++) 
+			myset.insert(i * 10);   // myset: 10 20 30 40 50
 
 		//std::pair<std::set<int>::const_iterator, std::set<int>::const_iterator> ret;
 		auto ret = myset.equal_range(30);
+
 		// ret 的类型是 pair<iterator, itrator> 
 		// equal_range(30) 返回的是 30 的左闭右开的区间 [30, 40) 
 		std::cout << "the lower bound points to: " << *ret.first << '\n';
@@ -90,7 +92,7 @@ namespace test_set {
 // count 和 equal_range 都是为 multiset设计的
 namespace test_multiset {
 	void test1_multiset() {
-		multiset<int> mset;		// multiset 允许键值冗余
+		multiset<int> mset;		// multiset 允许键值重复
 		mset.insert(3);
 		mset.insert(5);
 		mset.insert(8);
@@ -134,7 +136,7 @@ namespace test_multiset {
 		cout << endl;
 		// 有多个7时，find返回的是 中序遍历时 的第一个7 的位置
 		// 如果没找到，返回的是一个空区间
-		// 假设7每找到，返回
+		// 假设7没找到，返回
 		auto pos = mset.find(7);
 		while (pos != mset.end()) {
 			cout << *pos << " ";
@@ -147,10 +149,11 @@ namespace test_multiset {
 		cout << endl;
 	}
 }
-//int main() {
-//	//test_set::test2_set();
-//	//test_set::test3_set();
-//	//test_multiset::test1_multiset();
-//	test_multiset::test2_multiset();
-//	return 0;
-//}
+int main() {
+	//test_set::test1_set();
+	//test_set::test2_set();
+	//test_set::test3_set();
+	//test_multiset::test1_multiset();
+	test_multiset::test2_multiset();
+	return 0;
+}

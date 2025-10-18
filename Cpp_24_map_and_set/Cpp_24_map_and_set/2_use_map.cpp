@@ -119,10 +119,11 @@ namespace test_map {
 namespace test_multimap {
 
 }
-int main() {
-	//test_map::test1_map();
-	//test_map::test2_map();
-	//test_map::test3_map();
-	test_map::test_operator();
-	return 0;
-}
+
+//int main() {
+//	//test_map::test1_map();
+//	//test_map::test2_map();
+//	//test_map::test3_map();
+//	test_map::test_operator();
+//	return 0;
+//}
