@@ -42,8 +42,28 @@ void test2()
 	cout << t.isBalance() << endl;
 
 }
+//int main() {
+//	//test1();
+//	test2();
+//	return 0;
+//}
+
+void test() {
+	const int N = 20000000;
+	vector<int> v;
+	v.reserve(N);
+
+	srand(time(0));
+
+	AVLTree<int, int> t;
+	for (size_t i = 0; i < N; ++i)
+		v.push_back(rand());
+
+	for (auto e : v)
+		t.insert(make_pair(e, e));
+	cout << "ÊÇ·ñÊÇ AVLÊ÷: " << t.isBalance() << endl;
+}
 int main() {
-	//test1();
-	test2();
+	test();
 	return 0;
 }
