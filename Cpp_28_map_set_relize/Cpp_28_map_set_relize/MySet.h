@@ -17,6 +17,19 @@ namespace m_set
 		};
 		RBTree<K, K, SetKeyOfT> _tree;
 	public:
+		//typedef typename RBTree<K, K, SetKeyOfT>::iterator iterator;
+		typedef typename RBTree<K, K, SetKeyOfT>::const_iterator iterator;
+		typedef typename RBTree<K, K, SetKeyOfT>::const_iterator const_iterator;
+
+		const_iterator begin() const
+		{
+			return _tree.begin();
+		}
+		const_iterator end() const
+		{
+			return _tree.end();
+		}
+
 		bool insert(const K& key)
 		{
 			return _tree.insert(key);

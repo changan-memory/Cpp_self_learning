@@ -29,16 +29,153 @@ struct RBTreeNode
 	{ }
 };
 
+template<class T, class Ptr, class Ref>
+struct __TreeIterator
+{
+	typedef RBTreeNode<T> Node;
+	typedef __TreeIterator<T, Ptr, Ref> Self;
+
+	typedef __TreeIterator<T, T*, T&> Iterator;
+
+	Node* _node;
+
+	__TreeIterator(Node* node)
+		:_node(node)
+	{ }
+
+	// const 迭代器相当于套了一层模板
+	Ref operator*() const
+	{
+		return _node->_data;
+	}
+	Ptr operator->() const
+	{
+		return &_node->_data;
+	}
+	bool operator!=(const Self& s) const 
+	{ 
+		return _node != s._node; 
+	}
+	bool operator==(const Self& s) const 
+	{ 
+		return _node == s._node; 
+	}
+
+	Self operator--(int)
+	{
+		Self tmp = *this;
+		--*this;
+		return tmp;
+	}
+	Self& operator--()
+	{
+		if (_node->_left)
+		{
+			Node* subRight = _node->_left;
+			while (subRight->_right)
+			{
+				subRight = subRight->_right;
+			}
+			_node = subRight;
+		}
+		else
+		{
+			// 孩子是父亲的右的那个节点
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			while (parent && cur == parent->_left)
+			{
+				cur = cur->_parent;
+				parent = parent->_parent;
+			}
+			_node = parent;
+		}
+		return *this;
+	}
+	Self& operator++()
+	{
+		if (_node->_right)
+		{
+			// 右树的最左节点(最小节点)
+			Node* subLeft = _node->_right;
+			while (subLeft->_left)
+			{
+				subLeft = subLeft->_left;
+			}
+			_node = subLeft;
+		}
+		else
+		{
+			Node* cur = _node;
+			Node* parent = cur->_parent;
+			// 找孩子是父亲左的那个祖先节点，就是下一个要访问的节点
+			while (parent)
+			{
+				if (cur == parent->_left)
+				{
+					break;
+				}
+				else
+				{
+					cur = cur->_parent;
+					parent = parent->_parent;
+				}
+			}
+			_node = parent;
+		}
+		return *this;
+	}
+};
+
+
+
+// KeyOfT 是一个仿函数
+// Set->RBTree<K，K，SetKeyOfT>_t
+// map->RBTree<K，pair<K，V>,MapKeyOfT>_t;
 template<class K, class T, class KeyOfT>
 class RBTree
 {
 //public:
 //	int _rotateCount = 0;
+public:
+	// 同一个类模板 传不同的参数，实例化出不同的类型
+	typedef __TreeIterator<T, T*, T&> iterator;
+	typedef __TreeIterator<T, const T*, const T&> const_iterator;
+
+	iterator begin()
+	{
+		Node* leftMin = _root;
+		while (leftMin && leftMin->_left)
+		{
+			leftMin = leftMin->_left;
+		}
+		return iterator(leftMin);
+	}
+	iterator end()
+	{
+		return iterator(nullptr);
+	}
+
+	// const 版本
+	const_iterator begin() const
+	{
+		Node* leftMin = _root;
+		while (leftMin && leftMin->_left)
+		{
+			leftMin = leftMin->_left;
+		}
+		return const_iterator(leftMin);
+	}
+	const_iterator end() const
+	{
+		return const_iterator(nullptr);
+	}
 
 private:
 	typedef RBTreeNode<T> Node;
 	RBTreeNode<T>* _root = nullptr;
 
+	// find 函数也需要用 KeyOfT 控制
 	Node* find(const K& key) const
 	{
 		Node* curNode = _root;
@@ -69,9 +206,10 @@ public:
 		Node* curNode = _root;
 		// 先找空，找到一个可以插入的位置
 
-		// 使用 萃取器 取出 Key
+		// 使用 萃取器 取出 Key   设计相当巧妙
+		// 标准库中的 pair 不能直接比较大小，我们设计了 一个萃取器 用于取出 T 中的 Key
+		// 可以认为这里是 set 迁就了 map ,因为set的 K 可以直接比较，map 的pair<K, V> 需要取出 Key
 		KeyOfT kot;
-
 		while (curNode)
 		{
 			if (kot(data) < kot(curNode->_data))
