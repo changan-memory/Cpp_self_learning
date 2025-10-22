@@ -1,4 +1,4 @@
-#include "HashTable.h"
+ï»¿#include "HashTable.h"
 
 
 void testHash1()
@@ -11,17 +11,17 @@ void testHash1()
 		hash.insert(make_pair(e, e));
 	}
 
-	// ÊµÏÖ²»ÄÜĞŞ¸Ä key
+	// å®ç°ä¸èƒ½ä¿®æ”¹ key
 	/*auto ret = hash.find(4);
 	ret->_kv.first = 40;
 	ret->_kv.second = 400;*/
 
-	// Çó hashi µÄÊ±ºò ½øĞĞÁË È¡Ä££¬ string ²»ÄÜÈ¡Ä££¬Òª½â¾ö string ²»ÄÜ×ö key µÄÎÊÌâ
+	// æ±‚ hashi çš„æ—¶å€™ è¿›è¡Œäº† å–æ¨¡ï¼Œ string ä¸èƒ½å–æ¨¡ï¼Œè¦è§£å†³ string ä¸èƒ½åš key çš„é—®é¢˜
 	//HashTable<string, string, StringHashFunc> dict;
 	HashTable<string, string> dict;
-	dict.insert(make_pair("sort", "ÅÅĞò"));
-	dict.insert(make_pair("left", "×ó±ß"));
-	dict.insert(make_pair("right", "ÓÒ±ß"));
+	dict.insert(make_pair("sort", "æ’åº"));
+	dict.insert(make_pair("left", "å·¦è¾¹"));
+	dict.insert(make_pair("right", "å³è¾¹"));
 	auto ret = dict.find("right");
 	/*ret->_kv.first = "xx";
 	ret->_kv.second = "xx";*/
@@ -36,8 +36,58 @@ void testHash1()
 	cout << hf("acbd") << endl;
 	cout << hf("abbe") << endl;
 }
+
+void testHash2()
+{
+	using namespace hash_bucket;
+	HashTable<int, int> hash;
+	int a[] = { 1, 111, 4, 7, 15, 25, 44, 9 };
+	for (auto e : a)
+		hash.Insert(make_pair(e, e));
+
+	hash.Insert(make_pair(14, 14));
+	hash.Insert(make_pair(24, 24));
+	hash.Print();
+
+	hash.Insert(make_pair(34, 34));
+	hash.Print();
+
+	// æµ‹è¯•åˆ é™¤
+	hash.Erase(44);
+	hash.Erase(4);
+	hash.Erase(24);
+	hash.Print();
+
+	HashTable<string, string> dict;
+	dict.Insert(make_pair("sort", "æ’åº"));
+	dict.Insert(make_pair("left", "å·¦è¾¹"));
+	dict.Insert(make_pair("right", "å³è¾¹"));
+	dict.Insert(make_pair("sort", "æ’åº"));
+	dict.Insert(make_pair("left", "å·¦è¾¹"));
+	dict.Insert(make_pair("right", "å³è¾¹"));
+	dict.Insert(make_pair("sort", "æ’åº"));
+	dict.Insert(make_pair("left", "å·¦è¾¹"));
+	dict.Insert(make_pair("insert", "æ’å…¥"));
+	dict.Insert(make_pair("string", "å­—ç¬¦ä¸²"));
+	dict.Insert(make_pair("hello", "ä½ å¥½"));
+	dict.Insert(make_pair("world", "ä¸–ç•Œ"));
+	dict.Insert(make_pair("bucket", "æ¡¶"));
+	dict.Insert(make_pair("operate system", "æ“ä½œç³»ç»Ÿ"));
+	dict.Insert(make_pair("Linux", "Linux æ“ä½œç³»ç»Ÿ"));
+	dict.Insert(make_pair("windows", "windowsæ“ä½œç³»ç»Ÿ"));
+	dict.Insert(make_pair("Mac OS", "Macæ“ä½œç³»ç»Ÿ"));
+	
+
+	auto dret = dict.Find("left");
+	//dret->_kv.first = "xx";
+	dret->_kv.second = "xxxx";
+	dict.Print();
+
+	return;
+}
 int main()
 {
-	testHash1();
+	//testHash1();
+	testHash2();
 	return 0;
 }

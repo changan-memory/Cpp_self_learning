@@ -2,10 +2,11 @@
 
 #include <iostream>
 #include <vector>
+#include <stdio.h>
 using namespace std;
 
 
-// 开放定址法的哈希表
+// 闭散列的 开放定址法的哈希表
 namespace open_addr
 {
 	// 哈希表中每个位置的状态
@@ -65,7 +66,7 @@ namespace open_addr
 	class HashTable
 	{
 	private:
-		vector<HashData<K, V>> _table;
+		vector<HashData<K, V>> _table;	// vector 存自定义类型，无需实现析构函数
 		size_t _n = 0;  // 存储的有效数据的个数   哈希是分散存储的，vector 是连续存储的，因此即使 vector 中有 size,也需要这个 _n
 
 	public:
@@ -75,6 +76,9 @@ namespace open_addr
 		}
 		bool insert(const pair<K, V>& kv)
 		{
+			if (find(kv.first))
+				return false;
+
 			// 插入前需要控制 负载因子 和 扩容
 			//if ((static_cast<double> (_n) / static_cast<double>(_table.size())) >= 7)
 			if (_n * 10 / _table.size() >= 7)		// 牺牲一部分空间换取性能
@@ -145,4 +149,190 @@ namespace open_addr
 			return false;
 		}
 	};
+}
+
+
+namespace hash_bucket
+{
+	// 使用仿函数控制 string 和 其他整型的取模
+	template<class K>
+	struct DefaultHashFunc
+	{
+		size_t operator()(const K& key)
+		{
+			return static_cast<size_t> (key);
+		}
+	};
+
+	//// 方式一: 专门为 string 写一个 哈希函数，使用第一个 char 控制
+	//struct StringHashFunc
+	//{
+	//	size_t operator()(const string& str)
+	//	{
+	//		return static_cast<size_t> (str[0]);
+	//	}
+	//};
+
+	// 为 string 特化一个版本 哈希函数
+
+	template <>
+	struct DefaultHashFunc<string>
+	{
+		size_t operator()(const string& str)
+		{
+			// BKDR
+			size_t hash = 0;
+			for (auto ch : str) {
+				hash *= 131;
+				hash += ch;
+			}
+			return hash;
+		}
+	};
+
+	template<class K, class V>
+	struct HashNode
+	{
+		std::pair<K, V> _kv;
+		struct HashNode<K, V>* _next;
+
+		HashNode(const pair<K, V>& kv)
+			:_kv(kv)
+			,_next(nullptr)
+		{ }
+	};
+
+	template<class K, class V, class HashFunc = DefaultHashFunc<K>>
+	class HashTable
+	{
+	private:
+		typedef struct HashNode<K, V> Node;
+
+		vector<Node*> _table;	// 需要写析构函数
+		size_t _n = 0;
+	public:
+		HashTable()
+		{
+			_table.resize(10, nullptr);
+		}
+		// 需要手动析构桶中的节点
+		~HashTable()
+		{
+			for (size_t i = 0; i < _table.size(); i++)
+			{
+				Node* curNode = _table[i];
+				while (curNode)
+				{
+					Node* curNext = curNode->_next;
+					
+					delete curNode;
+					curNode = curNext;
+				}
+				_table[i] = nullptr;
+			}
+		}
+
+
+		bool Insert(const pair<K, V>& kv)
+		{
+			if (Find(kv.first))
+				return false;
+			HashFunc hf;
+
+			// 扩容逻辑
+			// 控制负载因子 为 1 时扩容
+			if (static_cast<double> (_n) / static_cast<double> (_table.size()) >= 1.0)
+			{
+				size_t newSize = _table.size() * 2;
+				vector<Node*> newTable;;
+				newTable.resize(newSize, nullptr);
+
+				// 遍历每个桶，将每个桶中的节点都拿过来
+				for (size_t i = 0; i < _table.size(); ++i)
+				{
+					Node* curNode = _table[i];
+					while (curNode)
+					{
+						Node* curNext = curNode->_next;
+						//size_t hashi = i % newSize;	// 自己写的时候写错的点
+						size_t hashi = hf(curNode->_kv.first) % newSize;
+
+						curNode->_next = newTable[hashi];
+						newTable[hashi] = curNode;
+
+						//curNode = curNode->_next;
+						curNode = curNext;
+					}
+					_table[i] = nullptr;
+				}
+				_table.swap(newTable);
+			}
+			// 挂结点的逻辑
+			size_t hashi = hf(kv.first) % _table.size();
+
+			Node* newNode = new Node(kv);
+			// 头插
+			newNode->_next = _table[hashi];
+			_table[hashi] = newNode;
+			++_n;
+			return true;
+		}
+
+		Node* Find(const K& key) const
+		{
+			HashFunc hf;
+			size_t hashi = hf(key) % _table.size();
+			
+			Node* curNode = _table[hashi];
+			while (curNode)
+			{
+				if (curNode->_kv.first == key)
+					return curNode;
+				curNode = curNode->_next;
+			}
+			return nullptr;
+		}
+
+		// 单链表的删除需要更改前一个结点的 next 指针，不适合复用 find
+		bool Erase(const K& key)
+		{
+			HashFunc hf;
+			size_t hashi = hf(key) % _table.size();
+
+			Node* curPrev = nullptr;
+			Node* curNode = _table[hashi];
+			while (curNode)
+			{
+				if (curNode->_kv.first == key)
+				{
+					if (curPrev == nullptr) // 头删
+						_table[hashi] = curNode->_next;	
+					else  // 非头删
+						curPrev->_next = curNode->_next;
+
+					delete curNode;
+					return true;
+				}
+				curPrev = curNode;
+				curNode = curNode->_next;
+			}
+			return false;
+		}
+		void Print()
+		{
+			for (size_t i = 0; i < _table.size(); ++i)
+			{
+				printf("[%d]->", i);
+				Node* curNode = _table[i];
+				while (curNode)
+				{
+					cout << curNode->_kv.first << ":" << curNode->_kv.second << "->";
+					curNode = curNode->_next;
+				}
+				printf("NULL\n");
+			}
+			cout << endl;
+		}
+	};
+
 }
