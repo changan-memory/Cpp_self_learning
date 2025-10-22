@@ -26,8 +26,11 @@ namespace m_list {
 	// 自定义类型 配合 运算符重载，可以实现自定义抽象类型的 各种实现
 
 	// 模板 只要给不同的模板参数，就是不同的类型！
-	// typedef __list_iterator<T, T&> iterator;
-	// typedef __list_iterator<T, const T&> const_iterator;
+	// typedef __list_iterator<T, T&, T*> iterator;
+	// typedef __list_iterator<T, const T&, const T*> const_iterator;
+
+	// 通过模板实现的操作，本质上 还是写了两个类，仅有返回类型不同
+	// 但 通过模板实现的话，是让编译器去做 复制代码的工作，我们自己不写冗余的代码
 	template<typename T, typename Ref, typename Ptr>
 	struct __list_iterator {
 	public:
@@ -132,14 +135,23 @@ namespace m_list {
 		// list的空间不是连续的，不能用Node*作为iterator
 		// 把Node*封装成自定义类型，内部实现运算符重载，实现*it访问数据，++it访问下一个结点
 
+	private:
+		//list_node<T>* _head;
+		Node* _head = nullptr;	// 哨兵位头结点的指针
+		size_t _size;		// 记录链表的节点数
+
 	public:
 		typedef __list_iterator<T, T&, T*> iterator;
 		typedef __list_iterator<T, const T&, const T*> const_iterator;
+
 		//typedef __list_const_iterator<T> const_iterator;  
 		//typedef __list_const_iterator<T> const_iterator; 这么设计const迭代器太冗余了
 		// 我们学习标准库中的实现	
 		// 实现const迭代器的不推荐的方案 将上述iterator复制一份,改名为__list_const_iterator<T>
 		// 然后仅让 operator* 返回 const T&
+		
+		// 通过复制 并 加上 const 的做法，使得 普通迭代器和 const 迭代器只有返回类型不同
+		// 我们可以通过增加模板参数来 实现const 迭代器
 
 		//typedef const __list_iterator<T> const_iterator;	// 该写法导致 迭代器本身是const
 		// const __list_iterator<T> 表示迭代器本身	// 而不是表示迭代器指向的对象是const的
@@ -265,10 +277,9 @@ namespace m_list {
 			--_size;
 			return iterator(next);
 		}
-	private:
-		//list_node<T>* _head;
-		Node* _head = nullptr;	// 哨兵位头结点的指针
-		size_t _size;		// 记录链表的节点数
+
 	};
 
 }
+
+

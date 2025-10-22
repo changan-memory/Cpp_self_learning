@@ -20,11 +20,12 @@ void test_list1() {
 	lt.push_back(3);
 	lt.push_back(4);
 	m_list::list<int>::iterator it = lt.begin();	// 自定义迭代器类型 
-	// 这里的赋值是调用拷贝构造，用已存在的对象初始化另一个对象，这里的需要是完成浅拷贝即可
+
+	// 这里的 = 是调用拷贝构造，用已存在的对象初始化另一个对象，这里的需要是完成浅拷贝即可
 	while (it != lt.end()) {	
 		// 调用的本质 it.operator(it = lt.end())	调用时,end()返回对象的拷贝,形成临时对象
 									// 临时对象具有常性，因此operator!=()的实现处参数要加const
-		std::cout << (*it) << " ";
+		std::cout << (*it)++ << " ";
 		//++it;
 		it++;
 	}
@@ -63,6 +64,8 @@ struct A {
 	int _a1;
 	int _a2;
 };
+
+
 // opeartor->
 void test_operator() {
 	m_list::list<A> lt;
@@ -137,12 +140,12 @@ void test_list5() {
 		std::cout << e << " "; std::cout << std::endl;
 }
 int main() {
-	//test_list1();
+	test_list1();
 	//test_list2_insert_erase();
 	//test_operator();
 	//test_list3();
 	//test_list4();
-	test_list5();
+	//test_list5();
 
 
 	return 0;
