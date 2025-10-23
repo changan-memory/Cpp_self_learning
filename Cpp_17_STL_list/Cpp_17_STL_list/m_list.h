@@ -2,13 +2,15 @@
 #include <assert.h>
 #include <iostream>
 
-namespace m_list {
+namespace m_list 
+{
 	// 适配器模式 实现 vector 和 list 的反向迭代器
 
 	// 带头双向循环链表
 	template<typename T>
 	//class list_node {		// 建议此处用struct  
-	struct list_node {
+	struct list_node 
+	{
 		list_node<T>* _next;
 		list_node<T>* _prev;
 		T _val;
@@ -31,11 +33,13 @@ namespace m_list {
 
 	// 通过模板实现的操作，本质上 还是写了两个类，仅有返回类型不同
 	// 但 通过模板实现的话，是让编译器去做 复制代码的工作，我们自己不写冗余的代码
-	template<typename T, typename Ref, typename Ptr>
-	struct __list_iterator {
+	template<class T, class Ref, class Ptr>
+	struct __list_iterator 
+	{
 	public:
 		typedef list_node<T> Node;
 		typedef __list_iterator<T, Ref, Ptr> self;	// 这里的 self 表示迭代器自己
+
 	public:
 		Node* _node;
 	public:
@@ -51,7 +55,8 @@ namespace m_list {
 		//	return _node->_val;
 		//}
 		
-		Ref operator*() {
+		Ref operator*() 
+		{
 			// 出了作用域 结点还在，因此可以用引用返回
 			return _node->_val;
 		}
@@ -59,8 +64,9 @@ namespace m_list {
 		//	return &_node->_val;
 		//	//return &(operator*());  // 标准库中的写法  两种写法等价
 		//}
-		Ptr operator->() {
-			return &_node->_val;
+		Ptr operator->() 
+		{
+			return &(_node->_val);
 			//return &(operator*());  // 标准库中的写法  两种写法等价
 		}
 		// 为了解决const迭代器的问题，operator->的返回值用了模板，同时兼顾了const和非const类型
@@ -85,11 +91,13 @@ namespace m_list {
 			return tmp;
 		}
 		// 迭代器比较，self 自己和自己比较 自定义的迭代器需要重载 !=
-		bool operator!=(const self& it) const {
+		bool operator!=(const self& it) const 
+		{
 			//return _node != it->_node;
 			return _node != it._node;
 		}
-		bool operator==(const self& it) const {
+		bool operator==(const self& it) const 
+		{
 			//return _node != it->_node;
 			return _node == it._node;
 		}
@@ -109,27 +117,28 @@ namespace m_list {
 	//	const T& operator*() {
 	//		return _node->_val;
 	//	}
-	//	__list_const_iterator<T>& operator++() {
-	//		_node = _node->_next;
-	//		return *this;		// ++之后变成下一个位置的迭代器，因此要返回*this
-	//	}
-	//	__list_const_iterator<T> operator++(int) {
-	//		__list_const_iterator<T> tmp(*this);
-	//		_node = _node->_next;
-	//		return tmp;		// 返回的是临时对象的拷贝，不能引用返回
-	//	}
-	//	bool operator!=(const __list_const_iterator<T>& it) {
-	//		//return _node != it->_node;
-	//		return _node != it._node;
-	//	}
-	//	bool operator==(const __list_const_iterator<T>& it) {
-	//		//return _node != it->_node;
-	//		return _node == it._node;
-	//	}
+		//__list_const_iterator<T>& operator++() {
+		//	_node = _node->_next;
+		//	return *this;		// ++之后变成下一个位置的迭代器，因此要返回*this
+		//}
+		//__list_const_iterator<T> operator++(int) {
+		//	__list_const_iterator<T> tmp(*this);
+		//	_node = _node->_next;
+		//	return tmp;		// 返回的是临时对象的拷贝，不能引用返回
+		//}
+		//bool operator!=(const __list_const_iterator<T>& it) {
+		//	//return _node != it->_node;
+		//	return _node != it._node;
+		//}
+		//bool operator==(const __list_const_iterator<T>& it) {
+		//	//return _node != it->_node;
+		//	return _node == it._node;
+		//}
 	//};
 
-	template<typename T>
-	class list {
+	template<class T>
+	class list 
+	{
 		// 类型重定义
 		typedef list_node<T> Node;
 		// list的空间不是连续的，不能用Node*作为iterator
@@ -162,21 +171,25 @@ namespace m_list {
 		// 如何设计 const 迭代器
 
 		// begin 和 end 都是返回一个 我们自定义的 iterator 对象
-		iterator begin() {
+		iterator begin() 
+		{
 			return _head->_next;		// 单参数的构造函数 支持隐式类型转换
 			//return iterator(_head->_next);	
 			// 以上两种写法都是生成一个匿名对象
 		}
-		iterator end() {
+		iterator end() 
+		{
 			//return _head;		// 单参数的构造函数 支持隐式类型转换
 			return iterator(_head);
 			// 以上两种写法都是生成一个匿名对象 最终返回
 		}
-		const_iterator begin() const {
+		const_iterator begin() const 
+		{
 			return _head->_next;		// 单参数的构造函数 
-			//return const_iterator(_head);	// 以上两种写法都是生成一个匿名对象 最终返回
+			//return const_iterator(_head->next);	// 以上两种写法都是生成一个匿名对象 最终返回
 		}
-		const_iterator end() const {
+		const_iterator end() const 
+		{
 			//return _head;		// 单参数的构造函数 支持隐式类型转换
 			return const_iterator(_head);	// 以上两种写法都是生成一个匿名对象 最终返回
 		}
@@ -184,12 +197,14 @@ namespace m_list {
 	public:
 		list() { empty_init(); }
 		// lt2(lt1)
-		list(const list<T>& lt) {
+		list(const list<T>& lt) 
+		{
 			empty_init();
 			for (auto& e : lt)
 				push_back(e);	// 直接尾插，就不用拷贝了
 		}
-		void empty_init() {
+		void empty_init() 
+		{
 			_head = new Node;
 			_head->_next = _head;
 			_head->_prev = _head;
@@ -198,28 +213,33 @@ namespace m_list {
 		//lt2 = lt1
 		//list& operator=(list tmp) {   // 在类内 使用模板类的时候，写类名和类型都可以
 		// 但是建议  统一使用类型  因为可读性更高，不容易出错
-		list<T>& operator=(list<T> tmp) {
+		list<T>& operator=(list<T> tmp)
+		{
 			swap(tmp);
 			return *this;
 		}
-		void swap(list<T>& lt) {
+		void swap(list<T>& lt) 
+		{
 			std::swap(_head, lt._head);
 			std::swap(_size, lt._size);
 		}
-		~list() {
+		~list() 
+		{
 			// ... iterator 无需实现析构函数, iterator只是帮助我们访问数据
 			clear();
 			delete _head;
 			_head = nullptr;
 		}
-		void clear() {
+		void clear() 
+		{
 			iterator it = begin();
 			while (it != end()) {
 				it = erase(it);
 			}
 			//_size = 0;  没必要写，每次erase, size都会减一
 		}
-		void push_back(const T& val) {
+		void push_back(const T& val)
+		{
 			//Node* newNode = new Node(val);
 			//// 尾插先找尾
 			//Node* tail = _head->_prev;
@@ -231,23 +251,28 @@ namespace m_list {
 			//++_size;
 			insert(end(), val);
 		}
-		void pop_back() {
+		void pop_back() 
+		{
 			erase(_head->_prev);
 			//erase(--end());
 		}
-		void push_front(const T& val) {
+		void push_front(const T& val) 
+		{
 			insert(_head->_next, val);
 			//insert(begin(), val);
 		}
-		void pop_front() {
+		void pop_front() 
+		{
 			erase(_head->_next);
 			//erase(begin());
 		}
-		size_t size() const {
+		size_t size() const 
+		{
 			return _size;
 		}
 		// 在pos位置之前进行插入
-		iterator insert(iterator pos, const T& val) {
+		iterator insert(iterator pos, const T& val) 
+		{
 			Node* newNode = new Node(val);
 			newNode->_next = pos._node;
 			newNode->_prev = pos._node->_prev;
@@ -264,7 +289,8 @@ namespace m_list {
 			next->_prev = newNode;*/
 			//delete next;	// 这是插入操作，不能删除结点!!!
 		}
-		iterator erase(iterator pos) {
+		iterator erase(iterator pos) 
+		{
 			/*if (pos == end() || _head->_next == _head)
 				return ;*/
 			assert(pos != end());  // 调试模式检查  不能删哨兵位的头结点
