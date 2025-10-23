@@ -18,6 +18,7 @@ namespace m_set
 		RBTree<K, K, SetKeyOfT> _tree;
 	public:
 		//typedef typename RBTree<K, K, SetKeyOfT>::iterator iterator;
+		// set 不允许修改，解决方案: set 的迭代器和const迭代器均为 const_iterator
 		typedef typename RBTree<K, K, SetKeyOfT>::const_iterator iterator;
 		typedef typename RBTree<K, K, SetKeyOfT>::const_iterator const_iterator;
 

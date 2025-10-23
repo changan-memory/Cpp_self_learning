@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <utility>
 using namespace std;
 
 enum Colour {
@@ -8,6 +9,8 @@ enum Colour {
 	Black
 };
 
+
+// 红黑树被实例化 出两份，一份 _data 是 K 类型，一份_data 是 pair<K, V> 类型
 template<class T>
 struct RBTreeNode
 {
@@ -33,8 +36,8 @@ template<class T, class Ptr, class Ref>
 struct __TreeIterator
 {
 	typedef RBTreeNode<T> Node;
-	typedef __TreeIterator<T, Ptr, Ref> Self;
 
+	typedef __TreeIterator<T, Ptr, Ref> Self;
 	typedef __TreeIterator<T, T*, T&> Iterator;
 
 	Node* _node;
@@ -50,7 +53,7 @@ struct __TreeIterator
 	}
 	Ptr operator->() const
 	{
-		return &_node->_data;
+		return &(_node->_data);
 	}
 	bool operator!=(const Self& s) const 
 	{ 
@@ -92,18 +95,20 @@ struct __TreeIterator
 		}
 		return *this;
 	}
+	
 	Self& operator++()
 	{
+		// 右树不为空，就访问右树的最左结点
 		if (_node->_right)
 		{
-			// 右树的最左节点(最小节点)
+			// 找右树的最左节点(最小节点)
 			Node* subLeft = _node->_right;
 			while (subLeft->_left)
-			{
 				subLeft = subLeft->_left;
-			}
+
 			_node = subLeft;
 		}
+		// 右树为空时分两种情况讨论
 		else
 		{
 			Node* cur = _node;
@@ -111,16 +116,19 @@ struct __TreeIterator
 			// 找孩子是父亲左的那个祖先节点，就是下一个要访问的节点
 			while (parent)
 			{
+				// cur 为 父亲的左结点时，下一个要访问的就是 父亲，结束循环, 指定 _node = parent
 				if (cur == parent->_left)
-				{
 					break;
-				}
+				// cur 为 父亲的右结点时，下一个要访问的就是 父亲，结束循环, 指定 _node = parent
 				else
 				{
 					cur = cur->_parent;
 					parent = parent->_parent;
 				}
 			}
+			// 有两种情况会结束循环  
+			// 1. cur == parent->_left 时， 下一个访问的就是cur 的 父亲，_node = parent
+			// 2. parent 为 空 时，cur 此时为根节点， 且 cur 的右为空，此时中序遍历结束
 			_node = parent;
 		}
 		return *this;
@@ -130,8 +138,8 @@ struct __TreeIterator
 
 
 // KeyOfT 是一个仿函数
-// Set->RBTree<K，K，SetKeyOfT>_t
-// map->RBTree<K，pair<K，V>,MapKeyOfT>_t;
+// Set->RBTree<K，K，SetKeyOfT> _t
+// map->RBTree<K，pair<K，V>, MapKeyOfT> _t;
 template<class K, class T, class KeyOfT>
 class RBTree
 {
@@ -142,13 +150,13 @@ public:
 	typedef __TreeIterator<T, T*, T&> iterator;
 	typedef __TreeIterator<T, const T*, const T&> const_iterator;
 
+	// begin 返回的是 中序遍历的第一个位置
 	iterator begin()
 	{
 		Node* leftMin = _root;
 		while (leftMin && leftMin->_left)
-		{
 			leftMin = leftMin->_left;
-		}
+
 		return iterator(leftMin);
 	}
 	iterator end()
@@ -175,6 +183,8 @@ private:
 	typedef RBTreeNode<T> Node;
 	RBTreeNode<T>* _root = nullptr;
 
+	
+public:
 	// find 函数也需要用 KeyOfT 控制
 	Node* find(const K& key) const
 	{
@@ -191,7 +201,7 @@ private:
 		}
 		return nullptr;
 	}
-public:
+
 	bool insert(const T& data)
 	{
 		// 先走二叉搜索树的插入逻辑
@@ -209,6 +219,10 @@ public:
 		// 使用 萃取器 取出 Key   设计相当巧妙
 		// 标准库中的 pair 不能直接比较大小，我们设计了 一个萃取器 用于取出 T 中的 Key
 		// 可以认为这里是 set 迁就了 map ,因为set的 K 可以直接比较，map 的pair<K, V> 需要取出 Key
+		// 这是 map 和 set 的设计，_data 可能是 K,也可能是 pair
+		// 如果是 K,可以直接比较，如果是map，标准库中的 pair<K, V> 的比较对象不支持仅比较K
+		// 因子设计了仿函数 KeyOfT 如果是 set 返回 K, 如果是map 中的 pair<K, V>，取出 K 进行比较
+		// KeyOfT 完全是为了 map 设计的，
 		KeyOfT kot;
 		while (curNode)
 		{
