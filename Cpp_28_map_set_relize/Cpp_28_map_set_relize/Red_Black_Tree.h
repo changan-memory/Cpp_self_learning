@@ -1,5 +1,5 @@
 #pragma once
-
+#include <assert.h>
 #include <iostream>
 #include <utility>
 using namespace std;
@@ -32,6 +32,7 @@ struct RBTreeNode
 	{ }
 };
 
+
 template<class T, class Ptr, class Ref>
 struct __TreeIterator
 {
@@ -39,6 +40,9 @@ struct __TreeIterator
 
 	typedef __TreeIterator<T, Ptr, Ref> Self;
 	typedef __TreeIterator<T, T*, T&> Iterator;
+	// 类模板 __TreeIterator 被实例化成 普通迭代器时， Self 和 Iterator 是同一个类型
+	// 类模板 __TreeIterator 被实例化成 const迭代器时:
+	// Self 就成了 const 迭代器，Iterator 始终是 普通迭代器
 
 	Node* _node;
 
@@ -46,13 +50,21 @@ struct __TreeIterator
 		:_node(node)
 	{ }
 
+	__TreeIterator(const Iterator& it)
+		:_node(it._node)
+	{ }
+
 	// const 迭代器相当于套了一层模板
 	Ref operator*() const
 	{
+		if (_node == nullptr)
+			assert(false);
 		return _node->_data;
 	}
 	Ptr operator->() const
 	{
+		if (_node == nullptr)
+			assert(false);
 		return &(_node->_data);
 	}
 	bool operator!=(const Self& s) const 
@@ -66,19 +78,20 @@ struct __TreeIterator
 
 	Self operator--(int)
 	{
-		Self tmp = *this;
+		Self tmp(*this);
 		--*this;
 		return tmp;
 	}
 	Self& operator--()
 	{
+		// -- 就是 ++ 反过来
+		// 左子树不为空，就去找左树的最大结点
 		if (_node->_left)
 		{
 			Node* subRight = _node->_left;
 			while (subRight->_right)
-			{
 				subRight = subRight->_right;
-			}
+			
 			_node = subRight;
 		}
 		else
@@ -114,17 +127,10 @@ struct __TreeIterator
 			Node* cur = _node;
 			Node* parent = cur->_parent;
 			// 找孩子是父亲左的那个祖先节点，就是下一个要访问的节点
-			while (parent)
+			while (parent && cur == parent->_right)
 			{
-				// cur 为 父亲的左结点时，下一个要访问的就是 父亲，结束循环, 指定 _node = parent
-				if (cur == parent->_left)
-					break;
-				// cur 为 父亲的右结点时，下一个要访问的就是 父亲，结束循环, 指定 _node = parent
-				else
-				{
-					cur = cur->_parent;
-					parent = parent->_parent;
-				}
+				cur = cur->_parent;
+				parent = parent->_parent;
 			}
 			// 有两种情况会结束循环  
 			// 1. cur == parent->_left 时， 下一个访问的就是cur 的 父亲，_node = parent
@@ -133,10 +139,16 @@ struct __TreeIterator
 		}
 		return *this;
 	}
+	Self operator++(int)
+	{
+		Self tmp(*this);
+		++*this;
+		return tmp;
+	}
 };
 
 
-
+// 迭代器与const迭代器 是同一个类模板，传入不同的模板参数，实例化出不同的类型
 // KeyOfT 是一个仿函数
 // Set->RBTree<K，K，SetKeyOfT> _t
 // map->RBTree<K，pair<K，V>, MapKeyOfT> _t;
@@ -145,6 +157,10 @@ class RBTree
 {
 //public:
 //	int _rotateCount = 0;
+private:
+	typedef RBTreeNode<T> Node;
+	RBTreeNode<T>* _root = nullptr;
+
 public:
 	// 同一个类模板 传不同的参数，实例化出不同的类型
 	typedef __TreeIterator<T, T*, T&> iterator;
@@ -179,11 +195,6 @@ public:
 		return const_iterator(nullptr);
 	}
 
-private:
-	typedef RBTreeNode<T> Node;
-	RBTreeNode<T>* _root = nullptr;
-
-	
 public:
 	// find 函数也需要用 KeyOfT 控制
 	Node* find(const K& key) const
@@ -202,14 +213,15 @@ public:
 		return nullptr;
 	}
 
-	bool insert(const T& data)
+	std::pair<iterator, bool> insert(const T& data)
 	{
 		// 先走二叉搜索树的插入逻辑
 		if (_root == nullptr)
 		{
 			_root = new Node(data);
 			_root->_col = Black;	// 性质 根节点是黑色的
-			return true;
+			//return true;
+			return make_pair(iterator(_root), true);
 		}
 		// _root 不为空时，二叉搜索树的逻辑
 		Node* parent = nullptr;
@@ -238,11 +250,17 @@ public:
 			}
 			// 搜索树中不允许有重复的值  对于已有值，不插入
 			else
-				return false;
+			{
+				//return false;
+				return make_pair(iterator(curNode), false);
+			}
 		}
 		// while 循环结束后，代表找到了可以插入的位置
 		// 找到位置了，但父节点不知道 新结点比自己大还是比自己小
 		curNode = new Node(data);
+		// 保存 cur 指针
+		Node* newNode = curNode;
+
 		if (kot(curNode->_data) < kot(parent->_data))
 			parent->_left = curNode;
 		else
@@ -360,7 +378,9 @@ public:
 		// parent == nullptr 结束循环时，curNode为_root结点，需要对 _root 节点变色
 		_root->_col = Black;	// 粗暴的处理，直接将根节点设为黑色，根节点为黑色总是正确的
 
-		return true;
+		//return true;
+		return make_pair(iterator(newNode), true);
+
 	}
 
 	bool CheckColour(Node* root, int blacknum, int benchmark)
