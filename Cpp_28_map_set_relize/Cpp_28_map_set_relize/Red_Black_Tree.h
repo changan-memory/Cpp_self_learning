@@ -59,6 +59,7 @@ struct __TreeIterator
 	{
 		if (_node == nullptr)
 			assert(false);
+
 		return _node->_data;
 	}
 	Ptr operator->() const

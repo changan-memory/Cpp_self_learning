@@ -115,8 +115,8 @@ void test2()
 }
 int main()
 {
-	//testSet();
+	testSet();
 	//testMap();
-	test2();
+	//test2();
 	return 0;
 }
