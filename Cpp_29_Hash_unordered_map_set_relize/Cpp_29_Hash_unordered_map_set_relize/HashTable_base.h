@@ -314,6 +314,7 @@ namespace base
 							curPrev->_next = curNode->_next;
 
 						delete curNode;
+						--_n;
 						return true;
 					}
 					curPrev = curNode;

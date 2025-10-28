@@ -203,37 +203,59 @@ namespace hash_bucket
 		{ }
 	};
 
+	// 提前声明哈希表  告诉编译器， HashTable 类型已有定义
+	//template<class K, class T, class KeyOfT, class HashFunc>
+	template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
+	class HashTable;
 
 	// 实现迭代器
 	// 为了方便操作，存了一个哈希表的指针
-	template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
+	template<class K, class T, class Ptr, class Ref, class KeyOfT, class HashFunc>
 	struct HTIterator
 	{
 		typedef struct HashNode<T> Node;
-		typedef struct HTIterator<K, T, KeyOfT, HashFunc> Self;
+		typedef struct HTIterator<K, T, Ptr, Ref, KeyOfT, HashFunc> Self;
 
-		HashTable<K, T, KeyOfT, HashFunc>* _pht;
+		typedef struct HTIterator<K, T, T*, T&, KeyOfT, HashFunc> Iterator;
 
 		Node* _node;
+		// 当前哈希表的指针
+		//HashTable<K, T, KeyOfT, HashFunc>* _pht;
+		const HashTable<K, T, KeyOfT, HashFunc>* _pht;
 
-		HTIterator(Node* node, HashTable<K, T, KeyOfT, HashFunc>* pht)
+		HTIterator(Node* node, const HashTable<K, T, KeyOfT, HashFunc>* pht)
 			:_node(node)
 			,_pht(pht)
 		{ }
 
-		Self operator++()
+
+		Ref operator*()
+		{
+			return _node->_data;
+		}
+
+		Ptr operator->()
+		{
+			return &(_node->_data);
+		}
+
+		Self& operator++()
 		{
 			// 当前桶没完，就找当前桶的位置
 			if (_node->_next)
+			{
 				_node = _node->_next;
+				return *this;
+			}
 			// 当前桶结束了，就去下一个桶找
 			else
 			{
 				KeyOfT kot;
 				HashFunc hf;
 
+				// _table 是 哈希表的 private 成员，迭代器类无法直接访问 
 				size_t hashi = hf((kot(_node->_data))) % _pht->_table.size();
-				// 从下一个位置 找不为空的 桶
+				// 从下一个位置开始，查找下一个不为空的 桶
 				++hashi;
 				while (hashi < _pht->_table.size())
 				{
@@ -246,17 +268,20 @@ namespace hash_bucket
 					else
 						++hashi;
 				}
-				// 循环内没有返回，代表没找到，返回 nullptr 表示 迭代器的 end()
+				// 循环内没有返回，代表走到表尾没找到下一个非空桶
+				// 返回 nullptr 表示 迭代器的 end()
 				_node = nullptr;
 				return *this;
 			}
 		}
+		// 后置 ++
 		Self operator++(int) 
 		{
 			Self tmp(*this);
 			++(*this);
 			return tmp;
 		}
+		// 单向迭代器，不支持--
 
 		bool operator!=(const Self& s) const
 		{
@@ -272,17 +297,23 @@ namespace hash_bucket
 
 	// set -> hash_bucket::HashTable<K, K> _ht;
 	// map -> hash_bucket::HashTable<K, std::pair<K, V>> _ht;
-	template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
+	//template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
+	template<class K, class T, class KeyOfT, class HashFunc>
 	class HashTable
 	{
-	private:
 		//typedef struct HashNode<K, V> Node;
 		typedef struct HashNode<T> Node;
 
+		template<class K, class T, class Ptr, class Ref, class KeyOfT, class HashFunc>
+		friend struct HTIterator;
+
+	private:
 		vector<Node*> _table;	// 需要写析构函数
 		size_t _n = 0;
+
 	public:
-		typedef struct HTIterator<K, T, KeyOfT, HashFunc> iterator;
+		typedef struct HTIterator<K, T, T*, T&, KeyOfT, HashFunc> iterator;
+		typedef struct HTIterator<K, T, const T*, const T&, KeyOfT, HashFunc> const_iterator;
 
 		iterator begin()
 		{
@@ -298,6 +329,22 @@ namespace hash_bucket
 		iterator end()
 		{
 			return iterator(nullptr, this);
+		}
+
+		const_iterator begin() const
+		{
+			for (size_t i = 0; i < _table.size(); ++i)
+			{
+				Node* curNode = _table[i];
+				if (curNode)
+					return iterator(_table[i], this);
+			}
+			// 没找到，返回空
+			return const_iterator(nullptr, this);
+		}
+		const_iterator end() const
+		{
+			return const_iterator(nullptr, this);
 		}
 
 		HashTable()
@@ -322,12 +369,13 @@ namespace hash_bucket
 		}
 
 
-		bool Insert(const T& data)
+		pair<iterator, bool> Insert(const T& data)
 		{
 			KeyOfT kot;
+			iterator it = Find(kot(data));
 
-			if (Find(kot(data)))
-				return false;
+			if (it != end())
+				return std::make_pair(it, false);
 			HashFunc hf;
 
 			// 扩容逻辑
@@ -366,10 +414,10 @@ namespace hash_bucket
 			newNode->_next = _table[hashi];
 			_table[hashi] = newNode;
 			++_n;
-			return true;
+			return std::make_pair(newNode, true);
 		}
 
-		Node* Find(const K& key) const
+		iterator Find(const K& key) const
 		{
 			KeyOfT kot;
 
@@ -380,10 +428,10 @@ namespace hash_bucket
 			while (curNode)
 			{
 				if (kot(curNode->_data) == key)
-					return curNode;
+					return iterator(curNode, this);
 				curNode = curNode->_next;
 			}
-			return nullptr;
+			return iterator(nullptr, this);
 		}
 
 		// 单链表的删除需要更改前一个结点的 next 指针，不适合复用 find
@@ -406,6 +454,7 @@ namespace hash_bucket
 						curPrev->_next = curNode->_next;
 
 					delete curNode;
+					--_n;
 					return true;
 				}
 				curPrev = curNode;

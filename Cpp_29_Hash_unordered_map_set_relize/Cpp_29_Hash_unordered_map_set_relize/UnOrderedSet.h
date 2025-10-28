@@ -16,19 +16,20 @@ namespace m_unordered_set
 		hash_bucket::HashTable<K, K, SetKeyOfT> _ht;
 
 	public:
-		typedef typename hash_bucket::HashTable<K, K, SetKeyOfT>::iterator iterator;
+		typedef typename hash_bucket::HashTable<K, K, SetKeyOfT>::const_iterator iterator;
+		typedef typename hash_bucket::HashTable<K, K, SetKeyOfT>::const_iterator const_iterator;
 
-		iterator begin()
+		const_iterator begin() const
 		{
 			return _ht.begin();
 		}
 
-		iterator end()
+		const_iterator end() const
 		{
 			return _ht.end();
 		}
 
-		bool insert(const K& key)
+		pair<iterator, bool> insert(const K& key)
 		{
 			return _ht.Insert(key);
 		}

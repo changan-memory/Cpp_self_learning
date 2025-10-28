@@ -1,4 +1,4 @@
-﻿#include "HashTable.h"
+﻿//#include "HashTable.h"
 
 
 //void testHash1()
@@ -107,6 +107,34 @@ void test_un_set()
 	us.insert(4);
 	us.insert(5);
 	us.insert(0);
+
+	//m_unordered_set::unordered_set<int>::iterator it_set = us.begin();
+	//while (it_set != us.end())
+	//{
+	//	//*it_set = 10;
+	//	cout << *it_set << " ";
+	//	++it_set;
+	//}
+	//cout << endl;
+
+	m_unordered_map::unordered_map<string, string> dict;
+	dict.insert(make_pair("sort", "排序"));
+	dict.insert(make_pair("left", "左边"));
+	dict.insert(make_pair("right", "右边"));
+	dict.insert(make_pair("left", "xxx"));
+
+	m_unordered_map::unordered_map<string, string>::iterator it_map = dict.begin();
+	while (it_map != dict.end())
+	{
+		//it_map->first += " world";
+		cout << it_map->first << " " << it_map->second << endl;;
+		++it_map;
+	}
+	cout << endl;
+
+	/*for (auto& kv : dict)
+		cout << kv.first << " : " << kv.second << " " << endl;
+	cout << endl;*/
 }
 int main()
 {
