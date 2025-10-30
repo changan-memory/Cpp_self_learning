@@ -198,13 +198,14 @@ public:
 
 	bool CheckColour(Node* root, int blacknum, int benchmark)
 	{
+		// 走到空，就算出了黑色节点的数量
 		if (root == nullptr)
 		{
-			if (blacknum != benchmark)
+			if (blacknum != benchmark)	// 检查算出的黑色节点的数量与基准值是否相同
 				return false;
 			return true;
 		}
-		// 检查黑色节点的数量
+		// 检查黑色节点的数量，每条路径上黑色结点的数量应该相同
 		if (root->_col == Black)
 			++blacknum;
 		// 检查有没有连续的红色结点
@@ -231,7 +232,7 @@ public:
 		if (root->_col != Black)
 			return false;
 
-		// 基准值
+		// 求一个黑色结点的数量的 基准值，已最左路径为基准值
 		int benchmark = 0;
 		Node* cur = _root;
 		while (cur)

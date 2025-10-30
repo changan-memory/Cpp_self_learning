@@ -25,7 +25,7 @@ int main()
 
 	for (size_t i = 0; i < N; i++)
 	{
-		v.push_back(rand() + i);	// 插入随机数据
+		v.push_back(rand() + i*i + 2);	// 插入随机数据
 		//v.push_back(i);				// 插入有序数据
 	}
 
@@ -51,7 +51,6 @@ int main()
 	cout << "AVL树是否平衡:          " << avlt.isBalance() << endl;
 	cout << "AVL树的高度:            " << avlt.height() << endl;
 	cout << "AVL树的旋转次数:        "<< avlt._rotateCount << endl;
-
 
 	return 0;
 }

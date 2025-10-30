@@ -7,7 +7,7 @@ namespace m_list
 	// 适配器模式 实现 vector 和 list 的反向迭代器
 
 	// 带头双向循环链表
-	template<typename T>
+	template<class T>
 	//class list_node {		// 建议此处用struct  
 	struct list_node 
 	{
@@ -147,7 +147,7 @@ namespace m_list
 	private:
 		//list_node<T>* _head;
 		Node* _head = nullptr;	// 哨兵位头结点的指针
-		size_t _size;		// 记录链表的节点数
+		size_t _size = 0;		// 记录链表的节点数
 
 	public:
 		typedef __list_iterator<T, T&, T*> iterator;
