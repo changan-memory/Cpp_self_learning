@@ -50,7 +50,7 @@ namespace m_map
 		V& operator[](const K& key)
 		{
 			pair<iterator, bool> ret = insert(make_pair(key, V()));
-			return (ret.first)->second;
+			return ((ret.first)->second);
 		}
 
 		std::pair<iterator, bool> insert(const pair<const K, V>& kv)

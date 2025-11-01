@@ -1,61 +1,84 @@
 #include <iostream>
 #include <functional>
 #include <stdio.h>
+#include <vector>
 
 using namespace std;
 
 
-struct ListNode {
-    int val;
-    struct ListNode *next;
-    ListNode(int x = 0) : val(x), next(NULL) {}
-};
-ListNode* creatLiist() {
-    ListNode* node1 = new ListNode(1);
-    ListNode* node2 = new ListNode(5);
-    ListNode* node3 = new ListNode(2);
-    ListNode* node4 = new ListNode(7);
-    ListNode* node5 = new ListNode(3);
-    ListNode* node6 = new ListNode(4);
-    node1->next = node2;
-    node2->next = node3;
-    node3->next = node4;
-    node4->next = node5;
-    node5->next = node6;
-    return node1;
-}
-class Partition {
+class MyCircularQueue {
+private:
+    vector<int> _circularQueue;
+    int _rear;
+    int _front;
 public:
-    ListNode* partition(ListNode* pHead, int x) {
-        if (pHead == nullptr)
-            return nullptr;
-        ListNode* guardLess = new ListNode(0);
-        ListNode* guardGreater = new ListNode(0);
-        guardLess->next = guardGreater->next = nullptr;
+    MyCircularQueue(int k) {
+        _circularQueue.resize(k);
+        _rear = 0;
+        _front = 0;
+    }
 
-        ListNode* lessTail = guardLess, * greaterTail = guardGreater;
-        ListNode* curNode = pHead;
-        while (curNode) {
-            if (curNode->val < x) {
-                lessTail->next = curNode;
-                lessTail = lessTail->next;
-            }
-            else {
-                greaterTail->next = curNode;
-                greaterTail = greaterTail->next;
-            }
-            curNode = curNode->next;
+    bool enQueue(int value) {
+        if (!isFull())
+        {
+            _circularQueue[_rear] = value;
+            ++_rear;
+            if (_rear == _circularQueue.size())
+                _rear %= _circularQueue.size();
+            return true;
         }
-        // 链接两个链表
-        lessTail->next = guardGreater->next;
-        pHead = guardLess->next;
-        delete guardGreater;
-        delete guardLess;
-        return pHead;
+        else
+        {
+            return false;
+        }
+    }
+
+    bool deQueue() {
+        if (!isEmpty())
+        {
+            _front++;
+            if (_front == _circularQueue.size())
+                _front %= _circularQueue.size();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    int Front() {
+        if (isEmpty())
+            return -1;
+        else
+        {
+            return _circularQueue[_front];
+        }
+    }
+
+    int Rear() {
+        if (isEmpty())
+            return -1;
+        else
+        {
+            return _circularQueue[_rear];
+        }
+    }
+
+    bool isEmpty() {
+        return _front == _rear;
+    }
+
+    bool isFull() {
+        return (_rear + 1) == _front;
     }
 };
-int main() {
-    Partition p1;
-    p1.partition(creatLiist(), 5);
+
+int main()
+{
+    MyCircularQueue myQueue(3);
+    myQueue.enQueue(1);
+    myQueue.enQueue(2);
+    myQueue.enQueue(3);
     return 0;
 }

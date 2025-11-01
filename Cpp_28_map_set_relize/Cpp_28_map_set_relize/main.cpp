@@ -51,7 +51,7 @@ void test_const_map(const m_map::map<int, int>& m)
 void testMap()
 {
 	m_map::map<int, int> myMap;
-	myMap.insert(make_pair(1, 2));	// 错误
+	myMap.insert(make_pair(1, 2));	// 错误 已解决
 	myMap.insert(make_pair(2, 4));
 	myMap.insert(make_pair(3, 6));
 	myMap.insert(make_pair(15, 18));
@@ -75,10 +75,12 @@ void testMap()
 		cout << it->first << ": " << it->second << endl;
 		//cout << it->->first << ": " << it->->second << endl;
 		// 严格来说是两个箭头， it-> 返回 T 的地址，再用 -> 访问数据
-
+		
+		
+		//it->first = 30;
 		it->second = 30;
 		++it;
-		// 不能先++ 再访问迭代器，当it 是最后一个位置是，++后就到了 end() 位置，无法访问
+		// 不能先++it 再访问迭代器，当it 是最后一个有效位置，++后就到了 end() 位置，无法访问
 		//it->second = 30;
 
 		//it->first = 20;
@@ -115,8 +117,8 @@ void test2()
 }
 int main()
 {
-	testSet();
-	//testMap();
+	//testSet();
+	testMap();
 	//test2();
 	return 0;
 }
