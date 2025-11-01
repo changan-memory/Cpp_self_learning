@@ -82,24 +82,24 @@ namespace base
 					return false;
 
 				// 插入前需要控制 负载因子 和 扩容
-				//if ((static_cast<double> (_n) / static_cast<double>(_table.size())) >= 7)
+				//if ((static_cast<double> (_n) / static_cast<double>(_table.size())) >= 0.75)
 				if (_n * 10 / _table.size() >= 7)		// 牺牲一部分空间换取性能
 				{
 					size_t newSize = _table.size() * 2;
 					// 扩容后映射关系变了，需要重新映射
-					// 创建一个新的 vector 处理映射关系 和 冲突
-					HashTable<K, V, HashFunc> newHT;
-					newHT._table.resize(newSize);
-					// 遍历旧表的数据 重新插入，映射到新表   只把 存在的区域 拷贝
+					// 创建一个新的 哈希表 处理映射关系 和 冲突
+					HashTable<K, V, HashFunc> newHashTable;
+					newHashTable._table.resize(newSize);
+					// 遍历旧表的数据 重新插入，映射到新表   只把 存在的区域 进行映射
 					for (size_t i = 0; i < _table.size(); i++)
 					{
 						if (_table[i]._state == EXIST)
 						{
 							// 这里再调用 insert 时，已经resize过了，会走下面的线性探测逻辑
-							newHT.insert(_table[i]._kv);
+							newHashTable.insert(_table[i]._kv);
 						}
 					}
-					_table.swap(newHT._table);
+					_table.swap(newHashTable._table);
 				}
 
 				// 线性探测
@@ -126,8 +126,7 @@ namespace base
 				size_t hashi = hs(key) % _table.size();
 				while (_table[hashi]._state != EMPTY)
 				{
-					if (_table[hashi]._state == EXIST
-						&& _table[hashi]._kv.first == key)
+					if (_table[hashi]._state == EXIST && _table[hashi]._kv.first == key)
 					{
 						//return (HashData<const K, V>*) & _table[hashi];
 						return (HashData<const K, V>*) & _table[hashi];
@@ -326,7 +325,7 @@ namespace base
 			{
 				for (size_t i = 0; i < _table.size(); ++i)
 				{
-					printf("[%d]->", i);
+					printf("[%d]->", (int)i);
 					Node* curNode = _table[i];
 					while (curNode)
 					{
