@@ -19,7 +19,7 @@ void testHash1()
 	ret0->_state = EMPTY;	// 这里是可以修改状态的，说不过去，考虑如何修改
 
 	// 求 hashi 的时候 进行了 取模， string 不能取模，要解决 string 不能做 key 的问题
-	//HashTable<string, string, StringHashFunc> dict;
+	//HashTable<string, string, StringHashFunc> dict;	// 单独写一个 string 的哈希函数时 的用法
 	HashTable<string, string> dict;
 	dict.insert(make_pair("sort", "排序"));
 	dict.insert(make_pair("left", "左边"));
@@ -32,34 +32,34 @@ void testHash1()
 	string s2("xxx");
 
 	DefaultHashFunc<string> hf;
-	/*cout << hf(s1) << endl;
+	cout << hf(s1) << endl;
 	cout << hf(s2) << endl;
 	cout << hf("abcd") << endl;
 	cout << hf("acbd") << endl;
-	cout << hf("abbe") << endl;*/
+	cout << hf("abbe") << endl;
 }
 
 void testHash2()
 {
 	using namespace base;
 	using namespace hash_bucket;
-	HashTable<int, int> hash;
-	int a[] = { 1, 111, 4, 7, 15, 25, 44, 9 };
-	for (auto e : a)
-		hash.Insert(make_pair(e, e));
+	//HashTable<int, int> hash;
+	//int a[] = { 1, 111, 4, 7, 15, 25, 44, 9 };
+	//for (auto e : a)
+	//	hash.Insert(make_pair(e, e));
 
-	hash.Insert(make_pair(14, 14));
-	hash.Insert(make_pair(24, 24));
-	hash.Print();
+	//hash.Insert(make_pair(14, 14));
+	//hash.Insert(make_pair(24, 24));
+	////hash.Print();
 
-	hash.Insert(make_pair(34, 34));
-	hash.Print();
+	//hash.Insert(make_pair(34, 34));
+	//hash.Print();
 
-	// 测试删除
-	hash.Erase(44);
-	hash.Erase(4);
-	hash.Erase(24);
-	hash.Print();
+	//// 测试删除
+	//hash.Erase(44);
+	//hash.Erase(4);
+	//hash.Erase(24);
+	//hash.Print();
 
 	HashTable<string, string> dict;
 	dict.Insert(make_pair("sort", "排序"));
@@ -90,12 +90,12 @@ void testHash2()
 }
 
 
-int main()
-{
-	testHash1();
-	//testHash2();
-	return 0;
-}
+//int main()
+//{
+//	//testHash1();
+//	testHash2();
+//	return 0;
+//}
 
 // 测试 unordered 系列
 #include "UnOrderedMap.h"

@@ -53,7 +53,7 @@ namespace base
 		{
 			size_t operator()(const string& str)
 			{
-				// BKDR
+				// BKDR 哈希算法
 				size_t hash = 0;
 				for (auto ch : str) {
 					hash *= 131;
@@ -207,11 +207,11 @@ namespace base
 		template<class K, class V, class HashFunc = DefaultHashFunc<K>>
 		class HashTable
 		{
-		private:
 			typedef struct HashNode<K, V> Node;
-
-			vector<Node*> _table;	// 需要写析构函数
+		private:
+			vector<Node*> _table;	// 需要写析构函数，桶中的节点需要手动析构
 			size_t _n = 0;
+
 		public:
 			HashTable()
 			{
@@ -239,11 +239,14 @@ namespace base
 			{
 				if (Find(kv.first))
 					return false;
-				HashFunc hf;
 
+				HashFunc hf;
 				// 扩容逻辑
 				// 控制负载因子 为 1 时扩容
-				if (static_cast<double> (_n) / static_cast<double> (_table.size()) >= 1.0)
+				//if (static_cast<double> (_n) / static_cast<double> (_table.size()) >= 1.0)
+
+				// 控制负载因子 到 1 时扩容
+				if (_n == _table.size())
 				{
 					size_t newSize = _table.size() * 2;
 					vector<Node*> newTable;;
@@ -256,9 +259,10 @@ namespace base
 						while (curNode)
 						{
 							Node* curNext = curNode->_next;
-							//size_t hashi = i % newSize;	// 自己写的时候写错的点
-							size_t hashi = hf(curNode->_kv.first) % newSize;
 
+							// 把每个结点做重新映射
+							size_t hashi = hf(curNode->_kv.first) % newSize;	
+							// 头插
 							curNode->_next = newTable[hashi];
 							newTable[hashi] = curNode;
 
