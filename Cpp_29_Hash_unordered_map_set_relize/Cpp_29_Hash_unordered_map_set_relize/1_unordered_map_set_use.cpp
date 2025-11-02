@@ -19,8 +19,8 @@ void test_speed()
 	for (size_t i = 0; i < N; ++i)
 	{
 		//v.push_back(rand());
-		v.push_back(rand() + i * i + 19*i);
-		//v.push_back(i);
+		//v.push_back(rand() + i * i + 13*i);
+		v.push_back(i);
 	}
 
 	// 21:15
@@ -91,9 +91,9 @@ void test_use()
 }
 
 
-int main()
-{
-	test_speed();
-	return 0;
-}
+//int main()
+//{
+//	test_speed();
+//	return 0;
+//}
 

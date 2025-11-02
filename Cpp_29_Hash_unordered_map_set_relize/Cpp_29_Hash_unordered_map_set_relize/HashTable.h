@@ -208,6 +208,7 @@ namespace hash_bucket
 	template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
 	class HashTable;
 
+
 	// 实现迭代器
 	// 为了方便操作，存了一个哈希表的指针
 	template<class K, class T, class Ptr, class Ref, class KeyOfT, class HashFunc>
@@ -227,6 +228,17 @@ namespace hash_bucket
 			:_node(node)
 			,_pht(pht)
 		{ }
+
+	/*	HTIterator(pair<Node*, bool> kv)
+			:_node(kv.first)
+		{
+		}*/
+
+		/*HTIterator(Node* node, const HashTable<K, T, KeyOfT, HashFunc>* pht)
+			:_node(node)
+			, _pht(pht)
+		{
+		}*/
 
 
 		Ref operator*()
