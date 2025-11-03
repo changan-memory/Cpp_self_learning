@@ -41,5 +41,11 @@ namespace m_unordered_map
 		{
 			return _ht.Insert(_kv);
 		}
+
+		V& operator[](const K& key)
+		{
+			pair<iterator, bool> ret = insert(std::make_pair(key, V()));
+			return (ret.first)->second;
+		}
 	};
 }

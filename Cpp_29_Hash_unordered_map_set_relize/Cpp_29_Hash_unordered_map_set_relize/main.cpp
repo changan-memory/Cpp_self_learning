@@ -104,24 +104,24 @@ namespace test_hash_base
 #include "UnOrderedMap.h"
 #include "UnOrderedSet.h"
 
-void test_un_set()
+void test_m_unordered()
 {
 	m_unordered_set::unordered_set<int> us;
-	/*us.insert(3);
+	us.insert(3);
 	us.insert(1);
 	us.insert(3);
 	us.insert(4);
 	us.insert(5);
-	us.insert(0);*/
+	us.insert(0);
 
-	//m_unordered_set::unordered_set<int>::iterator it_set = us.begin();
-	//while (it_set != us.end())
-	//{
-	//	//*it_set = 10;
-	//	cout << *it_set << " ";
-	//	++it_set;
-	//}
-	//cout << endl;
+	m_unordered_set::unordered_set<int>::iterator it_set = us.begin();
+	while (it_set != us.end())
+	{
+		//*it_set = 10;
+		cout << *it_set << " ";
+		++it_set;
+	}
+	cout << endl;
 
 	m_unordered_map::unordered_map<string, string> dict;
 	dict.insert(make_pair("sort", "排序"));
@@ -138,12 +138,20 @@ void test_un_set()
 	}
 	cout << endl;
 
-	/*for (auto& kv : dict)
+	for (auto& kv : dict)
 		cout << kv.first << " : " << kv.second << " " << endl;
-	cout << endl;*/
+	cout << endl;
+
+	dict["sort"] = "排序";
+	dict["left"] = "左边";
+	dict["right"] = "右边";
+	dict["left"] = "xxxx";
+	for (auto& kv : dict)
+		cout << kv.first << " : " << kv.second << " " << endl;
+	cout << endl;
 }
 int main()
 {
-	//test_un_set();
+	test_m_unordered();
 	return 0;
 }

@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <stdio.h>
+#include <assert.h>
+
 using namespace std;
 
 
@@ -208,6 +210,11 @@ namespace hash_bucket
 	template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
 	class HashTable;
 
+	// 1. 哈希表
+	// 2. 封装 map 和 set
+	// 3. 普通迭代器
+	// 4. const 迭代器
+	// 5. insert 返回值
 
 	// 实现迭代器
 	// 为了方便操作，存了一个哈希表的指针
@@ -217,40 +224,55 @@ namespace hash_bucket
 		typedef struct HashNode<T> Node;
 		typedef struct HTIterator<K, T, Ptr, Ref, KeyOfT, HashFunc> Self;
 
+		// 始终为 普通迭代器， 可用于 普通迭代器 构造 const 迭代器
 		typedef struct HTIterator<K, T, T*, T&, KeyOfT, HashFunc> Iterator;
 
-		Node* _node;
-		// 当前哈希表的指针
+		Node* _node;	// 当前结点的指针
+	
 		//HashTable<K, T, KeyOfT, HashFunc>* _pht;
-		const HashTable<K, T, KeyOfT, HashFunc>* _pht;
+		// 需要哈希表的指针  是因为  当前桶走完了，需要走到下一个桶
+		const HashTable<K, T, KeyOfT, HashFunc>* _pht;	  // 当前哈希表的指针
 
 		HTIterator(Node* node, const HashTable<K, T, KeyOfT, HashFunc>* pht)
 			:_node(node)
 			,_pht(pht)
 		{ }
 
-	/*	HTIterator(pair<Node*, bool> kv)
-			:_node(kv.first)
-		{
-		}*/
+		// 由 普通 iterator 构造 const iterator
+		HTIterator(const Iterator& it)	// 该函数 可以不写
+			:_node(it._node)
+			, _pht(it._pht)
+		{ }
 
-		/*HTIterator(Node* node, const HashTable<K, T, KeyOfT, HashFunc>* pht)
-			:_node(node)
-			, _pht(pht)
-		{
-		}*/
+		//HTIterator(Node* node, HashTable<K, T, KeyOfT, HashFunc>* pht)	// 该函数 可以不写
+		//	:_node(node)
+		//	, _pht(pht)
+		//{ }
 
-
-		Ref operator*()
+		Ref operator*() const
 		{
+			if (_node == nullptr)
+				assert(false);
 			return _node->_data;
 		}
 
-		Ptr operator->()
+		Ptr operator->() const
 		{
+			if (_node == nullptr)
+				assert(false);
 			return &(_node->_data);
 		}
 
+		bool operator!=(const Self& s) const
+		{
+			return _node != s._node;
+		}
+		bool operator==(const Self& s) const
+		{
+			return _node == s._node;
+		}
+
+		// 单向迭代器，不支持--
 		Self& operator++()
 		{
 			// 当前桶没完，就找当前桶的位置
@@ -263,8 +285,8 @@ namespace hash_bucket
 			else
 			{
 				KeyOfT kot;
-				HashFunc hf;
 
+				HashFunc hf;
 				// _table 是 哈希表的 private 成员，迭代器类无法直接访问 
 				size_t hashi = hf((kot(_node->_data))) % _pht->_table.size();
 				// 从下一个位置开始，查找下一个不为空的 桶
@@ -292,16 +314,6 @@ namespace hash_bucket
 			Self tmp(*this);
 			++(*this);
 			return tmp;
-		}
-		// 单向迭代器，不支持--
-
-		bool operator!=(const Self& s) const
-		{
-			return _node != s._node;
-		}
-		bool operator==(const Self& s) const
-		{
-			return _node == s._node;
 		}
 	};
 
@@ -388,6 +400,7 @@ namespace hash_bucket
 
 			if (it != end())
 				return std::make_pair(it, false);
+
 			HashFunc hf;
 
 			// 扩容逻辑
@@ -426,7 +439,8 @@ namespace hash_bucket
 			newNode->_next = _table[hashi];
 			_table[hashi] = newNode;
 			++_n;
-			return std::make_pair(newNode, true);
+			return std::make_pair(iterator(newNode, this), true);
+			//return pair<iterator, bool>(newNode, true);
 		}
 
 		iterator Find(const K& key) const
@@ -490,5 +504,4 @@ namespace hash_bucket
 			cout << endl;
 		}
 	};
-
 }
