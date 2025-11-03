@@ -210,11 +210,12 @@ namespace hash_bucket
 	template<class K, class T, class KeyOfT, class HashFunc = DefaultHashFunc<K>>
 	class HashTable;
 
-	// 1. 哈希表
-	// 2. 封装 map 和 set
-	// 3. 普通迭代器
-	// 4. const 迭代器
-	// 5. insert 返回值
+	// 1. 改造哈希表  KeyOfT
+	// 2. 封装 map 和 set   MapKeyOfT  SetKeyOfT
+	// 3. 普通迭代器     operator++   operator...
+	// 4. const 迭代器		通过模板参数控制
+	// 5. 实现 key 不能修改的问题
+	// 5. insert 返回值        由普通迭代器构造 const 迭代器
 
 	// 实现迭代器
 	// 为了方便操作，存了一个哈希表的指针
