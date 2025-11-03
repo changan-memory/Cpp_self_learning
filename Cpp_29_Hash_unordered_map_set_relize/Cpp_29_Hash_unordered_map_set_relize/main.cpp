@@ -155,3 +155,22 @@ int main()
 	test_m_unordered();
 	return 0;
 }
+
+//#include <unordered_set>
+//#include <unordered_map>
+//
+//int main()
+//{
+//	std::unordered_set<int> uSet;
+//	size_t oldBucket = uSet.bucket_count();
+//	for (size_t i = 0; i < 10000; ++i)
+//	{
+//		uSet.insert(i);
+//		if (oldBucket != uSet.bucket_count())
+//		{
+//			oldBucket = uSet.bucket_count();
+//			cout << oldBucket << endl;
+//		}
+//	}
+//	return 0;
+//}

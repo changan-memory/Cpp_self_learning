@@ -373,7 +373,7 @@ namespace hash_bucket
 
 		HashTable()
 		{
-			_table.resize(10, nullptr);
+			_table.resize(11, nullptr);
 		}
 		// 需要手动析构桶中的节点
 		~HashTable()
@@ -391,6 +391,64 @@ namespace hash_bucket
 				_table[i] = nullptr;
 			}
 		}
+		inline size_t GetNextPrime(size_t prime)
+		{
+			const int PRIMECOUNT = 28;
+			static const size_t primeList[PRIMECOUNT] =
+			{
+				53ul, 97ul, 193ul, 389ul, 
+				769ul, 1543ul, 3079ul, 6151ul, 
+				12289ul, 24593ul, 49157ul, 98317ul, 
+				196613ul, 393241ul, 786433ul, 1572869ul, 
+				3145739ul, 6291469ul, 12582917ul, 25165843ul, 
+				50331653ul, 100663319ul, 201326611ul, 402653189ul,
+				805306457ul, 1610612741ul, 3221225473ul, 4294967291ul
+			};
+
+			size_t i = 0;
+			for (; i < PRIMECOUNT; ++i)
+			{
+				if (primeList[i] > prime)
+					return primeList[i];
+			}
+			return primeList[i];
+		}
+
+		/*------------------任务：实现“获取下一个 >=n 的质数的函数”---> “用于哈希表扩容”------------------*/
+		inline unsigned long _stl_next_prime(unsigned long n)
+		{
+			//1.指定素数表的大小
+			static const int __stl_num_primes = 28;
+
+			//2.定义素数表覆盖常见哈希表大小
+			static const unsigned long _stl_prime_list[__stl_num_primes] =   //注意：这里的素数表的类型是unsigned long 类型
+			{
+				53, 97, 193, 389, 769,
+				1543, 3079, 6151, 12289, 24593,
+				49157, 98317, 196613, 393241, 786433,
+				1572869, 3145739, 6291469, 12582917, 25165843,
+				50331653, 100663319, 201326611, 402653189, 805306457,
+				1610612741, 3221225473, 4294967291
+			};
+
+			//3.使用二分查找找到第一个 >=n 的素数
+			//3.1：使用一个指针指向素数表中的“第一个素数”
+			const unsigned long* first = _stl_prime_list;
+
+			//3.1：使用一个指针指向素数表中的“最后一素数的下一位置”
+			const unsigned long* last = _stl_prime_list + __stl_num_primes;
+
+			//3.3：使用lower_bound()接口函数求出第一个 >=n 的素数
+			const unsigned long* pos = lower_bound(first, last, n);
+
+			//3.4：适合作为哈希表容量的质数
+			return pos == last ? *(last - 1) : *pos;
+
+			/*
+			*  说明遍历完质数表，所有预定义的质数都比 n 小
+			*  此时返回最大的质数 *(last - 1)，因为 last 是数组末尾的下一个位置，last - 1 指向最后一个有效质数
+			*/
+		}
 
 
 		pair<iterator, bool> Insert(const T& data)
@@ -407,7 +465,8 @@ namespace hash_bucket
 			// 控制负载因子 为 1 时扩容
 			if (static_cast<double> (_n) / static_cast<double> (_table.size()) >= 1.0)
 			{
-				size_t newSize = _table.size() * 2;
+				size_t newSize = GetNextPrime(_table.size());
+				//size_t newSize = _table.size() * 2;
 				vector<Node*> newTable;;
 				newTable.resize(newSize, nullptr);
 
