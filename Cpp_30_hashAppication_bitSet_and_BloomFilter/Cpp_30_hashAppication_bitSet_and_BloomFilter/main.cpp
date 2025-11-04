@@ -1,6 +1,7 @@
 #include "bitSet.h"
 //#include <bitset>
 
+
 void testBitSet()
 {
 	m_BitSet::bitset<1000> bs;
@@ -127,6 +128,82 @@ void testQuestion3_new()
 	cout << endl;
 }
 
+#include "bloomFilter.h"
+
+void testBloomFilter()
+{
+	BloomFilter<11> bf;
+	bf.Set("孙悟空");
+	bf.Set("猪八戒");
+	bf.Set("牛魔王");
+	bf.Set("二郎神");
+
+	cout << bf.Test("孙悟空") << endl;;
+	cout << bf.Test("猪八戒") << endl;;
+	cout << bf.Test("沙悟净") << endl;;
+}
+
+
+// 布隆过滤器 只要舍得开空间，误判率就可以降低到很低
+void TestBloomFilter2()
+{
+	srand(time(0));
+	const size_t N = 100000;
+	BloomFilter<N * 8> bf;	// N * x x代表平均一个值 占多少个字节
+
+	std::vector<std::string> v1;
+	//std::string url = "https://www.cnblogs.com/-clq/archive/2012/05/31/2528153.html";
+	std::string url = "猪八戒";
+
+	for (size_t i = 0; i < N; ++i)
+	{
+		v1.push_back(url + std::to_string(i));
+	}
+
+	for (auto& str : v1)
+	{
+		bf.Set(str);
+	}
+
+	// v2跟v1是相似字符串集（前缀一样），但是不一样
+	std::vector<std::string> v2;
+	for (size_t i = 0; i < N; ++i)
+	{
+		std::string urlstr = url;
+		urlstr += std::to_string(9999999 + i);
+		v2.push_back(urlstr);
+	}
+
+	size_t n2 = 0;
+	for (auto& str : v2)
+	{
+		if (bf.Test(str)) // 误判
+		{
+			++n2;
+		}
+	}
+	cout << "相似字符串误判率:" << (double)n2 / (double)N << endl;
+
+	// 不相似字符串集
+	std::vector<std::string> v3;
+	for (size_t i = 0; i < N; ++i)
+	{
+		//string url = "zhihu.com";
+		string url = "孙悟空";
+		url += std::to_string(i + rand());
+		v3.push_back(url);
+	}
+
+	size_t n3 = 0;
+	for (auto& str : v3)
+	{
+		if (bf.Test(str))
+		{
+			++n3;
+		}
+	}
+	cout << "不相似字符串误判率:" << (double)n3 / (double)N << endl;
+}
 int main()
 {
 	//testBitSet();
@@ -136,7 +213,9 @@ int main()
 	//testQuestion2_new();	// 问题二 优化版
 	
 	//testQuestion3();	// 问题三
-	testQuestion3_new();	// 问题三 优化版
+	//testQuestion3_new();	// 问题三 优化版
 
+	//testBloomFilter();
+	TestBloomFilter2();
 	return 0;
 }
