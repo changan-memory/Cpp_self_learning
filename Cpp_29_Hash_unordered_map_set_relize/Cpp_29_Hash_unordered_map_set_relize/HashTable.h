@@ -232,7 +232,10 @@ namespace hash_bucket
 	
 		//HashTable<K, T, KeyOfT, HashFunc>* _pht;
 		// 需要哈希表的指针  是因为  当前桶走完了，需要走到下一个桶
+
 		const HashTable<K, T, KeyOfT, HashFunc>* _pht;	  // 当前哈希表的指针
+		
+		//HashTable<K, T, KeyOfT, HashFunc>* _pht;	  // 当前哈希表的指针
 
 		HTIterator(Node* node, const HashTable<K, T, KeyOfT, HashFunc>* pht)
 			:_node(node)

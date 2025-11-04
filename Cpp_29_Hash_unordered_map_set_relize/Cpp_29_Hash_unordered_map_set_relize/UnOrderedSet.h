@@ -41,6 +41,11 @@ namespace m_unordered_set
 			// set 中的 pair<iterator, bool> 本质是 pair<const_iterator, bool>
 			// 两个 pair 实例化成了 不同的类型，不能互相转换
 		}
+		//pair<iterator, bool> insert(const K& key)
+		/*pair<iterator, bool> insert(const K& key)
+		{
+			return _ht.Insert(key);
+		}*/
 
 		//pair<iterator, bool> insert(const K& key)
 		//{
