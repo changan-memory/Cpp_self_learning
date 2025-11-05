@@ -238,6 +238,10 @@ namespace m_list {
 			insert(_head->_next, val);
 			//insert(begin(), val);
 		}
+		void push_front(T&& val) {
+			insert(_head->_next, std::forward<T> (val));
+			//insert(begin(), val);
+		}
 		void pop_front() {
 			erase(_head->_next);
 			//erase(begin());
