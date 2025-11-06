@@ -1,9 +1,19 @@
 #pragma once
 
-namespace m_SmartPtr {
+// C++98 auto_ptr
+
+// boost
+
+// C++11 unique_ptr
+// C++11 shared_ptr
+// C++11 weak_ptr
+
+namespace m_SmartPtr 
+{
 	// auto_ptr 模拟实现
 	template<class T>
-	class auto_ptr {
+	class auto_ptr 
+	{
 	private:
 		T* _ptr; // 指向管理的动态资源（如: new分配的对象）
 
@@ -18,13 +28,8 @@ namespace m_SmartPtr {
 		{
 			if (_ptr)  // 确保指针非空，避免重复释放
 			{
-				//1.显示释放的地址
 				cout << "delete:" << _ptr << endl;
-
-				//2.释放动态资源
 				delete _ptr;
-
-				//3.指针置空避免野指针
 				_ptr = nullptr;
 			}
 		}
@@ -61,29 +66,25 @@ namespace m_SmartPtr {
 		}
 
 		// 5. 重载解引用运算符：
-		T& operator*()
+		T& operator*() const
 		{
 			return *_ptr;  // 返回资源的引用
 		}
-		//注意：模拟原始指针的*操作，允许通过auto_ptr访问“资源本身”
-
-
-		// 6. 重载成员访问运算符
-		T* operator->()
+	
+		T* operator->() const
 		{
 			return _ptr;  // 返回资源指针
 		}
-		//注意：模拟原始指针的->操作，允许通过auto_ptr访问“资源的成员”
 	};
 
 	// unique_ptr 模拟实现
 	template<class T>
-	class unique_ptr {
+	class unique_ptr
+	{
 	private:
 		T* _ptr;  // 指向管理的动态资源
 
 	public:
-		// 1. 构造函数
 		explicit unique_ptr(T* ptr) // explicit：禁止隐式转换（避免int*等意外转换为unique_ptr）
 			: _ptr(ptr)
 		{
@@ -92,17 +93,12 @@ namespace m_SmartPtr {
 		*      1. unique_ptr的构造函数使用了explicit 关键字进行了禁止隐式转换
 		*/
 
-		// 2. 析构函数
-		~unique_ptr() {
+		~unique_ptr()
+		{
 			if (_ptr)
 			{
-				//1.
 				cout << "delete:" << _ptr << endl;
-
-				//2.
 				delete _ptr;
-
-				//3.
 				_ptr = nullptr;
 			}
 		}
@@ -114,16 +110,16 @@ namespace m_SmartPtr {
 		unique_ptr(const unique_ptr<T>& sp) = delete;
 		//3.2：禁止拷贝赋值
 		unique_ptr<T>& operator=(const unique_ptr<T>& sp) = delete;
+		// 禁止拷贝构造 和 赋值， 两种实现方式：
+		// 1. C++98 构造函数 和 operator= 声明为私有
+		// 2. C++11  构造函数 和 operator= 只声明，不实现，同时在函数声明尾部加上 = delete
 
 
-		// 4. 重载解引用运算符
 		T& operator*() {
 			return *_ptr;
 		}
 		//对比分析：这里的unique_ptr和auto_ptr的“重载解引用运算符”实现一样
 
-
-		// 5. 重载成员访问运算符
 		T* operator->() {
 			return _ptr;
 		}
@@ -168,7 +164,92 @@ namespace m_SmartPtr {
 		*      1. auto_ptr：auto_ptr<T>& operator=(auto_ptr<T>& ap)
 		*      2. unique_ptr：unique_ptr<T>& operator=(unique_ptr<T>&& sp)
 		*/
+
 	};
 
+	// shared_ptr 模拟实现
+	template<class T>
+	class shared_ptr
+	{
+	private:
+		T* _ptr;  // 指向管理的动态资源
 
+		// 引用计数，期望一个资源伴随着一个 引用计数， static 不能解决
+		int* _refCount;		// 引用计数使用动态的内存， 每个智能指针都保存了 引用计数的地址
+
+	public:
+
+		// 构造的时候，开辟引用计数
+		shared_ptr(T* ptr)
+			:_ptr(ptr)
+			, _refCount(new int(1))		// 初始化引用计数为 1
+		{ }
+
+		// 智能指针 生命周期结束后，对引用计数减减，减减后为 0 时，代表当前是最后一个引用计数
+		// 再开始 释放资源
+		~shared_ptr()
+		{
+			if (--(*_refCount) == 0)
+			{
+				cout << "~shared_ptr delete: " << typeid(T).name() << " " << _ptr << endl;
+				delete _ptr;
+				delete _refCount;
+			}
+		}
+
+		//// sp3(sp1)
+		//shared_ptr(const shared_ptr<T>& sp)
+		//	:_ptr(sp._ptr)
+		//	,_refCount(& (++(*sp._refCount)))
+		//{
+		//}
+
+		// sp3(sp1)
+		shared_ptr(const shared_ptr<T>& sp)
+			:_ptr(sp._ptr)
+			, _refCount(sp._refCount)
+		{
+			++(*_refCount);
+		}
+		
+		// 三种情况 sp3 = sp1		// 管理同一个资源的智能指针 互相赋值
+		//          sp1 = sp5		// 管理不同的资源的智能指针 互相赋值
+		//          sp1 = sp1		// 同一个智能指针对象互相赋值
+		shared_ptr<T>& operator=(const shared_ptr<T>& sp)
+		{
+			// 分两种情况分别判断
+			// 管理同个资源的 智能指针对象之间的赋值
+			if (this == &sp || _ptr == sp._ptr)
+				return *this;
+			//管理不同的资源的智能指针 互相赋值
+			else
+			{
+				// 旧资源的引用计数存在，且 减减后 引用计数为0 就释放资源
+				if (_refCount && --(*_refCount) == 0)
+				{
+					delete _ptr;
+					delete _refCount;
+				}
+				//  减减后 引用计数不为0 ，
+				_ptr = sp._ptr;
+				_refCount = sp._refCount;
+
+				if(_refCount)
+					++(*_refCount);
+
+				return *this;
+			}
+		}
+
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+
+	};
 }
