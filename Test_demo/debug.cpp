@@ -1,151 +1,140 @@
 #include <iostream>
-#include <functional>
-#include <stdio.h>
-#include <vector>
-
+#include <utility>  // 用于std::move
 using namespace std;
 
+namespace mySpace
+{
+    class string
+    {
+    private:
+        const char* _str;
 
-//class MyCircularQueue {
-//private:
-//    vector<int> _circularQueue;
-//    int _rear;
-//    int _front;
-//public:
-//    MyCircularQueue(int k) {
-//        _circularQueue.resize(k);
-//        _rear = 0;
-//        _front = 0;
-//    }
-//
-//    bool enQueue(int value) {
-//        if (!isFull())
-//        {
-//            _circularQueue[_rear] = value;
-//            ++_rear;
-//            if (_rear == _circularQueue.size())
-//                _rear %= _circularQueue.size();
-//            return true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//    }
-//
-//    bool deQueue() {
-//        if (!isEmpty())
-//        {
-//            _front++;
-//            if (_front == _circularQueue.size())
-//                _front %= _circularQueue.size();
-//            return true;
-//        }
-//        else
-//        {
-//            return false;
-//        }
-//    }
-//
-//    int Front() {
-//        if (isEmpty())
-//            return -1;
-//        else
-//        {
-//            return _circularQueue[_front];
-//        }
-//    }
-//
-//    int Rear() {
-//        if (isEmpty())
-//            return -1;
-//        else
-//        {
-//            return _circularQueue[_rear];
-//        }
-//    }
-//
-//    bool isEmpty() {
-//        return _front == _rear;
-//    }
-//
-//    bool isFull() {
-//        return (_rear + 1) == _front;
-//    }
-//};
-//
-//int main()
-//{
-//    MyCircularQueue myQueue(3);
-//    myQueue.enQueue(1);
-//    myQueue.enQueue(2);
-//    myQueue.enQueue(3);
-//    return 0;
-//}
+    public:
+        string(const char* str = "")
+            : _str(str)
+        {
+            cout << "mySpace::string 构造函数" << endl;
+        }
 
-#include <iostream>
-using namespace std;
+        string(const string& other)
+            : _str(other._str)  // 浅拷贝指针
+        {
+            cout << "mySpace::string 拷贝构造" << endl;
+        }
 
-//void Func(int& x) { cout << "左值引用版本\n"; }
-//void Func(int&& x) { cout << "右值引用版本\n"; }
-//
-//template<typename T>
-//void PerfectForward(T&& t)
-//{
-//    //Func(t);        //t 是右值引用变量，但本身是左值 → 调用 Fun(int&)
-//    Func(std::forward<T> (t));  //t 是右值引用变量，利用完美转发保持右值属性，调用 Func(int&& x)
-//}
-//
-//int main()
-//{
-//    PerfectForward(10); //传递右值下去，利用完美转发保持右值属性，调用 Func(int&& x)
-//    return 0;
-//}
+        string(string&& other) noexcept
+            : _str(move(other._str))
+        {
+            other._str = nullptr;  // 避免悬挂指针
+            cout << "mySpace::string 移动构造" << endl;
+        }
 
+        string& operator=(const string& other)
+        {
+            if (this != &other)
+            {
+                _str = other._str;
+                cout << "mySpace::string 拷贝赋值" << endl;
+            }
+            return *this;
+        }
 
-//template<typename T>
-//void PerfectForward(T&& t)
-//{
-//	//Fun(t);
-//
-//	// 完美转发保持对象的原生属性
-//	// 完美转发: 折叠后 t 是左值引用，t保持左值属性
-//	// 完美转发: 折叠后 t 是右值引用，t保持右值属性
-//	Fun(std::forward<T>(t));
-//}
+        string& operator=(string&& other) noexcept
+        {
+            if (this != &other)
+            {
+                _str = move(other._str);
+                other._str = nullptr;  // 避免悬挂指针
+                cout << "mySpace::string 移动赋值" << endl;
+            }
+            return *this;
+        }
 
+        ~string()
+        {
+            cout << "mySpace::string 析构函数" << endl;
+        }
+    };
+}
 
-////万能引用
-//template<class T>
-//void Function(T&& t)
-//{
-//	int a = 0;
-//	T x = a;
-//	//x++;
-//	cout << &a << endl;
-//	cout << &x << endl << endl;
-//}
-//
-//int main()
-//{
-//	// 10是右值，推导出T为int，模板实例化为void Function(int&& t)
-//	Function(10); // 右值
-//
-//	int a;
-//	// a是左值，推导出T为int&，引用折叠，模板实例化为void Function(int& t)
-//	Function(a); // 左值
-//
-//	// std::move(a)是右值，推导出T为int，模板实例化为void Function(int&& t)
-//	Function(std::move(a)); // 右值
-//
-//	const int b = 8;
-//	// b是左值，推导出T为const int&，引用折叠，模板实例化为void Function(const int& t)
-//	// 所以Function内部会编译报错，x不能++
-//	Function(b); // const 左值
-//
-//	// std::move(b)右值，推导出T为const int，模板实例化为void Function(const int&& t)
-//	// 所以Function内部会编译报错，x不能++
-//	Function(std::move(b)); // const 右值
-//
-//	return 0;
-//}
+class Person
+{
+private:
+    mySpace::string _name;  // 字符串类型的姓名
+    int _age;               // 整型的年龄
+
+public:
+    Person(const char* name = "", int age = 0)
+        : _name(name)  // 调用mySpace::string的构造函数
+        , _age(age)    // 直接初始化int成员
+    {
+        cout << "Person 构造函数" << endl;
+    }
+
+    //注意：根据规则，手动实现拷贝构造会抑制默认移动构造的生成
+    Person(const Person& p)
+        : _name(p._name)  // 调用mySpace::string的拷贝构造
+        , _age(p._age)    // 拷贝int成员
+    {
+        cout << "Person 拷贝构造" << endl;
+    }
+
+    //注意：根据规则，手动实现拷贝赋值会抑制默认移动赋值的生成
+    Person& operator=(const Person& p)
+    {
+        if (this != &p)  // 防止自赋值
+        {
+            _name = p._name;  // 调用mySpace::string的拷贝赋值
+            _age = p._age;    // 赋值int成员
+            cout << "Person 拷贝赋值" << endl;
+        }
+        return *this;
+    }
+
+    // 注意：根据规则，手动实现析构函数会抑制默认移动构造和移动赋值的生成
+    ~Person()
+    {
+        cout << "Person 析构函数" << endl;
+    }
+
+    /*  注意：
+    *       1. 由于我们手动实现了“拷贝构造、拷贝赋值和析构函数”
+    *       2. 根据C++规则，编译器不会自动生成默认的“移动构造”和“移动赋值”
+    *       3. 如果需要移动语义，必须手动实现
+    *   所以：如果你想看到默认生成的“移动构造”和“移动赋值”，可以将person类中手动实现的“拷贝构造、拷贝赋值和析构函数”注释掉
+    */
+};
+
+int main()
+{
+    /*--------------------测试：默认构造函数--------------------*/
+    cout << "Person s1;" << endl;
+    Person s1;  // 调用Person的构造函数，使用默认参数
+
+    /*--------------------测试：拷贝构造--------------------*/
+    cout << "\nPerson s2 = s1;" << endl;
+    Person s2 = s1;  // 调用Person的拷贝构造函数
+
+    /*--------------------测试：移动构造--------------------*/
+    cout << "\nPerson s3 = move(s1);" << endl;
+    Person s3 = move(s1);
+    /* 说明：
+    *      1. 由于Person类手动实现了拷贝构造和析构函数
+    *      2. 编译器不会生成默认移动构造，这里实际会调用拷贝构造
+    */
+
+    /*--------------------测试：拷贝赋值--------------------*/
+    cout << "\ns2 = s1;" << endl;
+    s2 = s1;  // 调用Person的拷贝赋值运算符
+
+    /*--------------------测试：移动赋值--------------------*/
+    cout << "\ns3 = move(s1);" << endl;
+    s3 = move(s1);
+    /* 说明：
+    *      1. 由于Person类手动实现了拷贝赋值和析构函数
+    *      2. 编译器不会生成默认移动赋值，这里实际会调用拷贝赋值
+    */
+
+    cout << "\n程序结束，对象开始析构" << endl;
+    return 0;
+}
