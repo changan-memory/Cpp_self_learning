@@ -106,10 +106,10 @@ namespace m_SmartPtr
 
 
 		// 3. 禁止拷贝：删除“拷贝构造和拷贝赋值”---> 确保资源所有权唯一，避免重复释放
-		//3.1：禁止拷贝构造
+		// 禁止拷贝赋值   禁止拷贝构造			   
 		unique_ptr(const unique_ptr<T>& sp) = delete;
-		//3.2：禁止拷贝赋值
 		unique_ptr<T>& operator=(const unique_ptr<T>& sp) = delete;
+
 		// 禁止拷贝构造 和 赋值， 两种实现方式：
 		// 1. C++98 构造函数 和 operator= 声明为私有
 		// 2. C++11  构造函数 和 operator= 只声明，不实现，同时在函数声明尾部加上 = delete
@@ -182,7 +182,7 @@ namespace m_SmartPtr
 		// 构造的时候，开辟引用计数
 		shared_ptr(T* ptr)
 			:_ptr(ptr)
-			, _refCount(new int(1))		// 初始化引用计数为 1
+			, _refCount(new int(1))		// new 一个 int 变量，初始化引用计数为 1
 		{ }
 
 		// 智能指针 生命周期结束后，对引用计数减减，减减后为 0 时，代表当前是最后一个引用计数

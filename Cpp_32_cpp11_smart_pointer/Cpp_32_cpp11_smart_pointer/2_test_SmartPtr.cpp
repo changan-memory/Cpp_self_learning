@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <utility>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ public:
 };
 
 
-// 一般实践中，很多公司明确规定不允许使用 auto_ptr
+// 一般实践中，明确规定不允许使用 auto_ptr
 void test_std_autoPtr() 
 {
 	// C++98
@@ -51,7 +52,7 @@ void test_autoPtr() {
 	// 隐患: 会导致 被拷贝对象悬空，访问就会出问题
 	m_SmartPtr::auto_ptr<A> ap3(ap1);
 
-	// 悬空后，再访问被拷问对象 就会崩溃
+	// 悬空后，再访问被拷贝对象 就会崩溃
 	ap1->_a++;
 	ap3->_a++;
 }
@@ -62,7 +63,9 @@ void test_std_unique_Ptr() {
 	std::unique_ptr<A> uPtr2(new A(2));
 
 	//std::unique_ptr<A> uPtr3(uPtr1);	// 报错，不能拷贝
-	//up1 = up2;	// 同样也不能赋值
+	//uPtr2 = uPtr1;	// 同样也不能赋值
+
+	unique_ptr<A> uPtr4 = std::move(uPtr1);
 }
 
 
@@ -109,10 +112,10 @@ int main()
 	//test_std_autoPtr();
 	//test_autoPtr();
 
-	//test_std_unique_Ptr();
+	test_std_unique_Ptr();
 
 	//test_std_shared_Ptr();
-	test_m_shared_Ptr();
+	//test_m_shared_Ptr();
 
 	return 0;
 }
