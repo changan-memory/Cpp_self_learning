@@ -18,7 +18,6 @@ public:
 	{
 		cout << "~A " <<  endl;
 	}
-
 	int _a;
 };
 
@@ -107,15 +106,57 @@ void test_m_shared_Ptr() {
 	sp1 = sp1;
 
 }
-int main()
+
+// shared_ptr 的循环引用问题
+//struct Node
+//{
+//	A _val;
+//	Node* _prev;
+//	Node* _next;
+//};
+//void test_circalRef_Shared_Ptr_1()
+//{
+//	////Node* n2 = new Node;
+//	//// 推荐用 new Node()  的写法，会对节点值进行初始化
+//	//Node* n1 = new Node();
+//	//Node* n2 = new Node();
+//	//// ...
+//	//delete n1;
+//	//delete n2;
+//
+//	std::shared_ptr<Node> sp1(new Node());
+//	std::shared_ptr<Node> sp2(new Node());
+//	//sp1->_next = sp2;	// 通过智能指针 链接链表时，无法链接， 因为类型不匹配
+//	//sp2->_prev = sp1;	// 左边时指针类型，右边是智能指针类型 对象
+//}
+
+// 想到的其中一种解决方案，把 prev 和 next 指针 也使用智能指针
+struct Node
 {
+	A _val;
+	std::shared_ptr<Node> _prev;
+	std::shared_ptr<Node> _next;
+};
+void test_circalRef_Shared_Ptr_2()
+{
+	// shared_ptr 的 循环引用 问题
+	std::shared_ptr<Node> sp1(new Node());
+	std::shared_ptr<Node> sp2(new Node());
+	// 把 prev 和 next 指针 也使用智能指针
+	sp1->_next = sp2;
+	sp2->_prev = sp1;
+}
+int main() {
+	test_circalRef_Shared_Ptr_2();
+
 	//test_std_autoPtr();
 	//test_autoPtr();
 
-	test_std_unique_Ptr();
+	//test_std_unique_Ptr();
 
 	//test_std_shared_Ptr();
 	//test_m_shared_Ptr();
+
 
 	return 0;
 }

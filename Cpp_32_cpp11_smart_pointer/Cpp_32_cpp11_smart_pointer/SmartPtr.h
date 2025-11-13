@@ -175,41 +175,41 @@ namespace m_SmartPtr
 		T* _ptr;  // 指向管理的动态资源
 
 		// 引用计数，期望一个资源伴随着一个 引用计数， static 不能解决
-		int* _refCount;		// 引用计数使用动态的内存， 每个智能指针都保存了 引用计数的地址
+		int* _ptr_refCount;		// 引用计数使用动态的内存， 每个智能指针都保存了 引用计数的地址
 
 	public:
 
 		// 构造的时候，开辟引用计数
 		shared_ptr(T* ptr)
 			:_ptr(ptr)
-			, _refCount(new int(1))		// new 一个 int 变量，初始化引用计数为 1
+			,_ptr_refCount(new int(1))		// new 一个 int 变量，初始化引用计数为 1
 		{ }
 
 		// 智能指针 生命周期结束后，对引用计数减减，减减后为 0 时，代表当前是最后一个引用计数
 		// 再开始 释放资源
 		~shared_ptr()
 		{
-			if (--(*_refCount) == 0)
+			if (--(*_ptr_refCount) == 0)
 			{
 				cout << "~shared_ptr delete: " << typeid(T).name() << " " << _ptr << endl;
 				delete _ptr;
-				delete _refCount;
+				delete _ptr_refCount;
 			}
 		}
 
 		//// sp3(sp1)
 		//shared_ptr(const shared_ptr<T>& sp)
 		//	:_ptr(sp._ptr)
-		//	,_refCount(& (++(*sp._refCount)))
+		//	,_ptr_refCount(& (++(*sp._ptr_refCount)))
 		//{
 		//}
 
 		// sp3(sp1)
 		shared_ptr(const shared_ptr<T>& sp)
 			:_ptr(sp._ptr)
-			, _refCount(sp._refCount)
+			, _ptr_refCount(sp._ptr_refCount)
 		{
-			++(*_refCount);
+			++(*_ptr_refCount);
 		}
 		
 		// 三种情况 sp3 = sp1		// 管理同一个资源的智能指针 互相赋值
@@ -225,17 +225,17 @@ namespace m_SmartPtr
 			else
 			{
 				// 旧资源的引用计数存在，且 减减后 引用计数为0 就释放资源
-				if (_refCount && --(*_refCount) == 0)
+				if (_ptr_refCount && --(*_ptr_refCount) == 0)
 				{
 					delete _ptr;
-					delete _refCount;
+					delete _ptr_refCount;
 				}
 				//  减减后 引用计数不为0 ，
 				_ptr = sp._ptr;
-				_refCount = sp._refCount;
+				_ptr_refCount = sp._ptr_refCount;
 
-				if(_refCount)
-					++(*_refCount);
+				if(_ptr_refCount)
+					++(*_ptr_refCount);
 
 				return *this;
 			}
