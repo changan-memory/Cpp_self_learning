@@ -240,6 +240,49 @@ namespace m_SmartPtr
 				return *this;
 			}
 		}
+		T* get() const noexcept
+		{
+			return _ptr;
+		}
+		int use_count() const noexcept
+		{
+			return *_ptr_refCount;
+		}
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+	};
+
+	// shared_ptr 模拟实现
+	template<class T>
+	class weak_ptr
+	{
+	private:
+		T* _ptr;  // 指向管理的动态资源
+
+	public:
+
+		weak_ptr()
+			:_ptr(nullptr)
+		{
+		}
+
+		weak_ptr(const shared_ptr<T>& sp)
+			:_ptr(sp.get())
+		{
+		}
+
+		weak_ptr<T>& operator=(const shared_ptr<T>& sp)
+		{
+			_ptr = sp.get();
+			return *this;
+		}
 
 		T& operator*()
 		{
@@ -250,6 +293,5 @@ namespace m_SmartPtr
 		{
 			return _ptr;
 		}
-
 	};
 }
