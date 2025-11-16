@@ -1,33 +1,35 @@
-//#include <iostream>
-//#include <string>
-//using namespace std;
+#include "SmartPointer.h"
 
-//// 函数模板
-//template<class T>
-//bool Less(T left, T right) {
-//	return left < right;
-//}
-//
-//int main() {
-//	cout << Less(1, 2) << endl;
-//	double a = 2.2, b = 1.1;
-//	double* pa = &a, * pb = &b;
-//	cout << Less(pa, pb) << endl;
-//	return 0;
-//}
+class A
+{	
+public:
+	int _a;
 
+	A(int a = 0)
+		:_a(a)
+	{
+		cout << "构造A" << endl;
+	}
+	~A()
+	{
+		cout << "析构A" << endl;
+	}
+};
 
-#include <iostream>
-#include "stack.hpp"
-using namespace std;
+void teat_auto_Ptr()
+{
+	myPointer::auto_ptr<A> ap1(new A(1));
+	myPointer::auto_ptr<A> ap3;
+	myPointer::auto_ptr<A> ap2(ap1);
 
-//int main() {
-//	m_stack::stack<int> st1;
-//	st1.push(1);
-//	st1.push(2);	//调用push，链接错误
-//	// 链接错误，在符号表中，找不到push函数的地址
-//	st1.top();		// top
-//	st1.size();		//调用size无链接错误
-//	cout << "stack.hpp" << endl;
-//	return 0;
-//}
+	/*cout << ap2->_a << endl;
+	cout << ap1->_a << endl;*/
+
+	
+}
+int main()
+{
+	teat_auto_Ptr();
+	return 0;
+}
+

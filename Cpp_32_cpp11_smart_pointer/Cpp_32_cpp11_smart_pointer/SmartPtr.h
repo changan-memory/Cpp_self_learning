@@ -1,4 +1,7 @@
 #pragma once
+#include <iostream>
+#include <utility>
+#include <functional>
 
 // C++98 auto_ptr
 
@@ -172,82 +175,98 @@ namespace m_SmartPtr
 	class shared_ptr
 	{
 	private:
-		T* _ptr;  // 指向管理的动态资源
+		//1.指向共享的资源的指针
+		//2.引用计数（堆上分配，所有共享对象共享）
+		//3.自定义删除器（支持数组/文件句柄等资源）
 
-		// 引用计数，期望一个资源伴随着一个 引用计数， static 不能解决
-		int* _ptr_refCount;		// 引用计数使用动态的内存， 每个智能指针都保存了 引用计数的地址
+		T* _ptr;
+		int* _pcount;
+		std::function<void(T*)> _del;
 
 	public:
+		// 实现：“默认构造函数”（支持默认删除器）
+		explicit shared_ptr(T* ptr = nullptr)
+			: _ptr(ptr)                       //1.管理空资源
+			, _pcount(new int(1))              //2.计数在堆上，初始值1
+			, _del([](T* ptr) { delete ptr; }) //3.lambda作为默认删除器
+		{
+		}
 
-		// 构造的时候，开辟引用计数
-		shared_ptr(T* ptr)
-			:_ptr(ptr)
-			,_ptr_refCount(new int(1))		// new 一个 int 变量，初始化引用计数为 1
-		{ }
+		// 实现：“普通构造函数”（带自定义删除器）---> 管理数组（需delete[]）、文件句柄（需fclose）等非普通指针
+		shared_ptr(T* ptr, function<void(T*)> del)
+			: _ptr(ptr)              //1.管理共享的资源
+			, _pcount(new int(1))     //2.计数在堆上，初始值1
+			, _del(del)               //3.接收自定义删除器
+		{
+		}
 
-		// 智能指针 生命周期结束后，对引用计数减减，减减后为 0 时，代表当前是最后一个引用计数
-		// 再开始 释放资源
+
+		// 实现：“释放资源”的核心逻辑：计数-1，为0时彻底释放
+		void release()
+		{
+			if (--(*_pcount) == 0)  //注意细节：调用“释放资源”一定会进行计数-1
+			{                       //但是只有计数减为0时，说明是最后一个引用者，才会进行资源释放
+
+				_del(_ptr);		//1.调用删除器释放资源
+				delete _pcount;	//2.释放计数空间
+
+				//3.避免野指针
+				_ptr = nullptr;       // 将指向“共享资源”的指针置空
+				_pcount = nullptr;    // 将指向“计数空间”的指针置空
+			}
+		}
+
+		// 实现：“析构函数”
 		~shared_ptr()
 		{
-			if (--(*_ptr_refCount) == 0)
-			{
-				cout << "~shared_ptr delete: " << typeid(T).name() << " " << _ptr << endl;
-				delete _ptr;
-				delete _ptr_refCount;
-			}
+			release();  //调用release释放资源
 		}
 
-		//// sp3(sp1)
-		//shared_ptr(const shared_ptr<T>& sp)
-		//	:_ptr(sp._ptr)
-		//	,_ptr_refCount(& (++(*sp._ptr_refCount)))
-		//{
-		//}
 
-		// sp3(sp1)
+		// 实现：“拷贝构造函数”
+		//注意：每调用一次“拷贝构造函数”就会进行一次“引用计数+1”
 		shared_ptr(const shared_ptr<T>& sp)
-			:_ptr(sp._ptr)
-			, _ptr_refCount(sp._ptr_refCount)
+			: _ptr(sp._ptr),      //1.共享资源
+			_pcount(sp._pcount),  //2.共享计数 且 +1
+			_del(sp._del)         //3.共享删除器
 		{
-			++(*_ptr_refCount);
-		}
-		
-		// 三种情况 sp3 = sp1		// 管理同一个资源的智能指针 互相赋值
-		//          sp1 = sp5		// 管理不同的资源的智能指针 互相赋值
-		//          sp1 = sp1		// 同一个智能指针对象互相赋值
+			(*_pcount)++;         //4.引用计数+1
+		} 
+
+		// 实现：“拷贝赋值运算符”：释放当前资源，共享新资源
 		shared_ptr<T>& operator=(const shared_ptr<T>& sp)
 		{
-			// 分两种情况分别判断
-			// 管理同个资源的 智能指针对象之间的赋值
-			if (this == &sp || _ptr == sp._ptr)
-				return *this;
-			//管理不同的资源的智能指针 互相赋值
-			else
+			//1.检测自赋值以避免自己赋值给自己导致的错误
+			if (_ptr != sp._ptr) //若资源不同，才需要释放当前资源
 			{
-				// 旧资源的引用计数存在，且 减减后 引用计数为0 就释放资源
-				if (_ptr_refCount && --(*_ptr_refCount) == 0)
-				{
-					delete _ptr;
-					delete _ptr_refCount;
-				}
-				//  减减后 引用计数不为0 ，
+				//1.释放当前资源（计数-1）
+				release();
+
+				//2.共享新资源
 				_ptr = sp._ptr;
-				_ptr_refCount = sp._ptr_refCount;
+				_pcount = sp._pcount;
+				_del = sp._del;
 
-				if(_ptr_refCount)
-					++(*_ptr_refCount);
-
-				return *this;
+				//3.新资源计数+1
+				(*_pcount)++;
 			}
+
+			//2.返回当前对象以支持链式赋值
+			return *this;
 		}
-		T* get() const noexcept
+
+		// 实现：“获取原始指针”
+		T* get() const
 		{
 			return _ptr;
 		}
-		int use_count() const noexcept
+
+		// 实现：“获取当前引用计数”
+		int use_count() const
 		{
-			return *_ptr_refCount;
+			return *_pcount;
 		}
+
 		T& operator*()
 		{
 			return *_ptr;
@@ -259,7 +278,8 @@ namespace m_SmartPtr
 		}
 	};
 
-	// shared_ptr 模拟实现
+
+	// weak_ptr 模拟实现
 	template<class T>
 	class weak_ptr
 	{

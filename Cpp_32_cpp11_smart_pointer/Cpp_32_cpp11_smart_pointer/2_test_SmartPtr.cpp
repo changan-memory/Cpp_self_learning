@@ -74,9 +74,9 @@ void test_std_unique_Ptr() {
 void test_std_shared_Ptr() {
 	
 	// shared_ptr
-	std::shared_ptr<A> sp1(new A(1));
+	std::shared_ptr<A> sp1(new A(1));	// 引用计数 == 1
 
-	std::shared_ptr<A> sp2(sp1);
+	std::shared_ptr<A> sp2(sp1);	// 引用计数 == 2
 
 	sp1->_a++;
 	sp2->_a++;
@@ -247,10 +247,10 @@ int main() {
 
 	//test_std_unique_Ptr();
 
-	//test_std_shared_Ptr();
+	test_std_shared_Ptr();
 	//test_m_shared_Ptr();
 
-	test_delete();
+	//test_delete();
 
 	return 0;
 }
